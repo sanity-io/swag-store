@@ -110,6 +110,7 @@ function HeaderCtas({
         </Suspense>
       </NavLink>
       <SearchToggle />
+      yo hey
       <CartToggle cart={cart} />
     </nav>
   );
