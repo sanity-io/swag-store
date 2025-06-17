@@ -52,18 +52,14 @@ export function HeaderMenu({
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
   const className = `header-menu-${viewport}`;
-  const {close} = useAside();
 
   return (
     <nav className={className} role="navigation">
+      <NavLink end prefetch="intent" style={activeLinkStyle} to="/demo">
+        demo
+      </NavLink>
       {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
+        <NavLink end prefetch="intent" style={activeLinkStyle} to="/">
           Home
         </NavLink>
       )}
@@ -82,7 +78,6 @@ export function HeaderMenu({
             className="header-menu-item"
             end
             key={item.id}
-            onClick={close}
             prefetch="intent"
             style={activeLinkStyle}
             to={url}
@@ -110,18 +105,16 @@ function HeaderCtas({
         </Suspense>
       </NavLink>
       <SearchToggle />
-      yo hey
       <CartToggle cart={cart} />
     </nav>
   );
 }
 
 function HeaderMenuMobileToggle() {
-  const {open} = useAside();
   return (
     <button
       className="header-menu-mobile-toggle reset"
-      onClick={() => open('mobile')}
+      // onClick={() => open('mobile')}
     >
       <h3>☰</h3>
     </button>
@@ -129,16 +122,16 @@ function HeaderMenuMobileToggle() {
 }
 
 function SearchToggle() {
-  const {open} = useAside();
+  // const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
+    <button className="reset" onClick={() => console.log('search')}>
       Search
     </button>
   );
 }
 
 function CartBadge({count}: {count: number | null}) {
-  const {open} = useAside();
+  // const {open} = useAside();
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
@@ -146,7 +139,7 @@ function CartBadge({count}: {count: number | null}) {
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
-        open('cart');
+        // open('cart');
         publish('cart_viewed', {
           cart,
           prevCart,

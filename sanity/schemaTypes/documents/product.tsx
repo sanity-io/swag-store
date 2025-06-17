@@ -4,7 +4,7 @@ import ProductHiddenInput from '../../components/inputs/ProductHidden'
 import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
 import {defineField, defineType} from 'sanity'
 import {getPriceRange} from '../../utils/getPriceRange'
-import { GROUPS } from '../../constants'
+import {GROUPS} from '../../constants'
 
 export const productType = defineType({
   name: 'product',
@@ -37,6 +37,12 @@ export const productType = defineType({
       title: 'Slug',
       type: 'proxyString',
       options: {field: 'store.slug.current'},
+    }),
+    defineField({
+      name: 'slug',
+      title: 'Slug',
+      type: 'string',
+      group: 'editorial',
     }),
     defineField({
       name: 'colorTheme',

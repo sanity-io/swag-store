@@ -25,6 +25,12 @@ export const pageType = defineField({
       validation: validateSlug,
     }),
     defineField({
+      name: 'publishedAt',
+      type: 'datetime',
+      readOnly: true,
+      group: 'editorial',
+    }),
+    defineField({
       name: 'colorTheme',
       type: 'reference',
       to: [{type: 'colorTheme'}],
@@ -46,6 +52,12 @@ export const pageType = defineField({
     defineField({
       name: 'body',
       type: 'portableText',
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'autoSummary',
+      type: 'portableText',
+      description: 'If enabled, a summary will be generated automatically from the body',
       group: 'editorial',
     }),
     defineField({

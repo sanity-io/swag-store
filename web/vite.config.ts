@@ -4,6 +4,7 @@ import {oxygen} from '@shopify/mini-oxygen/vite';
 import {reactRouter} from '@react-router/dev/vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+import {sanity} from 'hydrogen-sanity/vite';
 
 export default defineConfig({
   plugins: [
@@ -12,6 +13,7 @@ export default defineConfig({
     oxygen(),
     reactRouter(),
     tsconfigPaths(),
+    sanity(),
   ],
   build: {
     // Allow a strict Content-Security-Policy
@@ -30,7 +32,7 @@ export default defineConfig({
        * Include 'example-dep' in the array below.
        * @see https://vitejs.dev/config/dep-optimization-options
        */
-      include: [],
+      include: ['rxjs'],
     },
   },
 });

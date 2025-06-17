@@ -3,6 +3,8 @@ import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
 import {getLocaleFromRequest} from '~/lib/i18n';
 
+import {createClient, createSanityContext} from 'hydrogen-sanity';
+
 /**
  * The context implementation is separate from server.ts
  * so that type can be extracted for AppLoadContext
@@ -25,6 +27,23 @@ export async function createAppLoadContext(
     AppSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+  const sanity = createSanityContext({
+    request,
+    cache,
+    waitUntil,
+    client: createClient({
+      projectId: env.SANITY_PROJECT_ID,
+      dataset: env.SANITY_DATASET,
+      apiVersion: env.SANITY_API_VERSION || '2025-06-09',
+      useCdn: true,
+    }),
+    preview: env.SANITY_API_TOKEN ? {
+      token: env.SANITY_API_TOKEN,
+      studioUrl: 'http://localhost:3333',
+      enabled: true,
+    } : undefined,
+  });
+
   const hydrogenContext = createHydrogenContext({
     env,
     request,
@@ -39,6 +58,7 @@ export async function createAppLoadContext(
 
   return {
     ...hydrogenContext,
+    sanity,
     // declare additional Remix loader context
   };
 }

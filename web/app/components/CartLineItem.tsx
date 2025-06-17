@@ -4,7 +4,6 @@ import {CartForm, Image, type OptimisticCartLine} from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
-import {useAside} from './Aside';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>;
@@ -23,7 +22,6 @@ export function CartLineItem({
   const {id, merchandise} = line;
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
-  const {close} = useAside();
 
   return (
     <li key={id} className="cart-line">
@@ -44,7 +42,7 @@ export function CartLineItem({
           to={lineItemUrl}
           onClick={() => {
             if (layout === 'aside') {
-              close();
+              // close();
             }
           }}
         >

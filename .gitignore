@@ -25,3 +25,11 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+functions/**/.build/**
+.sanity/*
+
+# Sanity Functions
+functions/**/.env*
+functions/**/.build/
+functions/**/node_modules/

@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "@sanity/blueprints": "0.0.1"
+  },
+  "dependencies": {
+    "@types/node": "^24.0.1"
+  }
+}

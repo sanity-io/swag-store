@@ -5,7 +5,6 @@ import type {
   FooterQuery,
   HeaderQuery,
 } from 'storefrontapi.generated';
-import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
@@ -33,10 +32,8 @@ export function PageLayout({
   publicStoreDomain,
 }: PageLayoutProps) {
   return (
-    <Aside.Provider>
-      <CartAside cart={cart} />
-      <SearchAside />
-      <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} />
+    <div>
+      {/* <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} /> */}
       {header && (
         <Header
           header={header}
@@ -45,19 +42,22 @@ export function PageLayout({
           publicStoreDomain={publicStoreDomain}
         />
       )}
-      <main>{children}</main>
+      <div className="flex">
+        <main className="w-full">{children}</main>
+        {/* <CartBlock cart={cart} layout="aside" /> */}
+      </div>
       <Footer
         footer={footer}
         header={header}
         publicStoreDomain={publicStoreDomain}
       />
-    </Aside.Provider>
+    </div>
   );
 }
 
-function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
+function CartBlock({cart}: {cart: PageLayoutProps['cart']}) {
   return (
-    <Aside type="cart" heading="CART">
+    <div key="CART" className="w-[33%] block">
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
@@ -65,7 +65,7 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
           }}
         </Await>
       </Suspense>
-    </Aside>
+    </div>
   );
 }
 
