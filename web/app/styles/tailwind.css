@@ -4,3 +4,62 @@
  */
 
 @import 'tailwindcss';
+
+html,
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/ibm-plex-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Waldenburg';
+  src: url('/fonts/waldenburg-normal.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@theme {
+  --color-black: #000;
+  --color-white: #fff;
+
+  --color-brand-yellow: #ffff00;
+  --color-brand-green: #3FEA00;
+
+  --text-14: 14px;
+  --text-16: 16px;
+  --text-24: 24px;
+  --text-56: 56px;
+
+  --breakpoint-100: 100px;
+  --breakpoint-200: 200px;
+  --breakpoint-300: 300px;
+  --breakpoint-400: 400px;
+  --breakpoint-500: 500px;
+  --breakpoint-600: 600px;
+  --breakpoint-700: 700px;
+  --breakpoint-800: 800px;
+  --breakpoint-900: 900px;
+  --breakpoint-1000: 1000px;
+  --breakpoint-1100: 1100px;
+  --breakpoint-1200: 1200px;
+  --breakpoint-1300: 1300px;
+  --breakpoint-1400: 1400px;
+  --breakpoint-1500: 1500px;
+  --breakpoint-1600: 1600px;
+  --breakpoint-1700: 1700px;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-sans: 'Waldenburg', sans-serif;
+}

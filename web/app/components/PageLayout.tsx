@@ -1,5 +1,6 @@
-import {Await, Link} from 'react-router';
+import {Await, Link, useLocation} from 'react-router';
 import {Suspense, useId} from 'react';
+import clsx from 'clsx';
 import type {
   CartApiQueryFragment,
   FooterQuery,
@@ -31,8 +32,15 @@ export function PageLayout({
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
+  const location = useLocation();
+  const collectionPage = location.pathname.includes('/collections/');
+  const isPage = location.pathname.includes('/pages/');
+
+  // Full screen if collection page or content page
+  const cartPage = collectionPage || isPage;
+
   return (
-    <div>
+    <div className="font-mono">
       {/* <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} /> */}
       {header && (
         <Header
@@ -43,8 +51,15 @@ export function PageLayout({
         />
       )}
       <div className="flex">
-        <main className="w-full">{children}</main>
-        {/* <CartBlock cart={cart} layout="aside" /> */}
+        <main
+          className={clsx('w-full', {
+            '800:w-full': cartPage,
+            '800:w-2/3': !cartPage,
+          })}
+        >
+          {children}
+        </main>
+        <CartBlock cart={cart} />
       </div>
       <Footer
         footer={footer}
@@ -57,7 +72,7 @@ export function PageLayout({
 
 function CartBlock({cart}: {cart: PageLayoutProps['cart']}) {
   return (
-    <div key="CART" className="w-[33%] block">
+    <>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
@@ -65,7 +80,7 @@ function CartBlock({cart}: {cart: PageLayoutProps['cart']}) {
           }}
         </Await>
       </Suspense>
-    </div>
+    </>
   );
 }
 

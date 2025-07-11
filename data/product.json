@@ -1,0 +1,60 @@
+{
+        "_createdAt": "2025-06-05T18:20:13Z",
+        "_id": "shopifyProduct-3948286222444",
+        "_rev": "VeeKdMcpQr5dwABCWatJAw",
+        "_type": "product",
+        "_updatedAt": "2025-06-05T18:20:13Z",
+        "store": {
+        "createdAt": "2025-06-05T14:20:11-04:00",
+        "descriptionHtml": "<p></p>",
+        "gid": "gid://shopify/Product/9948286222617",
+        "id": 9948286222617,
+        "isDeleted": false,
+        "options": [
+            {
+            "_key": "Color",
+            "_type": "option",
+            "name": "Color",
+            "values": [
+                "Orange",
+                "Yellow",
+                "Green"
+            ]
+            }
+        ],
+        "previewImageUrl": "https://cdn.shopify.com/s/files/1/0945/7074/2041/files/YEZIK_Yellow.jpg?v=1749147611",
+        "priceRange": {
+            "maxVariantPrice": 40,
+            "minVariantPrice": 40
+        },
+        "productType": "",
+        "slug": {
+            "_type": "slug",
+            "current": "test-tray"
+        },
+        "status": "active",
+        "tags": "Test, Tray",
+        "title": "TEST Tray",
+        "variants": [
+            {
+            "_key": "00d1641c-f51b-54fd-91ca-fd63118f411d",
+            "_ref": "shopifyProductVariant-50880491094297",
+            "_type": "reference",
+            "_weak": true
+            },
+            {
+            "_key": "19bf61e7-7385-581f-9ee9-bbcfffb431ec",
+            "_ref": "shopifyProductVariant-50880491127065",
+            "_type": "reference",
+            "_weak": true
+            },
+            {
+            "_key": "1fcd5a8d-f424-5d13-8811-16ba5486b984",
+            "_ref": "shopifyProductVariant-50880491159833",
+            "_type": "reference",
+            "_weak": true
+            }
+        ],
+        "vendor": "Julia Xu"
+        }
+  }

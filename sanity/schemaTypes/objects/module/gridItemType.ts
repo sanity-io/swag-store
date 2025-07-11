@@ -8,20 +8,20 @@ export const gridItemType = defineField({
   type: 'object',
   fields: [
     defineField({
-      name: 'title',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
       name: 'image',
       type: 'image',
       options: {hotspot: true},
-      validation: (Rule) => Rule.required(),
+      // validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'body',
       type: 'portableTextSimple',
       validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'colorTheme',
+      type: 'reference',
+      to: [{type: 'colorTheme'}],
     }),
   ],
   preview: {

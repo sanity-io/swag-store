@@ -11,7 +11,10 @@ export const gridType = defineField({
     defineField({
       name: 'items',
       type: 'array',
-      of: [defineArrayMember({type: 'gridItem'})],
+      of: [
+        defineArrayMember({type: 'gridItem'}),
+        defineArrayMember({type: 'productReference'})
+      ],
     }),
   ],
   preview: {

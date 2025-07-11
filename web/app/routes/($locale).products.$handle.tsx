@@ -103,7 +103,11 @@ export default function Product() {
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      <div>
+        <ProductImage image={selectedVariant?.image} />
+        <div className="aspect-square w-full bg-brand-green" />
+        <div className="aspect-square w-full bg-brand-yellow" />
+      </div>
       <div className="product-main">
         <h1>{title}</h1>
         <ProductPrice

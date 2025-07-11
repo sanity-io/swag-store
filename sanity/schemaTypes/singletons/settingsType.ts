@@ -1,4 +1,4 @@
-import {CogIcon, ControlsIcon, ErrorOutlineIcon, MenuIcon, SearchIcon} from '@sanity/icons'
+import {CogIcon, ControlsIcon, ErrorOutlineIcon, HomeIcon, MenuIcon, SearchIcon} from '@sanity/icons'
 import {defineType, defineField} from 'sanity'
 
 const TITLE = 'Settings'
@@ -13,7 +13,12 @@ export const settingsType = defineType({
   icon: CogIcon,
   groups: [
     {
+      name: 'home',
+      title: 'Home',
+      icon: HomeIcon,
       default: true,
+    },
+    {
       name: 'navigation',
       title: 'Navigation',
       icon: MenuIcon,
@@ -35,6 +40,13 @@ export const settingsType = defineType({
     },
   ],
   fields: [
+    defineField({
+      name: 'homePage',
+      title: 'Homepage',
+      type: 'reference',
+      to: [{type: 'home'}],
+      group: 'home',
+    }),
     defineField({
       name: 'menu',
       type: 'menu',

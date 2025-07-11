@@ -25,7 +25,7 @@ export async function loader(args: LoaderFunctionArgs) {
 async function loadCriticalData({context, request}: LoaderFunctionArgs) {
   const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 8,
+    pageBy: 60,
   });
 
   const [{products}] = await Promise.all([
@@ -50,11 +50,10 @@ export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <div className="collection bg-gray-100">
       <PaginatedResourceSection
         connection={products}
-        resourcesClassName="products-grid"
+        resourcesClassName="grid grid-cols-2 800:grid-cols-4 gap-0"
       >
         {({node: product, index}) => (
           <ProductItem

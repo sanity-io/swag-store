@@ -25,9 +25,20 @@ export function Header({
 }: HeaderProps) {
   const {shop, menu} = header;
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+    <header className="fixed bottom-0 left-0 w-full 800:w-2/3 z-10 bg-white h-[40px] flex justify-between items-center">
+      <NavLink
+        className="p-0 h-full inline-flex justify-between items-center"
+        prefetch="intent"
+        to="/"
+        style={activeLinkStyle}
+        end
+      >
+        <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+          Sanity
+        </span>
+        <span className="bg-black text-white px-2 inline-flex items-center justify-center h-full">
+          Components&reg;
+        </span>
       </NavLink>
       <HeaderMenu
         menu={menu}
@@ -35,7 +46,7 @@ export function Header({
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
       />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
     </header>
   );
 }
@@ -51,19 +62,16 @@ export function HeaderMenu({
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
-  const className = `header-menu-${viewport}`;
+  const className = `gap-6 flex pr-6 header-menu-${viewport}`;
 
   return (
     <nav className={className} role="navigation">
-      <NavLink end prefetch="intent" style={activeLinkStyle} to="/demo">
-        demo
-      </NavLink>
       {viewport === 'mobile' && (
         <NavLink end prefetch="intent" style={activeLinkStyle} to="/">
-          Home
+          Information
         </NavLink>
       )}
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
+      {FALLBACK_HEADER_MENU.items.map((item) => {
         if (!item.url) return null;
 
         // if the url is internal, we strip the domain
@@ -178,34 +186,34 @@ const FALLBACK_HEADER_MENU = {
       tags: [],
       title: 'Collections',
       type: 'HTTP',
-      url: '/collections',
+      url: '/collections/all',
       items: [],
     },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
+    // {
+    //   id: 'gid://shopify/MenuItem/461609533496',
+    //   resourceId: null,
+    //   tags: [],
+    //   title: 'Blog',
+    //   type: 'HTTP',
+    //   url: '/blogs/journal',
+    //   items: [],
+    // },
+    // {
+    //   id: 'gid://shopify/MenuItem/461609566264',
+    //   resourceId: null,
+    //   tags: [],
+    //   title: 'Policies',
+    //   type: 'HTTP',
+    //   url: '/policies',
+    //   items: [],
+    // },
     {
       id: 'gid://shopify/MenuItem/461609599032',
       resourceId: 'gid://shopify/Page/92591030328',
       tags: [],
       title: 'About',
       type: 'PAGE',
-      url: '/pages/about',
+      url: '/pages/demo',
       items: [],
     },
   ],

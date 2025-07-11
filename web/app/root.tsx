@@ -10,6 +10,7 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
+  useLocation,
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
@@ -17,6 +18,8 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+
+import {VisualEditing} from 'hydrogen-sanity/visual-editing';
 
 export type RootLoader = typeof loader;
 
@@ -73,7 +76,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env} = args.context;
+  const {storefront, env, sanity} = args.context;
 
   return {
     ...deferredData,
@@ -83,6 +86,7 @@ export async function loader(args: LoaderFunctionArgs) {
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
     }),
+    isPreviewEnabled: sanity.preview?.enabled,
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
@@ -151,8 +155,8 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={tailwindCss} />
         <link rel="stylesheet" href={resetStyles} />
+        <link rel="stylesheet" href={tailwindCss} />
         <link rel="stylesheet" href={appStyles} />
         <Meta />
         <Links />
@@ -169,6 +173,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         ) : (
           children
         )}
+        {/* {data?.isPreviewEnabled ? <VisualEditing /> : null} */}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

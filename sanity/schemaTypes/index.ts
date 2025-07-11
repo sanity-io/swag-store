@@ -93,14 +93,14 @@ const blocks = [portableTextType, portableTextSimpleType]
 import {collectionType} from './documents/collection'
 import {colorThemeType} from './documents/colorTheme'
 import {pageType} from './documents/page'
+import {homeType} from './documents/home'
 import {productType} from './documents/product'
 import {productVariantType} from './documents/productVariant'
 
-const documents = [collectionType, colorThemeType, pageType, productType, productVariantType]
+const documents = [collectionType, colorThemeType, pageType, homeType, productType, productVariantType]
 
-import {homeType} from './singletons/homeType'
 import {settingsType} from './singletons/settingsType'
 
-const singletons = [homeType, settingsType]
+const singletons = [settingsType]
 
 export const schemaTypes = [...annotations, ...objects, ...singletons, ...blocks, ...documents]

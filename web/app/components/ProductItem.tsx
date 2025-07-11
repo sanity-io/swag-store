@@ -20,12 +20,7 @@ export function ProductItem({
   const variantUrl = useVariantUrl(product.handle);
   const image = product.featuredImage;
   return (
-    <Link
-      className="product-item"
-      key={product.id}
-      prefetch="intent"
-      to={variantUrl}
-    >
+    <Link className="" key={product.id} prefetch="intent" to={variantUrl}>
       {image && (
         <Image
           alt={image.altText || product.title}

@@ -33,3 +33,7 @@ functions/**/.build/**
 functions/**/.env*
 functions/**/.build/
 functions/**/node_modules/
+
+/node_modules
+node_modules
+/sanity/node_modules

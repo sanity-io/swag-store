@@ -24,7 +24,7 @@ export function CartLineItem({
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
 
   return (
-    <li key={id} className="cart-line">
+    <li key={id} className="cart-line bg-brand-yellow my-4 p-2">
       {image && (
         <Image
           alt={title}

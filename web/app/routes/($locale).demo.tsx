@@ -2,7 +2,6 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import cx from 'classnames';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import {useState, useEffect} from 'react';
-import ScrollingCanvas from '~/components/ScrollingCanvas';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Demo'}];
@@ -31,9 +30,5 @@ export default function CanvasDemo() {
     );
   }
 
-  return (
-    <div className="w-full h-screen">
-      <ScrollingCanvas />
-    </div>
-  );
+  return <div className="w-full h-screen">TEST</div>;
 }

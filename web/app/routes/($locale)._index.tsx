@@ -7,7 +7,11 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
-import ScrollingCanvas from '~/components/ScrollingCanvas';
+import PageComponentList from '~/components/PageComponentList';
+
+import {HOME_PAGE_QUERY, NESTED_HOME_PRODUCTS_QUERY} from '~/groq/queries';
+
+import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -33,8 +37,33 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
+  // Our home page is a reference to a settings singleton document
+  const {data} = await context.sanity.loadQuery(HOME_PAGE_QUERY);
+
+  // We fetch specific product GIDs for the homepage
+  const {
+    data: {products},
+  } = await context.sanity.loadQuery(NESTED_HOME_PRODUCTS_QUERY);
+
+  console.log('products', products);
+  const productIds = products
+    .map(({product}) => product.map((p) => p.productId))
+    .flat();
+  const uniqueProductIds = [...new Set(productIds)];
+  let deferredData = {};
+  if (uniqueProductIds.length > 0) {
+    deferredData = await context.storefront.query(SANITY_SHOPIFY_PRODUCTS, {
+      variables: {
+        ids: uniqueProductIds,
+        country: context.storefront.i18n.country,
+        language: context.storefront.i18n.language,
+      },
+    });
+  }
+  console.log('deferredData', deferredData);
   return {
     featuredCollection: collections.nodes[0],
+    sanityData: data,
   };
 }
 
@@ -59,9 +88,11 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
+  const modules = data.sanityData?.modules;
   return (
-    <div className="home">
-      <ScrollingCanvas />
+    <div className="home mb-[20px] bg-gray-100">
+      Sanity data:
+      <PageComponentList components={modules} />
     </div>
   );
 }

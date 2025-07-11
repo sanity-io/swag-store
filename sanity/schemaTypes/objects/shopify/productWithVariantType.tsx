@@ -17,7 +17,7 @@ export const productWithVariantType = defineField({
       name: 'product',
       type: 'reference',
       to: [{type: 'product'}],
-      weak: true,
+      weak: false,
     }),
     defineField({
       name: 'variant',
@@ -69,7 +69,7 @@ export const productWithVariantType = defineField({
             {
               productId,
               productVariantId,
-            }
+            },
           )
 
           return result ? true : 'Invalid product variant'

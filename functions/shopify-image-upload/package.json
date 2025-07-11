@@ -1,0 +1,9 @@
+{
+  "name": "shopify-image-upload",
+  "type": "module",
+  "main": "index.ts",
+  "dependencies": {
+    "@sanity/functions": "1.0.2",
+    "axios": "^1.10.0"
+  }
+}

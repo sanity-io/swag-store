@@ -1,8 +1,23 @@
 {
+  "name": "sanity-hydrogen-ecommerce",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:web": "npm run dev --workspace=web",
+    "dev:sanity": "npm run dev --workspace=sanity",
+    "build": "npm-run-all build:*",
+    "build:web": "npm run build --workspace=web",
+    "build:sanity": "npm run build --workspace=sanity"
+  },
+  "workspaces": [
+    "sanity",
+    "web"
+  ],
   "devDependencies": {
-    "@sanity/blueprints": "0.0.1"
+    "@sanity/blueprints": "0.0.1",
+    "npm-run-all": "^4.1.5"
   },
   "dependencies": {
-    "@types/node": "^24.0.1"
+    "@types/node": "^24.0.1",
+    "dotenv": "^16.5.0"
   }
 }
