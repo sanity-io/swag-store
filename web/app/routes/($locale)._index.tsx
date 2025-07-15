@@ -45,11 +45,11 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     data: {products},
   } = await context.sanity.loadQuery(NESTED_HOME_PRODUCTS_QUERY);
 
-  console.log('products', products);
   const productIds = products
     .map(({product}) => product.map((p) => p.productId))
     .flat();
   const uniqueProductIds = [...new Set(productIds)];
+  console.log('uniqueProductIds', uniqueProductIds);
   let deferredData = {};
   if (uniqueProductIds.length > 0) {
     deferredData = await context.storefront.query(SANITY_SHOPIFY_PRODUCTS, {
@@ -60,10 +60,11 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
       },
     });
   }
-  console.log('deferredData', deferredData);
+
   return {
     featuredCollection: collections.nodes[0],
     sanityData: data,
+    productData: deferredData,
   };
 }
 
@@ -89,61 +90,13 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 export default function Home() {
   const data = useLoaderData<typeof loader>();
   const modules = data.sanityData?.modules;
+  console.log('data', data);
   return (
     <div className="home mb-[20px] bg-gray-100">
-      Sanity data:
       <PageComponentList components={modules} />
     </div>
   );
 }
-
-// function FeaturedCollection({
-//   collection,
-// }: {
-//   collection: FeaturedCollectionFragment;
-// }) {
-//   if (!collection) return null;
-//   const image = collection?.image;
-//   return (
-//     <Link
-//       className="featured-collection"
-//       to={`/collections/${collection.handle}`}
-//     >
-//       {image && (
-//         <div className="featured-collection-image">
-//           <Image data={image} sizes="100vw" />
-//         </div>
-//       )}
-//       <h1>{collection.title}</h1>
-//     </Link>
-//   );
-// }
-
-// function RecommendedProducts({
-//   products,
-// }: {
-//   products: Promise<RecommendedProductsQuery | null>;
-// }) {
-//   return (
-//     <div className="recommended-products">
-//       <h2>Recommended Products</h2>
-//       <Suspense fallback={<div>Loading...</div>}>
-//         <Await resolve={products}>
-//           {(response) => (
-//             <div className="recommended-products-grid">
-//               {response
-//                 ? response.products.nodes.map((product) => (
-//                     <ProductItem key={product.id} product={product} />
-//                   ))
-//                 : null}
-//             </div>
-//           )}
-//         </Await>
-//       </Suspense>
-//       <br />
-//     </div>
-//   );
-// }
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {

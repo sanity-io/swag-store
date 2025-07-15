@@ -34,13 +34,17 @@ body {
 @theme {
   --color-black: #000;
   --color-white: #fff;
+  --color-gray: #DDDDDD;
 
   --color-brand-yellow: #ffff00;
   --color-brand-green: #3FEA00;
+  --color-brand-blue: #0052FF;
+  --color-brand-red: #FF0000;
 
   --text-14: 14px;
   --text-16: 16px;
   --text-24: 24px;
+  --text-30: 30px;
   --text-56: 56px;
 
   --breakpoint-100: 100px;
@@ -62,4 +66,8 @@ body {
   --breakpoint-1700: 1700px;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-sans: 'Waldenburg', sans-serif;
+}
+
+form button {
+  width: 100%;
 }

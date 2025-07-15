@@ -1,5 +1,6 @@
 import {type FetcherWithComponents} from 'react-router';
 import {CartForm, type OptimisticCartLineInput} from '@shopify/hydrogen';
+import clsx from 'clsx';
 
 export function AddToCartButton({
   analytics,
@@ -7,12 +8,14 @@ export function AddToCartButton({
   disabled,
   lines,
   onClick,
+  className,
 }: {
   analytics?: unknown;
   children: React.ReactNode;
   disabled?: boolean;
   lines: Array<OptimisticCartLineInput>;
   onClick?: () => void;
+  className?: string;
 }) {
   return (
     <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
@@ -25,6 +28,10 @@ export function AddToCartButton({
           />
           <button
             type="submit"
+            className={clsx(
+              'bg-black text-white px-4 py-2 800:hover:bg-brand-yellow 800:hover:text-black transition-colors duration-300',
+              className,
+            )}
             onClick={onClick}
             disabled={disabled ?? fetcher.state !== 'idle'}
           >

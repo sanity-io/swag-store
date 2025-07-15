@@ -155,6 +155,9 @@ ${PRODUCT_VARIANT_FIELDS_OG}
         id
         title
         handle
+        selectedOrFirstAvailableVariant(ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+          ...ProductVariantFields
+        }
         options {
           name
           optionValues {

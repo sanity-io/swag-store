@@ -2,7 +2,7 @@ import {useOptimisticCart, Money} from '@shopify/hydrogen';
 import {Link, useLocation} from 'react-router';
 import {useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
-import {CartLineItem} from '~/components/CartLineItem';
+import {CartLineItem, CartLineSimple} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
 import clsx from 'clsx';
 import {CartForm} from '@shopify/hydrogen';
@@ -61,31 +61,6 @@ export function CartMain({
     }
   }, [addToCartFetchers]);
 
-  // Example: Handle successful cart updates
-  // useEffect(() => {
-  //   if (latestCartData) {
-  //     console.log('Items successfully added to cart:', {
-  //       totalQuantity: latestCartData.totalQuantity,
-  //       totalItems: latestCartData.lines?.nodes?.length || 0,
-  //       cartId: latestCartData.id,
-  //     });
-
-  //     // You can trigger additional actions here, such as:
-  //     // - Show a success notification
-  //     // - Update analytics
-  //     // - Trigger animations
-  //     // - Update other parts of the UI
-  //   }
-  // }, [latestCartData]);
-
-  // Example: Handle cart update states
-  // useEffect(() => {
-  //   if (isUpdating) {
-  //     console.log('Cart is being updated...');
-  //     // You can show loading states or disable interactions
-  //   }
-  // }, [isUpdating]);
-
   return (
     <div
       key="CART"
@@ -106,21 +81,22 @@ export function CartMain({
           '800:h-dvh 800:min-h-full': !isCollapsed,
         })}
       >
-        <CartEmpty
+        {/* <CartEmpty
           hidden={linesCount}
           collapsed={isCollapsed}
           layout={layout}
           setIsCollapsed={setIsCollapsed}
-        />
-        <div className={clsx('cart-details')}>
-          <div aria-labelledby="cart-lines">
-            <CartLines
-              cart={originalCart}
-              layout={layout}
-              collapsed={isCollapsed}
-              setIsCollapsed={setIsCollapsed}
-            />
-          </div>
+        /> */}
+        <div
+          className={clsx('cart-details h-[calc(100%-40px)]')}
+          aria-labelledby="cart-lines"
+        >
+          <CartLines
+            cart={originalCart}
+            layout={layout}
+            collapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+          />
           {/* {cartHasItems && <CartSummary cart={cart} layout={layout} />} */}
         </div>
         <div
@@ -160,6 +136,35 @@ function CartLines({
   collapsed: boolean;
   setIsCollapsed: (collapsed: boolean) => void;
 }) {
+  const hats =
+    cart?.lines?.nodes.filter((line) =>
+      line.attributes.some(
+        (attribute) =>
+          attribute.key === 'category' && attribute.value === 'hats',
+      ),
+    ) || [];
+  const shirts =
+    cart?.lines?.nodes.filter((line) =>
+      line.attributes.some(
+        (attribute) =>
+          attribute.key === 'category' && attribute.value === 'shirts',
+      ),
+    ) || [];
+  const accessories =
+    cart?.lines?.nodes.filter((line) =>
+      line.attributes.some(
+        (attribute) =>
+          attribute.key === 'category' && attribute.value === 'accessories',
+      ),
+    ) || [];
+  const goods =
+    cart?.lines?.nodes.filter((line) =>
+      line.attributes.some(
+        (attribute) =>
+          attribute.key === 'category' && attribute.value === 'goods',
+      ),
+    ) || [];
+
   return (
     <>
       {collapsed && (
@@ -175,15 +180,72 @@ function CartLines({
         </button>
       )}
       <div
-        className={clsx('p-4', {
+        className={clsx('p-4 h-full flex flex-col gap-4', {
           hidden: collapsed,
         })}
       >
-        <ul className={clsx(' p-4')}>
+        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+            hats ({hats?.length ?? 0})
+          </div>
+          {hats?.length > 0 ? (
+            <ul className="relative flex flex-row h-full">
+              {hats?.map((hat) => (
+                <CartLineSimple key={hat.id} line={hat} />
+              ))}
+            </ul>
+          ) : (
+            <div className="w-full text-center">Select hats</div>
+          )}
+        </div>
+        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+            shirts ({shirts?.length ?? 0})
+          </div>
+          {shirts?.length > 0 ? (
+            <ul className="relative flex flex-row h-full">
+              {shirts?.map((shirt) => (
+                <CartLineSimple key={shirt.id} line={shirt} />
+              ))}
+            </ul>
+          ) : (
+            <div className="w-full text-center">Select shirts</div>
+          )}
+        </div>
+        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+            accessories ({accessories?.length ?? 0})
+          </div>
+          {accessories?.length > 0 ? (
+            <ul className="relative flex flex-row h-full">
+              {accessories?.map((accessory) => (
+                <CartLineSimple key={accessory.id} line={accessory} />
+              ))}
+            </ul>
+          ) : (
+            <div className="w-full text-center">Select accessories</div>
+          )}
+        </div>
+
+        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+            goods ({goods?.length ?? 0})
+          </div>
+          {goods?.length > 0 ? (
+            <ul className="relative flex flex-row h-full">
+              {goods?.map((good) => (
+                <CartLineSimple key={good.id} line={good} />
+              ))}
+            </ul>
+          ) : (
+            <div className="w-full text-center">Select goods</div>
+          )}
+        </div>
+        {/* <ul className={clsx(' p-4')}>
           {(cart?.lines?.nodes ?? []).map((line) => (
             <CartLineItem key={line.id} line={line} layout={layout} />
           ))}
-        </ul>
+        </ul> */}
       </div>
     </>
   );

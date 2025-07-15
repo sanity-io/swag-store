@@ -1,5 +1,5 @@
 import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -10,8 +10,9 @@ import {
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
-import {ProductForm} from '~/components/ProductForm';
+import {ProductFormPDP} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import {Arrow} from '~/components/Icons';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -60,11 +61,21 @@ async function loadCriticalData({
     throw new Response(null, {status: 404});
   }
 
+  const {data: sanityProduct} = await context.sanity.loadQuery(
+    `*[_type == "product" && slug == "${handle}"][0] {
+    ...,
+    category->
+    }`,
+  );
+
+  console.log(sanityProduct);
+
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
   return {
     product,
+    sanityProduct,
   };
 }
 
@@ -81,7 +92,8 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, sanityProduct} = useLoaderData<typeof loader>();
+  console.log(sanityProduct);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -102,47 +114,69 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      <div>
+    <div className="product bg-gray grid grid-cols-2">
+      <Link
+        to="/collections/all"
+        className="fixed top-4 w-[80px] h-[80px] left-4"
+      >
+        <Arrow />
+      </Link>
+      <div
+        className="col-span-1"
+        style={{
+          backgroundImage: 'url(/images/grid-bg.png)',
+          backgroundSize: '482px 444px',
+          backgroundRepeat: 'repeat',
+        }}
+      >
         <ProductImage image={selectedVariant?.image} />
-        <div className="aspect-square w-full bg-brand-green" />
+        <div className="aspect-square w-full " />
         <div className="aspect-square w-full bg-brand-yellow" />
       </div>
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
+      <div className="col-span-1">
+        <div className="p-4 flex h-screen sticky top-0 flex-col justify-between">
+          <div>
+            <h1 className="text-56 font-sans mt-0 leading-none">
+              {title}
+              <br />
+              <ProductPrice
+                price={selectedVariant?.price}
+                compareAtPrice={selectedVariant?.compareAtPrice}
+              />
+            </h1>
+          </div>
+          <div className="pb-[60px]">
+            <p className="uppercase mb-2">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+              ultricies velit metus, nec fringilla odio tincidunt eu. Nulla
+              vitae semper tortor. Suspendisse ultricies velit posuere.
+            </p>
+            <ProductFormPDP
+              category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
+              productOptions={productOptions}
+              selectedVariant={selectedVariant}
+            />
+            <br />
+            <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+            <br />
+          </div>
+        </div>
+        <Analytics.ProductView
+          data={{
+            products: [
+              {
+                id: product.id,
+                title: product.title,
+                price: selectedVariant?.price.amount || '0',
+                vendor: product.vendor,
+                variantId: selectedVariant?.id || '',
+                variantTitle: selectedVariant?.title || '',
+                quantity: 1,
+              },
+            ],
+          }}
         />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
       </div>
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
     </div>
   );
 }

@@ -75,6 +75,11 @@ export const productWithVariantType = defineField({
           return result ? true : 'Invalid product variant'
         }),
     }),
+    defineField({
+      name: 'colorTheme',
+      type: 'reference',
+      to: [{type: 'colorTheme'}],
+    }),
   ],
   preview: {
     select: {

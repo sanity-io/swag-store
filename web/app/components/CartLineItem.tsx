@@ -5,6 +5,8 @@ import {useVariantUrl} from '~/lib/variants';
 import {Link} from 'react-router';
 import {ProductPrice} from './ProductPrice';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
+import {useState} from 'react';
+import clsx from 'clsx';
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
@@ -66,6 +68,39 @@ export function CartLineItem({
   );
 }
 
+export function CartLineSimple({line}: {line: CartLine}) {
+  const {id: lineId, isOptimistic, merchandise} = line;
+  const {product, title, image, selectedOptions} = merchandise;
+  const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
+  const [isRemoving, setIsRemoving] = useState(false);
+
+  return (
+    <div
+      className={clsx('h-full relative', {
+        'opacity-50': isRemoving,
+      })}
+    >
+      {image && (
+        <Image
+          alt={title}
+          className="h-full object-cover"
+          data={image}
+          height={200}
+          loading="lazy"
+          width={200}
+        />
+      )}
+      <div className="absolute bottom-0 right-0 z-10 w-[30px] h-[30px] 800:hover:bg-brand-red p-2 bg-black text-white">
+        <CartLineRemoveButton
+          onRemove={() => setIsRemoving(true)}
+          lineIds={[lineId]}
+          disabled={!!isOptimistic}
+        />
+      </div>
+    </div>
+  );
+}
+
 /**
  * Provides the controls to update the quantity of a line item in the cart.
  * These controls are disabled when the line item is new, and the server
@@ -115,9 +150,11 @@ function CartLineQuantity({line}: {line: CartLine}) {
 function CartLineRemoveButton({
   lineIds,
   disabled,
+  onRemove,
 }: {
   lineIds: string[];
   disabled: boolean;
+  onRemove?: () => void;
 }) {
   return (
     <CartForm
@@ -126,8 +163,13 @@ function CartLineRemoveButton({
       action={CartForm.ACTIONS.LinesRemove}
       inputs={{lineIds}}
     >
-      <button disabled={disabled} type="submit">
-        Remove
+      <button
+        disabled={disabled}
+        className="absolute w-full h-full top-0 left-0"
+        type="submit"
+        onClick={onRemove}
+      >
+        x
       </button>
     </CartForm>
   );

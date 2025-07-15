@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink, useAsyncValue} from 'react-router';
+import {Await, Link, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -7,6 +7,7 @@ import {
 } from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import clsx from 'clsx';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -24,29 +25,64 @@ export function Header({
   publicStoreDomain,
 }: HeaderProps) {
   const {shop, menu} = header;
+  const searchParams = new URLSearchParams(window.location.search);
+  const grid = searchParams.get('grid');
+
+  const {pathname} = window.location;
+  console.log(pathname, grid);
+
   return (
-    <header className="fixed bottom-0 left-0 w-full 800:w-2/3 z-10 bg-white h-[40px] flex justify-between items-center">
-      <NavLink
-        className="p-0 h-full inline-flex justify-between items-center"
-        prefetch="intent"
-        to="/"
-        style={activeLinkStyle}
-        end
-      >
-        <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
-          Sanity
-        </span>
-        <span className="bg-black text-white px-2 inline-flex items-center justify-center h-full">
-          Components&reg;
-        </span>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
+    <header
+      className={clsx(
+        'fixed bottom-0 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
+        pathname.includes('/collections/all') && 'h-[80px]',
+      )}
+    >
+      {pathname.includes('/collections/all') && (
+        <div className="w-full  h-[40px] flex items-center justify-center">
+          <Link
+            className={clsx(
+              'w-full text-center inline-flex h-full justify-center items-center font-bold',
+              grid !== 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+            )}
+            to="/collections/all"
+          >
+            Catalogue
+          </Link>
+          <Link
+            className={clsx(
+              'w-full text-center inline-flex h-full justify-center items-center font-bold',
+              grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+            )}
+            to="/collections/all?grid=true"
+          >
+            Grid
+          </Link>
+        </div>
+      )}
+      <div className="w-full justify-between h-[40px] flex items-center">
+        <NavLink
+          className="p-0 h-full inline-flex justify-between items-center"
+          prefetch="intent"
+          to="/"
+          style={activeLinkStyle}
+          end
+        >
+          <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+            Sanity
+          </span>
+          <span className="bg-black text-white px-8 inline-flex items-center justify-center h-full">
+            Components&reg;
+          </span>
+        </NavLink>
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+        {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
+      </div>
     </header>
   );
 }

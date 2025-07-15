@@ -27,9 +27,18 @@ export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
           _key,
           ...,
           (_type == 'productReference') => {
+            
             productWithVariant {
               ...,
-              product->
+              product-> {
+                ...,
+                category-> {
+                  _key,
+                  title,
+                  slug,
+                }
+              },
+              'backgroundColor': colorTheme->background.hex,
             }
           },
           (_type == 'gridItem') => {

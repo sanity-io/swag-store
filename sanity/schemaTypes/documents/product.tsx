@@ -56,6 +56,12 @@ export const productType = defineType({
       group: 'editorial',
     }),
     defineField({
+      name: 'category',
+      type: 'reference',
+      to: [{type: 'category'}],
+      group: 'editorial',
+    }),
+    defineField({
       name: 'store',
       type: 'shopifyProduct',
       description: 'Product data from Shopify (read-only)',
