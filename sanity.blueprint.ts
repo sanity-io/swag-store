@@ -13,7 +13,7 @@ export default defineBlueprint({
       src: 'functions/sanity-shopify-product-slug',
       event: {
         on: ['publish'],
-        filter: '_type == "product" && slug.current != store.slug.current'
+        filter: '_type == "product" && slug != store.slug.current'
       }
     }),
     
@@ -26,6 +26,16 @@ export default defineBlueprint({
       }
     }),
 
+    defineDocumentFunction({
+      name: 'editorial-products',
+      src: 'functions/editorial-products',
+      event: {
+        on: ['publish'],
+        filter: '_type == "page"',
+        projection: 'body, _id, autoProducts'
+      }
+    }),
+
     // defineDocumentFunction({
     //   name: 'firstPublished',
     //   src: 'functions/firstPublished',
@@ -35,15 +45,15 @@ export default defineBlueprint({
     //   }
     // }),
 
-    // defineDocumentFunction({
-    //   name: 'aiSummary',
-    //   src: 'functions/aiSummary',
-    //   timeout: 30,
-    //   event: {
-    //     on: ['publish'],
-    //     filter: '_type == "page" && !defined(autoSummary)'
-    //   }
-    // }),
+    defineDocumentFunction({
+      name: 'aiSummary',
+      src: 'functions/aiSummary',
+      timeout: 30,
+      event: {
+        on: ['publish'],
+        filter: '_type == "page" && !defined(autoSummary)'
+      }
+    }),
 
 
     // defineDocumentFunction({

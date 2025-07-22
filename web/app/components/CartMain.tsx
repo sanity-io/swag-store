@@ -70,9 +70,11 @@ export function CartMain({
         backgroundRepeat: 'repeat',
       }}
       className={clsx(
-        'w-1/3 800:fixed right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
+        'w-1/3 800:absolute  right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
         {
           '800:h-[calc(100dvh)]': !isCollapsed,
+          // '800:absolute bottom-0': cartPage,
+          // '800:sticky top-0': !cartPage,
         },
       )}
     >
@@ -104,10 +106,10 @@ export function CartMain({
           className="w-full h-[40px] absolute bottom-0 bg-black flex justify-between items-center"
         >
           <div className="bg-black text-white px-4 py-2 inline-flex w-1/2">
-            Total({cart.totalQuantity}):&nbsp;
+            Total({cart?.totalQuantity}):&nbsp;
             <dd>
-              {cart.cost?.subtotalAmount?.amount ? (
-                <Money data={cart.cost?.subtotalAmount} />
+              {cart?.cost?.subtotalAmount?.amount ? (
+                <Money data={cart?.cost?.subtotalAmount} />
               ) : (
                 '-'
               )}

@@ -1,5 +1,5 @@
 {
-  "name": "product-ref-map",
+  "name": "editorial-products",
   "type": "module",
   "main": "index.ts",
   "dependencies": {

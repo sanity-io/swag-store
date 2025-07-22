@@ -92,7 +92,7 @@ export default function Home() {
   const modules = data.sanityData?.modules;
   console.log('data', data);
   return (
-    <div className="home mb-[20px] bg-gray-100">
+    <div className="home bg-gray-100">
       <PageComponentList components={modules} />
     </div>
   );

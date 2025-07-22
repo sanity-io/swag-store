@@ -55,15 +55,15 @@ export default function Collection() {
   return (
     <div className="collection bg-gray-100">
       {!grid && (
-        <div className="absolute top-0 left-0 w-full p-4 z-10">
+        <div className="fixed top-0 left-0 w-full p-4 z-10">
           <div className="flex items-start leading-none flex-wrap gap-2">
             <span className="text-sm relative top-2 inline-block mr-8">
               FILTER
             </span>
-            <button className="text-56 mr-6 italic">Everything(7)</button>
-            <button className="text-56 mr-6">Hats(1)</button>
-            <button className="text-56 mr-6">Shirts(2)</button>
-            <button className="text-56 mr-6">Accessories(2)</button>
+            <button className="text-56 mr-6 italic">Everything(14)</button>
+            <button className="text-56 mr-6">Hats(3)</button>
+            <button className="text-56 mr-6">Shirts(4)</button>
+            <button className="text-56 mr-6">Accessories(4)</button>
             <button className="text-56 mr-6">Goods(1)</button>
           </div>
         </div>

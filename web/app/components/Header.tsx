@@ -14,81 +14,86 @@ interface HeaderProps {
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
+  children?: React.ReactNode;
 }
 
 type Viewport = 'desktop' | 'mobile';
 
-export function Header({
-  header,
-  isLoggedIn,
-  cart,
-  publicStoreDomain,
-}: HeaderProps) {
+export function Header({header, children, publicStoreDomain}: HeaderProps) {
   const {shop, menu} = header;
-  const searchParams = new URLSearchParams(window.location.search);
+
+  const {pathname, search} =
+    typeof window !== 'undefined'
+      ? window.location
+      : {pathname: '', search: ''};
+  const searchParams =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(search)
+      : new URLSearchParams();
   const grid = searchParams.get('grid');
 
-  const {pathname} = window.location;
   console.log(pathname, grid);
 
   return (
-    <header
-      className={clsx(
-        'fixed bottom-0 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
-        pathname.includes('/collections/all') && 'h-[80px]',
-      )}
-    >
-      {pathname.includes('/collections/all') && (
-        <div className="w-full  h-[40px] flex items-center justify-center">
-          <Link
-            className={clsx(
-              'w-full text-center inline-flex h-full justify-center items-center font-bold',
-              grid !== 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
-            )}
-            to="/collections/all"
+    <>
+      <header
+        className={clsx(
+          'sticky bottom-0 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
+          pathname.includes('/collections/all') && 'h-[80px]',
+        )}
+      >
+        {pathname.includes('/collections/all') && (
+          <div className="w-full  h-[40px] flex items-center justify-center">
+            <Link
+              className={clsx(
+                'w-full text-center inline-flex h-full justify-center items-center font-bold',
+                grid !== 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+              )}
+              to="/collections/all"
+            >
+              Catalogue
+            </Link>
+            <Link
+              className={clsx(
+                'w-full text-center inline-flex h-full justify-center items-center font-bold',
+                grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+              )}
+              to="/collections/all?grid=true"
+            >
+              Grid
+            </Link>
+          </div>
+        )}
+        <div className="w-full justify-between h-[40px] flex items-center">
+          <NavLink
+            className="p-0 h-full inline-flex justify-between items-center"
+            prefetch="intent"
+            to="/"
+            style={activeLinkStyle}
+            end
           >
-            Catalogue
-          </Link>
-          <Link
-            className={clsx(
-              'w-full text-center inline-flex h-full justify-center items-center font-bold',
-              grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
-            )}
-            to="/collections/all?grid=true"
-          >
-            Grid
-          </Link>
+            <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+              Sanity
+            </span>
+            <span className="bg-black text-white px-8 inline-flex items-center justify-center h-full">
+              Components&reg;
+            </span>
+          </NavLink>
+          <HeaderMenu
+            menu={menu}
+            viewport="desktop"
+            primaryDomainUrl={header.shop.primaryDomain.url}
+            publicStoreDomain={publicStoreDomain}
+          />
+          {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
         </div>
-      )}
-      <div className="w-full justify-between h-[40px] flex items-center">
-        <NavLink
-          className="p-0 h-full inline-flex justify-between items-center"
-          prefetch="intent"
-          to="/"
-          style={activeLinkStyle}
-          end
-        >
-          <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
-            Sanity
-          </span>
-          <span className="bg-black text-white px-8 inline-flex items-center justify-center h-full">
-            Components&reg;
-          </span>
-        </NavLink>
-        <HeaderMenu
-          menu={menu}
-          viewport="desktop"
-          primaryDomainUrl={header.shop.primaryDomain.url}
-          publicStoreDomain={publicStoreDomain}
-        />
-        {/* <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} /> */}
-      </div>
-    </header>
+      </header>
+      {children}
+    </>
   );
 }
 
 export function HeaderMenu({
-  menu,
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
@@ -134,46 +139,6 @@ export function HeaderMenu({
   );
 }
 
-function HeaderCtas({
-  isLoggedIn,
-  cart,
-}: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
-  return (
-    <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
-      <SearchToggle />
-      <CartToggle cart={cart} />
-    </nav>
-  );
-}
-
-function HeaderMenuMobileToggle() {
-  return (
-    <button
-      className="header-menu-mobile-toggle reset"
-      // onClick={() => open('mobile')}
-    >
-      <h3>☰</h3>
-    </button>
-  );
-}
-
-function SearchToggle() {
-  // const {open} = useAside();
-  return (
-    <button className="reset" onClick={() => console.log('search')}>
-      Search
-    </button>
-  );
-}
-
 function CartBadge({count}: {count: number | null}) {
   // const {open} = useAside();
   const {publish, shop, cart, prevCart} = useAnalytics();
@@ -195,22 +160,6 @@ function CartBadge({count}: {count: number | null}) {
       Cart {count === null ? <span>&nbsp;</span> : count}
     </a>
   );
-}
-
-function CartToggle({cart}: Pick<HeaderProps, 'cart'>) {
-  return (
-    <Suspense fallback={<CartBadge count={null} />}>
-      <Await resolve={cart}>
-        <CartBanner />
-      </Await>
-    </Suspense>
-  );
-}
-
-function CartBanner() {
-  const originalCart = useAsyncValue() as CartApiQueryFragment | null;
-  const cart = useOptimisticCart(originalCart);
-  return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
 
 const FALLBACK_HEADER_MENU = {

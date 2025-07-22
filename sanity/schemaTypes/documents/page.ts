@@ -66,6 +66,12 @@ export const pageType = defineField({
       type: 'seo',
       group: 'seo',
     }),
+    defineField({
+      name: 'autoProducts',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'product'}]}],
+      group: 'editorial',
+    }),
   ],
   preview: {
     select: {

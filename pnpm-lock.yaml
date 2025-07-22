@@ -22,6 +22,24 @@ importers:
         specifier: ^4.1.5
         version: 4.1.5
 
+  functions/product-ref-map:
+    dependencies:
+      '@sanity/client':
+        specifier: ^7.8.1
+        version: 7.8.1
+      '@sanity/functions':
+        specifier: 1.0.3
+        version: 1.0.3
+
+  functions/sanity-shopify-product-slug:
+    dependencies:
+      '@sanity/client':
+        specifier: ^7.8.1
+        version: 7.8.1
+      '@sanity/functions':
+        specifier: 1.0.2
+        version: 1.0.2
+
   sanity:
     dependencies:
       '@sanity/asset-utils':
@@ -2500,6 +2518,10 @@ packages:
     resolution: {integrity: sha512-bNgqWkKzzbAh2qDKHK0IYgR+7TaRsmk6rCpeX+kwIJ6J8ot8ZnZxzRgwfPmBztOQu8YfahQ6t90giT4uVhQNEg==}
     engines: {node: '>=20'}
 
+  '@sanity/client@7.8.1':
+    resolution: {integrity: sha512-jz/IizNHGrss7BG+wFzhI2l2f2avayM4dsBcxKRW4T3HSP4MP7T3oA6vgSDRX1N6KfQfFVILNq6bBE0ut8cHUA==}
+    engines: {node: '>=20'}
+
   '@sanity/codegen@3.99.0':
     resolution: {integrity: sha512-XTI6X6uFCms7PLHtCXNTLIoAbR5Mjg5yPrEn3EhHlGyNJV6CSyEOUtd+KyjrAQzC0FQPvT5aZJF1x5hVX+Cwdw==}
     engines: {node: '>=18'}
@@ -2560,6 +2582,14 @@ packages:
   '@sanity/export@3.45.2':
     resolution: {integrity: sha512-k6b2JAgZugngKDxQYa8uV6TjWkDArhAh5e67L5DbQDqkKnFFPGQCVGv6oXH/Ni+JUvFhKGHYw/E2ksCnuMmH5A==}
     engines: {node: '>=18'}
+
+  '@sanity/functions@1.0.2':
+    resolution: {integrity: sha512-qbLNmrNKn6QH8qjxWsuWZlg+tNzmqDVx0pbRDClgIOSpTFZGH4jhm1WHCoAxj267AJsmQO6+mbOc6tmKmG/vaA==}
+    engines: {node: '>=20'}
+
+  '@sanity/functions@1.0.3':
+    resolution: {integrity: sha512-aEDxl52oAmxinHIMwnUhy4sOGzuMH0NY+52GkEpLoK4Nw+2k45lvYIF7tqc8HxwYF9fKVyYaZ4PXOJpgeMn9/g==}
+    engines: {node: '>=20'}
 
   '@sanity/generate-help-url@3.0.0':
     resolution: {integrity: sha512-wtMYcV5GIDIhVyF/jjmdwq1GdlK07dRL40XMns73VbrFI7FteRltxv48bhYVZPcLkRXb0SHjpDS/icj9/yzbVA==}
@@ -3071,6 +3101,9 @@ packages:
 
   '@types/node@24.0.13':
     resolution: {integrity: sha512-Qm9OYVOFHFYg3wJoTSrz80hoec5Lia/dPp84do3X7dZvLikQvM1YpmvTBEdIr/e+U8HTkFjLHLnl78K/qjf+jQ==}
+
+  '@types/node@24.1.0':
+    resolution: {integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -10872,6 +10905,15 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
+  '@sanity/client@7.8.1':
+    dependencies:
+      '@sanity/eventsource': 5.0.2
+      get-it: 8.6.10
+      nanoid: 3.3.11
+      rxjs: 7.8.2
+    transitivePeerDependencies:
+      - debug
+
   '@sanity/codegen@3.99.0':
     dependencies:
       '@babel/core': 7.28.0
@@ -10982,6 +11024,10 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
+
+  '@sanity/functions@1.0.2': {}
+
+  '@sanity/functions@1.0.3': {}
 
   '@sanity/generate-help-url@3.0.0': {}
 
@@ -11696,7 +11742,7 @@ snapshots:
 
   '@types/follow-redirects@1.14.4':
     dependencies:
-      '@types/node': 24.0.13
+      '@types/node': 24.1.0
 
   '@types/hast@2.3.10':
     dependencies:
@@ -11726,6 +11772,10 @@ snapshots:
   '@types/minimist@1.2.5': {}
 
   '@types/node@24.0.13':
+    dependencies:
+      undici-types: 7.8.0
+
+  '@types/node@24.1.0':
     dependencies:
       undici-types: 7.8.0
 
@@ -13698,6 +13748,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  follow-redirects@1.15.9: {}
+
   follow-redirects@1.15.9(debug@4.4.1):
     optionalDependencies:
       debug: 4.4.1(supports-color@8.1.1)
@@ -13810,6 +13862,17 @@ snapshots:
       has-symbols: 1.1.0
       hasown: 2.0.2
       math-intrinsics: 1.1.0
+
+  get-it@8.6.10:
+    dependencies:
+      '@types/follow-redirects': 1.14.4
+      decompress-response: 7.0.0
+      follow-redirects: 1.15.9
+      is-retry-allowed: 2.2.0
+      through2: 4.0.2
+      tunnel-agent: 0.6.0
+    transitivePeerDependencies:
+      - debug
 
   get-it@8.6.10(debug@4.4.1):
     dependencies:
