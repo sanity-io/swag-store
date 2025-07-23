@@ -1,5 +1,5 @@
 import {DocumentIcon} from '@sanity/icons'
-import {defineField} from 'sanity'
+import {defineField, defineArrayMember} from 'sanity'
 
 import {validateSlug} from '../../utils/validateSlug'
 import { GROUPS } from '../../constants'
@@ -52,6 +52,17 @@ export const pageType = defineField({
     defineField({
       name: 'body',
       type: 'portableText',
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'modules',
+      type: 'array',
+      of: [
+        defineArrayMember({ type: 'accordion' }),
+        defineArrayMember({ type: 'informationHero' }),
+        defineArrayMember({ type: 'logoGrid' }),
+        defineArrayMember({ type: 'techInformation' }),
+      ],
       group: 'editorial',
     }),
     defineField({

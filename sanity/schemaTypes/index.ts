@@ -41,6 +41,10 @@ import {shopifyProductType} from './objects/shopify/shopifyProductType'
 import {shopifyProductVariantType} from './objects/shopify/shopifyProductVariantType'
 import {spotType} from './objects/hotspot/spotType'
 
+import {informationHeroType} from './objects/module/informationHero'
+import {logoGridType} from './objects/module/logoGrid'
+import {techInformationType} from './objects/module/techInformation'
+
 // Objects used as annotations must be imported first
 const annotations = [linkEmailType, linkExternalType, linkInternalType, linkProductType]
 
@@ -57,6 +61,9 @@ const objects = [
   customProductOptionColorType,
   customProductOptionSizeObjectType,
   customProductOptionSizeType,
+  informationHeroType,
+  logoGridType,
+  techInformationType,
   footerType,
   gridItemType,
   gridType,
