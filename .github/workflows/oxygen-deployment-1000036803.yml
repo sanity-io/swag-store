@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: web
-        run: npm install
+        run: npm ci
 
       - name: Build and Publish to Oxygen
         working-directory: web
