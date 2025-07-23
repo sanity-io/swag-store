@@ -21,12 +21,13 @@ jobs:
 
       - name: Cache node modules
         id: cache-npm
+        working-directory: web
         uses: actions/cache@v4
         env:
           cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('web/**/package-lock.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('web/**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -34,10 +35,10 @@ jobs:
 
       - name: Install dependencies
         working-directory: web
-        run: npm install
+        run: yarn
 
       - name: Build and Publish to Oxygen
         working-directory: web
-        run: npx shopify hydrogen deploy
+        run: yarn hydrogen deploy
         env:
           SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000036803 }}
