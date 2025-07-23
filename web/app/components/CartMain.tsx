@@ -90,7 +90,10 @@ export function CartMain({
           setIsCollapsed={setIsCollapsed}
         /> */}
         <div
-          className={clsx('cart-details h-[calc(100%-40px)]')}
+          className={clsx('cart-details')}
+          style={{
+            height: `calc(100% - 40px)`,
+          }}
           aria-labelledby="cart-lines"
         >
           <CartLines

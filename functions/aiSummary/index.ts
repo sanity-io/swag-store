@@ -15,9 +15,12 @@ export const handler = documentEventHandler(async (props) => {
 
   console.log('👋 Your Sanity Function was called at', new Date().toISOString())
 
+  console.log('👋 ai summary _id:', _id, _type)
+  
   if (_type !== 'page') {
     return
   }
+
 
   const client = createClient({
     ...context.clientOptions,

@@ -56,7 +56,8 @@ export const pageType = defineField({
     }),
     defineField({
       name: 'autoSummary',
-      type: 'portableText',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'product'}]}],
       description: 'If enabled, a summary will be generated automatically from the body',
       group: 'editorial',
     }),
@@ -70,6 +71,11 @@ export const pageType = defineField({
       name: 'autoProducts',
       type: 'array',
       of: [{type: 'reference', to: [{type: 'product'}]}],
+      group: 'editorial',
+    }),
+    defineField({
+      name: 'productTest',
+      type: 'portableText',
       group: 'editorial',
     }),
   ],

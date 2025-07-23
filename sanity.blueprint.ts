@@ -26,15 +26,15 @@ export default defineBlueprint({
       }
     }),
 
-    defineDocumentFunction({
-      name: 'editorial-products',
-      src: 'functions/editorial-products',
-      event: {
-        on: ['publish'],
-        filter: '_type == "page"',
-        projection: 'body, _id, autoProducts'
-      }
-    }),
+    // defineDocumentFunction({
+    //   name: 'editorial-products',
+    //   src: 'functions/editorial-products',
+    //   timeout: 30,
+    //   event: {
+    //     on: ['publish'],
+    //     filter: '_type == "page"'
+    //   }
+    // }),
 
     // defineDocumentFunction({
     //   name: 'firstPublished',
@@ -45,15 +45,15 @@ export default defineBlueprint({
     //   }
     // }),
 
-    defineDocumentFunction({
-      name: 'aiSummary',
-      src: 'functions/aiSummary',
-      timeout: 30,
-      event: {
-        on: ['publish'],
-        filter: '_type == "page" && !defined(autoSummary)'
-      }
-    }),
+    // defineDocumentFunction({
+    //   name: 'aiSummary',
+    //   src: 'functions/aiSummary',
+    //   timeout: 30,
+    //   event: {
+    //     on: ['publish'],
+    //     filter: '_type == "page" && !defined(autoSummary)'
+    //   }
+    // }),
 
 
     // defineDocumentFunction({
