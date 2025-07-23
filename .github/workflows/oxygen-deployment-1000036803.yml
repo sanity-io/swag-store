@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: web
-        run: yarn
+        run: npm install
 
       - name: Build and Publish to Oxygen
         working-directory: web
