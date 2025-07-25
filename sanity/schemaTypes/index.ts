@@ -44,6 +44,9 @@ import {spotType} from './objects/hotspot/spotType'
 import {informationHeroType} from './objects/module/informationHero'
 import {logoGridType} from './objects/module/logoGrid'
 import {techInformationType} from './objects/module/techInformation'
+import {collaboratorsType} from './objects/module/collaborators'
+import {faqsType} from './objects/module/faqs'
+import {careersType} from './objects/module/careersType'
 
 // Objects used as annotations must be imported first
 const annotations = [linkEmailType, linkExternalType, linkInternalType, linkProductType]
@@ -64,6 +67,9 @@ const objects = [
   informationHeroType,
   logoGridType,
   techInformationType,
+  collaboratorsType,
+  faqsType,
+  careersType,
   footerType,
   gridItemType,
   gridType,

@@ -37,23 +37,12 @@ export const pageType = defineField({
       group: 'theme',
     }),
     defineField({
-      name: 'showHero',
-      type: 'boolean',
-      description: 'If disabled, page title will be displayed instead',
-      initialValue: false,
-      group: 'editorial',
-    }),
-    defineField({
       name: 'hero',
       type: 'hero',
       hidden: ({document}) => !document?.showHero,
       group: 'editorial',
     }),
-    defineField({
-      name: 'body',
-      type: 'portableText',
-      group: 'editorial',
-    }),
+
     defineField({
       name: 'modules',
       type: 'array',
@@ -62,33 +51,19 @@ export const pageType = defineField({
         defineArrayMember({ type: 'informationHero' }),
         defineArrayMember({ type: 'logoGrid' }),
         defineArrayMember({ type: 'techInformation' }),
+        defineArrayMember({ type: 'collaborators' }),
+        defineArrayMember({ type: 'faqs' }),
+        defineArrayMember({ type: 'careers' }),
       ],
       group: 'editorial',
     }),
-    defineField({
-      name: 'autoSummary',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'product'}]}],
-      description: 'If enabled, a summary will be generated automatically from the body',
-      group: 'editorial',
-    }),
+
     defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',
       group: 'seo',
-    }),
-    defineField({
-      name: 'autoProducts',
-      type: 'array',
-      of: [{type: 'reference', to: [{type: 'product'}]}],
-      group: 'editorial',
-    }),
-    defineField({
-      name: 'productTest',
-      type: 'portableText',
-      group: 'editorial',
-    }),
+    })
   ],
   preview: {
     select: {

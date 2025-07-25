@@ -1,6 +1,6 @@
 import {defineField, defineType} from 'sanity'
 
-export default defineType({
+export const collaboratorsType = defineType({
   name: 'collaborators',
   title: 'Collaborators',
   type: 'object',

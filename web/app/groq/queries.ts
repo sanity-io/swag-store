@@ -48,3 +48,25 @@ export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
       }
     }
 }`;
+
+export const PAGE_QUERY = groq`*[_type in ["page"] && slug.current == $handle][0] {
+  title,
+  _type,
+  'slug': slug.current,
+  svgSupport {
+    asset-> {
+      shopifyUrl,
+      metadata
+    }
+  },
+  'seo': seo {
+    title,
+    description,
+    image {
+      asset-> {
+        shopifyUrl,
+        metadata
+      }
+    }
+  }
+}`;

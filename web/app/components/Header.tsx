@@ -32,7 +32,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
       : new URLSearchParams();
   const grid = searchParams.get('grid');
 
-  console.log(pathname, grid);
+  // console.log(pathname, grid);
 
   return (
     <>
