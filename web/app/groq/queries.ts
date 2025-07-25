@@ -16,6 +16,49 @@ export const NESTED_HOME_PRODUCTS_QUERY = groq`*[_type == "settings"][0].homePag
   ${NESTED_PRODUCT_QUERY}
 }`;
 
+const PRODUCT_REFERENCE_QUERY = groq`
+  (_type == 'productReference') => {     
+    productWithVariant {
+      ...,
+      product-> {
+        ...,
+        category-> {
+          _key,
+          title,
+          slug,
+        }
+      },
+      'backgroundColor': colorTheme->background.hex,
+    }
+  }
+`;
+
+const COLLABORATORS_QUERY = groq`
+  (_type == 'collaborators') => {
+    subtitle,
+    items[] {
+      _type,
+      _key,
+      image {
+        asset-> {
+          ...,
+        }
+      },
+      name,
+      description,
+      url,
+    }
+  }
+`;
+
+const INFORMATION_HERO_QUERY = groq`
+  (_type == 'informationHero') => {
+    subtitle,
+    header,
+    content,
+  }
+`;
+
 export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
     modules[] {
       _type,
@@ -26,21 +69,7 @@ export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
           _type,
           _key,
           ...,
-          (_type == 'productReference') => {
-            
-            productWithVariant {
-              ...,
-              product-> {
-                ...,
-                category-> {
-                  _key,
-                  title,
-                  slug,
-                }
-              },
-              'backgroundColor': colorTheme->background.hex,
-            }
-          },
+          ${PRODUCT_REFERENCE_QUERY},
           (_type == 'gridItem') => {
             ...
           }
@@ -68,5 +97,11 @@ export const PAGE_QUERY = groq`*[_type in ["page"] && slug.current == $handle][0
         metadata
       }
     }
+  },
+  modules[] {
+    _type,
+    _key,
+    ${COLLABORATORS_QUERY},
+    ${INFORMATION_HERO_QUERY},
   }
 }`;

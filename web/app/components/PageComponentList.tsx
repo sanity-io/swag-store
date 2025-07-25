@@ -2,12 +2,14 @@
 import React, {Fragment} from 'react';
 
 import {Grid} from './Grid';
+import {InformationHero} from './InformationHero';
 
 const GLOBAL_COMPONENT_LIST_TYPE = 'globalComponentList';
 
 // Lazy load components
 const COMPONENTS: {[key: string]: React.ComponentType<any>} = {
   grid: Grid,
+  informationHero: InformationHero,
 };
 
 // Define a type for the component shape

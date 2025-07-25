@@ -2,6 +2,9 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
+import PageComponentList from '~/components/PageComponentList';
+import {PAGE_QUERY} from '~/groq/queries';
+
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
 };
@@ -29,23 +32,29 @@ async function loadCriticalData({
     throw new Error('Missing page handle');
   }
 
-  const [{page}] = await Promise.all([
-    context.storefront.query(PAGE_QUERY, {
-      variables: {
-        handle: params.handle,
-      },
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
+  const {data} = await context.sanity.loadQuery(PAGE_QUERY, {
+    handle: params.handle,
+  });
 
-  if (!page) {
+  console.log('data', data);
+
+  // const [{page}] = await Promise.all([
+  //   context.storefront.query(PAGE_QUERY, {
+  //     variables: {
+  //       handle: params.handle,
+  //     },
+  //   }),
+  //   // Add other queries here, so that they are loaded in parallel
+  // ]);
+
+  if (!data) {
     throw new Response('Not Found', {status: 404});
   }
 
-  redirectIfHandleIsLocalized(request, {handle: params.handle, data: page});
+  // redirectIfHandleIsLocalized(request, {handle: params.handle, data: data});
 
   return {
-    page,
+    page: data,
   };
 }
 
@@ -60,33 +69,11 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Page() {
   const {page} = useLoaderData<typeof loader>();
+  const modules = page?.modules;
 
   return (
     <div className="page">
-      <header>
-        <h1>{page.title}</h1>
-      </header>
-      <main dangerouslySetInnerHTML={{__html: page.body}} />
+      <PageComponentList components={modules} />
     </div>
   );
 }
-
-const PAGE_QUERY = `#graphql
-  query Page(
-    $language: LanguageCode,
-    $country: CountryCode,
-    $handle: String!
-  )
-  @inContext(language: $language, country: $country) {
-    page(handle: $handle) {
-      handle
-      id
-      title
-      body
-      seo {
-        description
-        title
-      }
-    }
-  }
-` as const;
