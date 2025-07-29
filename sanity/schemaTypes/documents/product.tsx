@@ -51,6 +51,13 @@ export const productType = defineType({
       group: 'editorial',
     }),
     defineField({
+      name: 'images',
+      title: 'Images',
+      type: 'array',
+      of: [{type: 'image', fields: [{name: 'alt', type: 'string', title: 'Alt text'}]}],
+      group: 'editorial',
+    }),
+    defineField({
       name: 'body',
       type: 'portableText',
       group: 'editorial',

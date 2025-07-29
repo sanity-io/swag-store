@@ -43,7 +43,7 @@ export function CartMain({
   const withDiscount =
     cart &&
     Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
-  const className = `cart-main min-h-[80px] flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
+  const className = `cart-main min-h-[80px] relative flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
   const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
 
   useEffect(() => {
@@ -70,7 +70,7 @@ export function CartMain({
         backgroundRepeat: 'repeat',
       }}
       className={clsx(
-        'w-1/3 800:absolute  right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
+        'w-full 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
         {
           '800:h-[calc(100dvh)]': !isCollapsed,
           // '800:absolute bottom-0': cartPage,

@@ -38,7 +38,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
     <>
       <header
         className={clsx(
-          'sticky bottom-0 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
+          'sticky bottom-0 order-2 800:order-1 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
           pathname.includes('/collections/all') && 'h-[80px]',
         )}
       >
@@ -72,10 +72,10 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
             style={activeLinkStyle}
             end
           >
-            <span className="bg-brand-green min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+            <span className="800:bg-brand-green 800:min-w-[180px] px-2 inline-flex items-center justify-center h-full">
               Sanity
             </span>
-            <span className="bg-black text-white px-8 inline-flex items-center justify-center h-full">
+            <span className="bg-black hidden  text-white px-8 800:inline-flex items-center justify-center h-full">
               Components&reg;
             </span>
           </NavLink>
@@ -198,7 +198,7 @@ const FALLBACK_HEADER_MENU = {
       tags: [],
       title: 'About',
       type: 'PAGE',
-      url: '/pages/demo',
+      url: '/pages/about',
       items: [],
     },
   ],

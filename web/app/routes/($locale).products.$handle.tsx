@@ -68,8 +68,6 @@ async function loadCriticalData({
     }`,
   );
 
-  console.log(sanityProduct);
-
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
@@ -93,7 +91,6 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 
 export default function Product() {
   const {product, sanityProduct} = useLoaderData<typeof loader>();
-  console.log(sanityProduct);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -122,7 +119,7 @@ export default function Product() {
         <Arrow />
       </Link>
       <div
-        className="col-span-1"
+        className="col-span-2 800:col-span-1"
         style={{
           backgroundImage: 'url(/images/grid-bg.png)',
           backgroundSize: '482px 444px',
@@ -130,13 +127,13 @@ export default function Product() {
         }}
       >
         <ProductImage image={selectedVariant?.image} />
-        <div className="aspect-square w-full " />
-        <div className="aspect-square w-full bg-brand-yellow" />
+        <div className="aspect-square hidden 800:block w-full " />
+        <div className="aspect-square hidden 800:block w-full bg-brand-yellow" />
       </div>
-      <div className="col-span-1">
-        <div className="p-4 flex h-screen sticky top-0 flex-col justify-between">
+      <div className="col-span-2 800:col-span-1">
+        <div className="p-4 flex 800:h-screen sticky top-0 flex-col justify-between">
           <div>
-            <h1 className="text-56 font-sans mt-0 leading-none">
+            <h1 className="text-24 800:text-56 font-sans mt-0 leading-none">
               {title}
               <br />
               <ProductPrice

@@ -7,20 +7,20 @@ export const Arrow = () => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_299_1367)">
+    <g clipPath="url(#clip0_299_1367)">
       <path
         d="M42.1875 25H7.8125"
         stroke="black"
-        stroke-width="3.125"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="3.125"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M21.875 10.9375L7.8125 25L21.875 39.0625"
         stroke="black"
-        stroke-width="3.125"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="3.125"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </g>
     <defs>

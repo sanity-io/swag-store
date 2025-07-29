@@ -17,43 +17,60 @@ export function Footer({
     <Suspense>
       <Await resolve={footerPromise}>
         {(footer) => (
-          <footer className=" bg-brand-liteblue h-[calc(100dvh-40px)]">
+          <footer className="py-2 bg-brand-liteblue h-[calc(100dvh-40px)]">
             <div className="h-[calc(100%-60px)]">
-              <div className="h-full flex justify-center items-center ">
-                <div className="grid grid-cols-3 items-center justify-between w-full gap-4 max-w-[1200px] mx-auto">
-                  <div className="flex items-center justify-between gap-4">
-                    <a className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase">
+              <div className="h-full flex justify-center items-center p-4 ">
+                <div className="grid grid-cols-1 800:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
+                  <div className="flex flex-col 800:flex-row items-center justify-between gap-4">
+                    <a
+                      href="https://sanity.io"
+                      className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
+                    >
                       Sanity.io
                     </a>
                     <ul className="flex items-center gap-3">
                       <li>
-                        <img src="/images/github.svg" />
+                        <a href="https://github.com/sanity-io">
+                          <img src="/images/github.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/youtube.svg" />
+                        <a href="https://www.youtube.com/@sanity_io">
+                          <img src="/images/youtube.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/linkedin.svg" />
+                        <a href="https://www.linkedin.com/company/sanity-io">
+                          <img src="/images/linkedin.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/bluesky.svg" />
+                        <a href="https://bsky.app/profile/sanity.io">
+                          <img src="/images/bluesky.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/x.svg" />
+                        <a href="https://x.com/sanity_io">
+                          <img src="/images/x.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/rss.svg" />
+                        <a href="https://www.sanity.io/feed/rss">
+                          <img src="/images/rss.svg" />
+                        </a>
                       </li>
                       <li>
-                        <img src="/images/discord.svg" />
+                        <a href="https://snty.link/community">
+                          <img src="/images/discord.svg" />
+                        </a>
                       </li>
                     </ul>
                   </div>
                   <div className="flex justify-center">
                     <img src="/images/footer-logo.svg" />
                   </div>
-                  <div className="">
-                    <form className="flex items-center gap-2 min-w-[300px]">
+                  <div className="p-4">
+                    <form className="flex flex-col 800:flex-row justify-center text-center items-center gap-2 min-w-[300px]">
                       <input
                         type="email"
                         className="text-24 font-sans placeholder:text-black w-full min-w-[350px]"
@@ -95,7 +112,7 @@ function FooterMenu({
 }) {
   return (
     <nav
-      className="footer-menu uppercase text-black p-4 flex justify-between"
+      className="footer-menu uppercase text-black p-4 flex flex-col 800:flex-row pb-2 justify-between"
       role="navigation"
     >
       <div className="flex items-center gap-12">

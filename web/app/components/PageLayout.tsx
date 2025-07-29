@@ -49,7 +49,7 @@ export function PageLayout({
         </main>
 
         <div
-          className={clsx('w-full sticky bottom-0', {
+          className={clsx('w-full flex flex-col sticky z-30 bottom-0', {
             // '800:w-full': !cartPage,
             // '800:w-2/3': cartPage,
           })}
@@ -66,12 +66,13 @@ export function PageLayout({
           )}
         </div>
       </div>
-
-      <Footer
-        footer={footer}
-        header={header}
-        publicStoreDomain={publicStoreDomain}
-      />
+      <div className="relative z-20">
+        <Footer
+          footer={footer}
+          header={header}
+          publicStoreDomain={publicStoreDomain}
+        />
+      </div>
     </div>
   );
 }

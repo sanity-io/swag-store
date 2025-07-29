@@ -51,11 +51,64 @@ const COLLABORATORS_QUERY = groq`
   }
 `;
 
+const LOGOS_QUERY = groq`
+  (_type == 'logoGrid') => {
+    title,
+    items[] {
+      _key,
+      image {
+        asset-> {
+          ...,
+        }
+      },
+      url,
+      title,
+    }
+  }
+`;
+
+const CAREERS_QUERY = groq`
+  (_type == 'careers') => {
+    subtitle,
+    body,
+    cta,
+  }
+`;
+
 const INFORMATION_HERO_QUERY = groq`
   (_type == 'informationHero') => {
     subtitle,
     header,
     content,
+  }
+`;
+
+const TECH_INFORMATION_QUERY = groq`
+
+  (_type == 'techInformation') => {
+       subtitle,
+    description,
+    infoBlocks[] {
+      _key,
+      content,
+      image {
+        asset-> {
+          ...,
+        }
+      },
+    },
+  }
+`;
+
+const FAQS_QUERY = groq`
+  (_type == 'faqs') => {
+    subtitle,
+    description,
+    questions[] {
+      _key,
+      question,
+      answer,
+    }
   }
 `;
 
@@ -103,5 +156,9 @@ export const PAGE_QUERY = groq`*[_type in ["page"] && slug.current == $handle][0
     _key,
     ${COLLABORATORS_QUERY},
     ${INFORMATION_HERO_QUERY},
+    ${TECH_INFORMATION_QUERY},
+    ${LOGOS_QUERY},
+    ${FAQS_QUERY},
+    ${CAREERS_QUERY},
   }
 }`;

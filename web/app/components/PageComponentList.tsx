@@ -3,6 +3,11 @@ import React, {Fragment} from 'react';
 
 import {Grid} from './Grid';
 import {InformationHero} from './InformationHero';
+import {TechInformation} from './TechInformation';
+import {LogoGrid} from './LogoGrid';
+import {Collaborators} from './Collaborators';
+import {Faqs} from './Faqs';
+import {Careers} from './Careers';
 
 const GLOBAL_COMPONENT_LIST_TYPE = 'globalComponentList';
 
@@ -10,6 +15,11 @@ const GLOBAL_COMPONENT_LIST_TYPE = 'globalComponentList';
 const COMPONENTS: {[key: string]: React.ComponentType<any>} = {
   grid: Grid,
   informationHero: InformationHero,
+  techInformation: TechInformation,
+  logoGrid: LogoGrid,
+  collaborators: Collaborators,
+  faqs: Faqs,
+  careers: Careers,
 };
 
 // Define a type for the component shape

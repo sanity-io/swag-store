@@ -36,8 +36,6 @@ async function loadCriticalData({
     handle: params.handle,
   });
 
-  console.log('data', data);
-
   // const [{page}] = await Promise.all([
   //   context.storefront.query(PAGE_QUERY, {
   //     variables: {

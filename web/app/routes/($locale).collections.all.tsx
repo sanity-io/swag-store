@@ -51,7 +51,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Collection() {
   const {products, grid} = useLoaderData<typeof loader>();
-  console.log(grid);
+
   return (
     <div className="collection bg-gray-100">
       {!grid && (
@@ -60,11 +60,13 @@ export default function Collection() {
             <span className="text-sm relative top-2 inline-block mr-8">
               FILTER
             </span>
-            <button className="text-56 mr-6 italic">Everything(14)</button>
-            <button className="text-56 mr-6">Hats(3)</button>
-            <button className="text-56 mr-6">Shirts(4)</button>
-            <button className="text-56 mr-6">Accessories(4)</button>
-            <button className="text-56 mr-6">Goods(1)</button>
+            <button className="text-24 800:text-56 mr-6 italic">
+              Everything(14)
+            </button>
+            <button className="text-24 800:text-56 mr-6">Hats(3)</button>
+            <button className="text-24 800:text-56 mr-6">Shirts(4)</button>
+            <button className="text-24 800:text-56 mr-6">Accessories(4)</button>
+            <button className="text-24 800:text-56 mr-6">Goods(1)</button>
           </div>
         </div>
       )}

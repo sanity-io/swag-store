@@ -234,7 +234,7 @@ export function ProductFormPDP({
         onClick={() => {
           // open('cart');
         }}
-        className="fixed bottom-[40px] left-0 text-center !w-2/3 bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
+        className="absolute 800:fixed bottom-[0px] 800:bottom-[40px] w-full left-0 text-center 800:!w-2/3 bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
         lines={
           selectedVariant
             ? [
