@@ -17,7 +17,7 @@ export function Footer({
     <Suspense>
       <Await resolve={footerPromise}>
         {(footer) => (
-          <footer className="py-2 bg-brand-liteblue h-[calc(100dvh-40px)]">
+          <footer className="py-1 800:py-0 bg-brand-liteblue h-[calc(100dvh-40px)]">
             <div className="h-[calc(100%-60px)]">
               <div className="h-full flex justify-center items-center p-4 ">
                 <div className="grid grid-cols-1 800:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
@@ -112,7 +112,7 @@ function FooterMenu({
 }) {
   return (
     <nav
-      className="footer-menu uppercase text-black p-4 flex flex-col 800:flex-row pb-2 justify-between"
+      className="footer-menu uppercase text-black p-4 flex flex-col 800:flex-row pb-2 800:pb-0 justify-between"
       role="navigation"
     >
       <div className="flex items-center gap-12">
@@ -130,7 +130,7 @@ function FooterMenu({
             <a
               href={url}
               key={item.id}
-              rel="noopener noreferrer"
+              rel="noopener noreferrer text-black"
               target="_blank"
             >
               {item.title}
@@ -204,6 +204,6 @@ function activeLinkStyle({
 }) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
+    color: isPending ? 'black' : 'black',
   };
 }

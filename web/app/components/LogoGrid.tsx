@@ -32,10 +32,11 @@ export const LogoGrid = ({title, items}: {title: string; items: any[]}) => {
               key={_key}
               className="col-span-1 bg-black aspect-video flex items-center justify-center"
             >
-              <div className="w-[70%] h-auto">
+              <div className="w-[70%] h-auto mx-auto">
                 <SanityImage
                   image={image}
-                  className="w-full h-full object-contain"
+                  containerClasses="inline-flex items-center justify-center"
+                  className="w-full h-auto object-contain"
                   alt={title}
                   width={100}
                   height={100}

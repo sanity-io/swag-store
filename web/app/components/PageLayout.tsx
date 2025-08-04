@@ -40,7 +40,7 @@ export function PageLayout({
 
       <div className="flex flex-wrap">
         <main
-          className={clsx('w-full relative', {
+          className={clsx('w-full 800:min-h-screen bg-gray-100 relative', {
             '800:w-full': cartPage,
             '800:w-2/3': !cartPage,
           })}

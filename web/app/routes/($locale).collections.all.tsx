@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {GridProductItem, ProductItem} from '~/components/ProductItem';
@@ -17,8 +17,34 @@ export async function loader(args: LoaderFunctionArgs) {
   const criticalData = await loadCriticalData(args);
   const searchParams = new URLSearchParams(args.request.url.split('?')[1]);
   const grid = searchParams.get('grid');
+  const category = searchParams.get('category');
 
-  return {...deferredData, ...criticalData, grid};
+  console.log('criticalData', criticalData);
+
+  if (category) {
+    const filteredProducts = criticalData.products.nodes.filter((product) => {
+      console.log('product', product, category.toLocaleUpperCase());
+      return product.tags
+        .map((tag) => tag.toUpperCase())
+        .includes(category.toUpperCase());
+    });
+
+    return {
+      ...deferredData,
+      ...criticalData,
+      grid,
+      category,
+      filteredProducts: {nodes: filteredProducts},
+    };
+  }
+
+  return {
+    ...deferredData,
+    ...criticalData,
+    grid,
+    category,
+    filteredProducts: criticalData.products,
+  };
 }
 
 /**
@@ -50,7 +76,9 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export default function Collection() {
-  const {products, grid} = useLoaderData<typeof loader>();
+  const {filteredProducts, grid, category} = useLoaderData<typeof loader>();
+
+  console.log('filteredProducts', filteredProducts);
 
   return (
     <div className="collection bg-gray-100">
@@ -60,13 +88,51 @@ export default function Collection() {
             <span className="text-sm relative top-2 inline-block mr-8">
               FILTER
             </span>
-            <button className="text-24 800:text-56 mr-6 italic">
+            <Link
+              to="/collections/all"
+              className={clsx(
+                'text-24 800:text-56 mr-6',
+                category === null && 'italic',
+              )}
+            >
               Everything(14)
-            </button>
-            <button className="text-24 800:text-56 mr-6">Hats(3)</button>
-            <button className="text-24 800:text-56 mr-6">Shirts(4)</button>
-            <button className="text-24 800:text-56 mr-6">Accessories(4)</button>
-            <button className="text-24 800:text-56 mr-6">Goods(1)</button>
+            </Link>
+            <Link
+              to="/collections/all?category=hats"
+              className={clsx(
+                'text-24 800:text-56 mr-6',
+                category === 'hats' && 'italic',
+              )}
+            >
+              Hats(3)
+            </Link>
+            <Link
+              to="/collections/all?category=shirts"
+              className={clsx(
+                'text-24 800:text-56 mr-6',
+                category === 'shirts' && 'italic',
+              )}
+            >
+              Shirts(4)
+            </Link>
+            <Link
+              to="/collections/all?category=accessories"
+              className={clsx(
+                'text-24 800:text-56 mr-6',
+                category === 'accessories' && 'italic',
+              )}
+            >
+              Accessories(4)
+            </Link>
+            <Link
+              to="/collections/all?category=goods"
+              className={clsx(
+                'text-24 800:text-56 mr-6',
+                category === 'goods' && 'italic',
+              )}
+            >
+              Goods(1)
+            </Link>
           </div>
         </div>
       )}
@@ -79,14 +145,13 @@ export default function Collection() {
           <div className="col-span-1 p-2"></div>
         </div>
       )}
-      <PaginatedResourceSection
-        connection={products}
-        resourcesClassName={clsx(
+      <div
+        className={clsx(
           'grid gap-0',
           grid ? 'grid-cols-1' : 'grid-cols-2 800:grid-cols-4 gap-0',
         )}
       >
-        {({node: product, index}) => {
+        {filteredProducts?.nodes?.map((product, index) => {
           return grid ? (
             <GridProductItem
               key={product.id}
@@ -100,8 +165,8 @@ export default function Collection() {
               loading={index < 8 ? 'eager' : undefined}
             />
           );
-        }}
-      </PaginatedResourceSection>
+        })}
+      </div>
     </div>
   );
 }
@@ -115,6 +180,7 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    tags
     featuredImage {
       id
       altText

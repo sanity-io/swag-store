@@ -13,6 +13,7 @@ import {ProductImage} from '~/components/ProductImage';
 import {ProductFormPDP} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {Arrow} from '~/components/Icons';
+import SanityImage from '~/components/SanityImage';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -63,10 +64,20 @@ async function loadCriticalData({
 
   const {data: sanityProduct} = await context.sanity.loadQuery(
     `*[_type == "product" && slug == "${handle}"][0] {
-    ...,
-    category->
+      ...,
+      images[] {
+        ...,
+        asset->{
+          ...,
+          url,
+        },
+        alt,
+      },
+      category->
     }`,
   );
+
+  console.log('sanity product', sanityProduct);
 
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
@@ -91,6 +102,8 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 
 export default function Product() {
   const {product, sanityProduct} = useLoaderData<typeof loader>();
+
+  console.log('sanity product', sanityProduct);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -127,8 +140,13 @@ export default function Product() {
         }}
       >
         <ProductImage image={selectedVariant?.image} />
-        <div className="aspect-square hidden 800:block w-full " />
-        <div className="aspect-square hidden 800:block w-full bg-brand-yellow" />
+        {sanityProduct?.images?.map((image) => (
+          <SanityImage
+            image={image}
+            width={600}
+            containerClasses="w-full !max-w-full object-contain"
+          />
+        ))}
       </div>
       <div className="col-span-2 800:col-span-1">
         <div className="p-4 flex 800:h-screen sticky top-0 flex-col justify-between">

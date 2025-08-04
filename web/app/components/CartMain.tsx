@@ -72,7 +72,7 @@ export function CartMain({
       className={clsx(
         'w-full 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
         {
-          '800:h-[calc(100dvh)]': !isCollapsed,
+          'h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
           // '800:absolute bottom-0': cartPage,
           // '800:sticky top-0': !cartPage,
         },
@@ -200,7 +200,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <div className="w-full text-center">Select hats</div>
+            <Link
+              to="/collections/all?category=hats"
+              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+            >
+              Select hats
+            </Link>
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
@@ -214,7 +219,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <div className="w-full text-center">Select shirts</div>
+            <Link
+              to="/collections/all?category=shirts"
+              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+            >
+              Select shirts
+            </Link>
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
@@ -228,7 +238,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <div className="w-full text-center">Select accessories</div>
+            <Link
+              to="/collections/all?category=accessories"
+              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+            >
+              Select accessories
+            </Link>
           )}
         </div>
 
@@ -243,7 +258,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <div className="w-full text-center">Select goods</div>
+            <Link
+              to="/collections/all?category=goods"
+              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+            >
+              Select goods
+            </Link>
           )}
         </div>
         {/* <ul className={clsx(' p-4')}>

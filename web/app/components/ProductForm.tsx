@@ -145,14 +145,17 @@ export function ProductFormPDP({
   const navigate = useNavigate();
   // const {open} = useAside();
   return (
-    <div className="product-form">
+    <div className="product-form border-t border-black mt-8">
       {productOptions.map((option) => {
         // If there is only a single value in the option values, don't display the option
         if (option.optionValues.length === 1) return null;
 
         return (
-          <div className="product-options" key={option.name}>
-            <h5>{option.name}</h5>
+          <div
+            className="product-options flex items-center py-2 border-b border-black"
+            key={option.name}
+          >
+            <h5 className="uppercase mr-8">{option.name}</h5>
             <div className="product-options-grid">
               {option.optionValues.map((value) => {
                 const {
@@ -180,9 +183,7 @@ export function ProductFormPDP({
                       replace
                       to={`/products/${handle}?${variantUriQuery}`}
                       style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
+                        backgroundColor: selected ? 'black' : 'transparent',
                         opacity: available ? 1 : 0.3,
                       }}
                     >
@@ -203,9 +204,8 @@ export function ProductFormPDP({
                       }`}
                       key={option.name + name}
                       style={{
-                        border: selected
-                          ? '1px solid black'
-                          : '1px solid transparent',
+                        backgroundColor: selected ? 'black' : 'transparent',
+                        color: selected ? 'white' : 'black',
                         opacity: available ? 1 : 0.3,
                       }}
                       disabled={!exists}

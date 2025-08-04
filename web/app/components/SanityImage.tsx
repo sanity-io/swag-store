@@ -35,6 +35,7 @@ function Image({
   loading = 'lazy',
   saturation,
   className,
+  containerClasses,
   loadingPlaceholder = true,
   ...unknownProps
 }: {
@@ -51,6 +52,7 @@ function Image({
   loading?: string;
   saturation?: number;
   className?: string;
+  containerClasses?: string;
   loadingPlaceholder?: boolean;
   sizes?: string;
 }) {
@@ -90,8 +92,8 @@ function Image({
       UrlBuilder,
     }) || {};
   const {
-    aspectRatio = targetAspect,
-    sizes = initialSizes,
+    aspectRatio,
+    sizes,
     height,
     srcSet,
     defaultSrc,
@@ -116,7 +118,8 @@ function Image({
 
   // If loading is eager, there's no need to wait for it to be inView
   const showImage = loading === 'eager' || inView;
-  const containerClass = 'relative ';
+  const containerClass =
+    'relative overflow-hidden w-full' + ' ' + containerClasses;
 
   const bg = image?.asset?.metadata?.palette?.dominant?.background;
   const lqip = image?.asset?.metadata?.lqip;
@@ -144,8 +147,8 @@ function Image({
     >
       <div
         ref={containerRef}
-        className={`absolute top-0 left-0 ${
-          isLoaded ? 'opacity-0 h-auto' : 'w-full h-full bg-gray'
+        className={`absolute top-0 left-0 w-full h-full ${
+          isLoaded ? 'opacity-0 h-auto' : ' bg-gray'
         }`}
         // If we have no bg color, no lqip and loadingPlaceholder === true, then show a loading placeholder
         data-show-placeholder={!bg && !lqip && loadingPlaceholder}
