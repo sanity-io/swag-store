@@ -12,7 +12,7 @@ export const LogoGrid = ({title, items}: {title: string; items: any[]}) => {
         className="grid grid-cols-2 800:grid-cols-3 gap-4 p-4 bg-gray/40"
         style={{
           backgroundImage: 'url(/images/grid-bg.png)',
-          backgroundSize: '482px 444px',
+          backgroundSize: '5px',
           backgroundRepeat: 'repeat',
         }}
       >

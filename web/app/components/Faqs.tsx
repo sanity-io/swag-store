@@ -100,7 +100,7 @@ export const Faqs = ({questions, subtitle, description}: FaqsProps) => {
           className="col-span-1 hidden 800:block"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '5px',
             backgroundRepeat: 'repeat',
           }}
         ></div>

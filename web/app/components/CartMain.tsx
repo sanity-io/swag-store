@@ -66,7 +66,7 @@ export function CartMain({
       key="CART"
       style={{
         backgroundImage: 'url(/images/grid-bg.png)',
-        backgroundSize: '100% 100%',
+        backgroundSize: '5px',
         backgroundRepeat: 'repeat',
       }}
       className={clsx(

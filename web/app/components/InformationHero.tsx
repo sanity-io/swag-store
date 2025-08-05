@@ -17,7 +17,7 @@ export function InformationHero({
           className="col-span-1"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '5px',
             backgroundRepeat: 'repeat',
           }}
         >
@@ -34,7 +34,7 @@ export function InformationHero({
           className="col-span-2 800:grid-cols-2 flex flex-col justify-between"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '5px',
             backgroundRepeat: 'repeat',
           }}
         >

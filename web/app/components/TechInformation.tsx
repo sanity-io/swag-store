@@ -24,10 +24,10 @@ export function TechInformation({
       </div>
       <div className="grid grid-cols-1 800:grid-cols-3 gap-4">
         <div
-          className="col-span-2 800:grid-cols-2 gap-4"
+          className="col-span-2 800:grid-cols-2 800:grid gap-4"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '5px',
             backgroundRepeat: 'repeat',
           }}
         >
@@ -52,10 +52,10 @@ export function TechInformation({
         </div>
 
         <div
-          className="col-span-1 hidden"
+          className="col-span-1 hidden 800:block"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '5px',
             backgroundRepeat: 'repeat',
           }}
         ></div>

@@ -30,7 +30,7 @@ export const Careers = ({subtitle, body, cta}) => {
           className="col-span-1"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '4px',
             backgroundRepeat: 'repeat',
           }}
         ></div>
@@ -38,7 +38,7 @@ export const Careers = ({subtitle, body, cta}) => {
           className="col-span-1"
           style={{
             backgroundImage: 'url(/images/grid-bg.png)',
-            backgroundSize: '482px 444px',
+            backgroundSize: '4px',
             backgroundRepeat: 'repeat',
           }}
         ></div>
