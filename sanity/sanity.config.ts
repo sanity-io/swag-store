@@ -1,4 +1,4 @@
-import {defineConfig, isDev} from 'sanity'
+import {createAuthStore, defineConfig, isDev} from 'sanity'
 
 import {structureTool} from 'sanity/structure'
 import {schemaTypes} from './schemaTypes'
@@ -6,6 +6,8 @@ import {structure} from './structure'
 
 import {visionTool} from '@sanity/vision'
 import {colorInput} from '@sanity/color-input'
+import {embeddingsIndexDashboard} from '@sanity/embeddings-index-ui'
+
 import {assist} from '@sanity/assist'
 import {imageHotspotArrayPlugin} from 'sanity-plugin-hotspot-array'
 import {media, mediaAssetSource} from 'sanity-plugin-media'
@@ -25,8 +27,24 @@ export default defineConfig({
   projectId,
   dataset,
 
+  auth: createAuthStore({
+    projectId: projectId,
+    dataset: dataset,
+    redirectOnSingle: false,
+    mode: "append",
+    providers: [
+      {
+        name: "saml",
+        title: "Sanity.io SSO",
+        url: "https://api.sanity.io/v2021-10-01/auth/saml/login/a9fd8216",
+      },
+    ],
+    loginMethod: "dual",
+  }),
+
   plugins: [
     structureTool({structure}),
+    embeddingsIndexDashboard(),
     colorInput(),
     imageHotspotArrayPlugin(),
     customDocumentActions(),

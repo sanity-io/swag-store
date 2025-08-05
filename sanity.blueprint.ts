@@ -3,11 +3,19 @@ import process from 'node:process'
 
 import {defineBlueprint, defineDocumentFunction} from '@sanity/blueprints'
 
-const { ALGOLIA_APP_ID, ALOGLIA_WRITE_KEY, SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_STORE_URL } = process.env
+// const { ALGOLIA_APP_ID, ALOGLIA_WRITE_KEY, SHOPIFY_API_KEY, SHOPIFY_API_SECRET, SHOPIFY_STORE_URL } = process.env
 
 
 export default defineBlueprint({
   "resources": [
+    // defineDocumentFunction({
+    //   name: 'editorial-product-mapping',
+    //   src: 'functions/editorial-product-mapping',
+    //   event: {
+    //     on: ['publish'],
+    //     filter: '_type == "post" && !defined(products)'
+    //   }
+    // }),
     defineDocumentFunction({
       name: 'sanity-shopify-product-slug',
       src: 'functions/sanity-shopify-product-slug',
@@ -17,14 +25,14 @@ export default defineBlueprint({
       }
     }),
     
-    defineDocumentFunction({
-      name: 'product-ref-map',
-      src: 'functions/product-ref-map',
-      event: {
-        on: ['publish'],
-        filter: '_type == "homePage" || _type == "page"'
-      }
-    }),
+    // defineDocumentFunction({
+    //   name: 'product-ref-map',
+    //   src: 'functions/product-ref-map',
+    //   event: {
+    //     on: ['publish'],
+    //     filter: '_type == "homePage" || _type == "page"'
+    //   }
+    // }),
 
     // defineDocumentFunction({
     //   name: 'editorial-products',
@@ -35,26 +43,6 @@ export default defineBlueprint({
     //     filter: '_type == "page"'
     //   }
     // }),
-
-    // defineDocumentFunction({
-    //   name: 'firstPublished',
-    //   src: 'functions/firstPublished',
-    //   event: {
-    //     on: ['publish'],
-    //     filter: '_type == "page" && publishedAt == null'
-    //   }
-    // }),
-
-    // defineDocumentFunction({
-    //   name: 'aiSummary',
-    //   src: 'functions/aiSummary',
-    //   timeout: 30,
-    //   event: {
-    //     on: ['publish'],
-    //     filter: '_type == "page" && !defined(autoSummary)'
-    //   }
-    // }),
-
 
     // defineDocumentFunction({
     //   name: 'shopify-image-upload',
@@ -71,17 +59,5 @@ export default defineBlueprint({
     //   }
     // }),
 
-    // defineDocumentFunction({
-    //   name: 'algoliaSync',
-    //   src: 'functions/algoliaSync',
-    //   env: {
-    //     ALGOLIA_APP_ID: ALGOLIA_APP_ID || '',
-    //     ALOGLIA_WRITE_KEY: ALOGLIA_WRITE_KEY || ''
-    //   },
-    //   event: {
-    //     on: ['publish'],
-    //     filter: '_type == "product"'
-    //   }
-    // })
   ]
 })

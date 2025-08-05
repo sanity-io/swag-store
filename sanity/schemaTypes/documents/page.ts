@@ -47,7 +47,6 @@ export const pageType = defineField({
       name: 'modules',
       type: 'array',
       of: [
-        defineArrayMember({ type: 'accordion' }),
         defineArrayMember({ type: 'informationHero' }),
         defineArrayMember({ type: 'logoGrid' }),
         defineArrayMember({ type: 'techInformation' }),

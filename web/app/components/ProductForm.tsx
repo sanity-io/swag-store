@@ -17,6 +17,7 @@ export function ProductForm({
   category: string;
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
+  console.log('category', category);
   const navigate = useNavigate();
   // const {open} = useAside();
   return (
