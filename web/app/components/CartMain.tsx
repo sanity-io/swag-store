@@ -35,6 +35,7 @@ export function CartMain({
   const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
 
   const [isCollapsed, setIsCollapsed] = useState(collectionPage || false);
+  const [isCollapsedMobile, setIsCollapsedMobile] = useState(true);
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
@@ -52,6 +53,7 @@ export function CartMain({
     } else {
       setIsCollapsed(false);
     }
+    setIsCollapsedMobile(true);
   }, [location]);
 
   useEffect(() => {
@@ -72,7 +74,8 @@ export function CartMain({
       className={clsx(
         'w-full 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
         {
-          'h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
+          '800:h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
+          'h-[calc(100dvh-40px)] z-[1000]': !isCollapsedMobile,
           // '800:absolute bottom-0': cartPage,
           // '800:sticky top-0': !cartPage,
         },
@@ -81,6 +84,7 @@ export function CartMain({
       <div
         className={clsx(className, {
           '800:h-dvh 800:min-h-full': !isCollapsed,
+          'h-[calc(100dvh-0px)] min-h-full': !isCollapsedMobile,
         })}
       >
         {/* <CartEmpty
@@ -100,6 +104,8 @@ export function CartMain({
             cart={originalCart}
             layout={layout}
             collapsed={isCollapsed}
+            isCollapsedMobile={isCollapsedMobile}
+            setIsCollapsedMobile={setIsCollapsedMobile}
             setIsCollapsed={setIsCollapsed}
           />
           {/* {cartHasItems && <CartSummary cart={cart} layout={layout} />} */}
@@ -134,11 +140,15 @@ function CartLines({
   cart,
   layout,
   collapsed,
+  isCollapsedMobile,
   setIsCollapsed,
+  setIsCollapsedMobile,
 }: {
   cart: CartApiQueryFragment | null;
   layout: CartLayout;
   collapsed: boolean;
+  isCollapsedMobile: boolean;
+  setIsCollapsedMobile: (collapsed: boolean) => void;
   setIsCollapsed: (collapsed: boolean) => void;
 }) {
   const hats =
@@ -172,21 +182,43 @@ function CartLines({
 
   return (
     <>
-      {collapsed && (
-        <button
-          className="p-2 h-[40px] w-full flex justify-between items-center bg-brand-yellow"
-          onClick={() => setIsCollapsed(false)}
-        >
-          <div className="">
-            <span>goods</span>
-            <span>({cart?.totalQuantity ?? 0})</span>
-          </div>
-          +
-        </button>
-      )}
+      <button
+        className={clsx(
+          'p-2 h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
+          {
+            '800:!hidden': collapsed,
+          },
+        )}
+        onClick={() => setIsCollapsed(!collapsed)}
+      >
+        <div className="">
+          <span>
+            DESKTOP is d: {collapsed ? 'true' : 'false'} m:{' '}
+            {isCollapsedMobile ? 'true' : 'false'}
+          </span>
+          <span>({cart?.totalQuantity ?? 0})</span>
+        </div>
+        +
+      </button>
+      <button
+        className={clsx(
+          'p-2 h-[40px] w-full flex 800:hidden cursor-pointer justify-between items-center bg-brand-yellow',
+          {
+            // hidden: !isCollapsedMobile,
+          },
+        )}
+        onClick={() => setIsCollapsedMobile(!isCollapsedMobile)}
+      >
+        <div className="">
+          <span>mobile ism: {isCollapsedMobile ? 'true' : 'false'}</span>
+          <span>({cart?.totalQuantity ?? 0})</span>
+        </div>
+        +
+      </button>
       <div
-        className={clsx('p-4 h-full flex flex-col gap-4', {
-          hidden: collapsed,
+        className={clsx('p-4 h-full hidden 800:flex flex-col gap-4', {
+          '800:!hidden': collapsed,
+          '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
         })}
       >
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">

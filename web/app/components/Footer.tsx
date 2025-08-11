@@ -1,5 +1,5 @@
 import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
+import {Await, Link, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 
 interface FooterProps {
@@ -20,8 +20,8 @@ export function Footer({
           <footer className="py-1 800:py-0 bg-brand-liteblue h-[calc(100dvh-40px)]">
             <div className="h-[calc(100%-60px)]">
               <div className="h-full flex justify-center items-center p-4 ">
-                <div className="grid grid-cols-1 800:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
-                  <div className="flex flex-col 800:flex-row items-center justify-between gap-4">
+                <div className="grid grid-cols-1 1200:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
+                  <div className="flex flex-col 1200:flex-row items-center justify-between gap-4">
                     <a
                       href="https://sanity.io"
                       className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
@@ -66,23 +66,22 @@ export function Footer({
                       </li>
                     </ul>
                   </div>
-                  <div className="flex justify-center">
+                  <div className="flex justify-center 800:my-10">
                     <img src="/images/footer-logo.svg" />
                   </div>
                   <div className="p-4">
-                    <form className="flex flex-col 800:flex-row justify-center text-center items-center gap-2 min-w-[300px]">
-                      <input
-                        type="email"
-                        className="text-24 font-sans placeholder:text-black w-full min-w-[350px]"
-                        placeholder="Join our community newsletter"
-                      />
-                      <button
+                    <div className="flex flex-col 1400:flex-row justify-center text-center items-center gap-2 max-w-[300px] mx-auto">
+                      <span className="text-24 font-sans text-black w-full min-w-[350px]">
+                        Join our community newsletter
+                      </span>
+
+                      <Link
+                        to="/subscribe"
                         className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
-                        type="submit"
                       >
                         SUBSCRIBE
-                      </button>
-                    </form>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

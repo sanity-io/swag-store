@@ -26,6 +26,49 @@ function robotsTxtData({url, shopId}: {shopId?: string; url?: string}) {
 User-agent: *
 ${generalDisallowRules({sitemapUrl, shopId})}
 
+# AI Crawlers - Allow product data crawling with preferred patterns
+User-agent: GPTBot
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
+User-agent: ChatGPT-User
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
+User-agent: CCBot
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
+User-agent: anthropic-ai
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
+User-agent: Claude-Web
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
+User-agent: Omgilibot
+Allow: /products/
+Allow: /collections/
+Allow: /pages/
+Crawl-delay: 1
+${generalDisallowRules({sitemapUrl, shopId})}
+
 # Google adsbot ignores robots.txt unless specifically named!
 User-agent: adsbot-google
 Disallow: /checkouts/

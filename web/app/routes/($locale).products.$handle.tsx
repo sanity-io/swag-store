@@ -125,6 +125,27 @@ export default function Product() {
 
   return (
     <div className="product bg-gray grid grid-cols-2">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: title,
+            description: product.description,
+            image: selectedVariant?.image?.url,
+            offers: {
+              '@type': 'Offer',
+              price: selectedVariant?.price?.amount,
+              priceCurrency: selectedVariant?.price?.currencyCode,
+              availability: selectedVariant?.availableForSale
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            },
+            sku: selectedVariant?.sku,
+          }),
+        }}
+      />
       <Link
         to="/collections/all"
         className="fixed top-4 w-[80px] h-[80px] left-4"

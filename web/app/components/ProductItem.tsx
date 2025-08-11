@@ -77,7 +77,39 @@ export function GridProductItem({
         <Money data={product.priceRange.minVariantPrice} />
       </div>
       <div className="col-span-1 flex items-end justify-end h-full">
-        <button className="uppercase bg-black text-white p-2 w-full h-full">
+        <Link to={variantUrl}>
+          <svg
+            width="23"
+            height="23"
+            viewBox="0 0 23 23"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title>Navigate to {product.title}</title>
+            <g clip-path="url(#clip0_419_3357)">
+              <path
+                d="M5.75 17.25L17.25 5.75"
+                stroke="white"
+                stroke-width="2.15625"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M7.90625 5.75H17.25V15.0938"
+                stroke="white"
+                stroke-width="2.15625"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_419_3357">
+                <rect width="23" height="23" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </Link>
+        <button className="uppercase hidden md:block bg-black text-white p-2 w-full h-full">
           Add to Cart
         </button>
       </div>
