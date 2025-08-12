@@ -107,11 +107,13 @@ import {collectionType} from './documents/collection'
 import {colorThemeType} from './documents/colorTheme'
 import {pageType} from './documents/page'
 import {homeType} from './documents/home'
+import {colorVariantType} from './documents/colorVariant'
+import {productMapType} from './documents/productMap'
 import {productType} from './documents/product'
 import {productVariantType} from './documents/productVariant'
 import {categoryType} from './documents/category'
 
-const documents = [collectionType, colorThemeType, pageType, categoryType, homeType, productType, productVariantType]
+const documents = [collectionType, colorThemeType, pageType, categoryType, homeType, productType, colorVariantType, productMapType, productVariantType]
 
 import {settingsType} from './singletons/settingsType'
 

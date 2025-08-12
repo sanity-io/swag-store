@@ -44,7 +44,7 @@ export function InformationHero({
             </h1>
           </div>
           <div className="grid grid-cols-1 800:grid-cols-2 mb-[40px]">
-            <div className="col-span-1 col-start-2 bg-brand-green p-4">
+            <div className="col-span-1 col-start-2 bg-brand-green p-4 pb-[50px]">
               <div>
                 <PortableText value={content} components={portableRichText} />
               </div>

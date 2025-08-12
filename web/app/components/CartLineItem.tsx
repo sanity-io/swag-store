@@ -76,7 +76,7 @@ export function CartLineSimple({line}: {line: CartLine}) {
 
   return (
     <div
-      className={clsx('h-full relative', {
+      className={clsx('h-full min-w-[200px] bg-gray-100 relative', {
         'opacity-50': isRemoving,
       })}
     >
@@ -89,6 +89,11 @@ export function CartLineSimple({line}: {line: CartLine}) {
           loading="lazy"
           width={200}
         />
+      )}
+      {merchandise.title !== 'Default Title' && (
+        <div className="absolute bottom-2 left-3 z-10  px-2 rounded-md 800:hover:bg-brand-red  bg-white text-black">
+          {merchandise.title}
+        </div>
       )}
       <div className="absolute bottom-0 right-0 z-10 w-[30px] h-[30px] 800:hover:bg-brand-red p-2 bg-black text-white">
         <CartLineRemoveButton

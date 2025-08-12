@@ -13,7 +13,7 @@ export function TechInformation({
   subtitle?: string;
 }) {
   return (
-    <div className="bg-gray min-h-[calc(100vh-40px)]">
+    <div className="bg-gray">
       <div className="flex flex-col justify-between p-4">
         <h5 className="text-14 uppercase">{subtitle}</h5>
         <div className="mt-[180px]">

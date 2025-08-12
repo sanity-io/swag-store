@@ -6,6 +6,7 @@ import type {
 } from '@shopify/hydrogen/storefront-api-types';
 import {AddToCartButton} from './AddToCartButton';
 // import {useAside} from './Aside';
+import {useState} from 'react';
 import type {ProductFragment} from 'storefrontapi.generated';
 
 export function ProductForm({
@@ -17,9 +18,8 @@ export function ProductForm({
   category: string;
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
 }) {
-  console.log('category', category);
   const navigate = useNavigate();
-  // const {open} = useAside();
+
   return (
     <div className="product-form">
       {productOptions.map((option) => {
@@ -84,7 +84,7 @@ export function ProductForm({
                           : '1px solid transparent',
                         opacity: available ? 1 : 0.3,
                       }}
-                      disabled={!exists}
+                      // disabled={!exists}
                       onClick={() => {
                         if (!selected) {
                           navigate(`?${variantUriQuery}`, {
@@ -130,6 +130,150 @@ export function ProductForm({
       >
         {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
       </AddToCartButton>
+    </div>
+  );
+}
+
+export function ProductVariantForm({
+  productOptions,
+  selectedVariant,
+  category,
+}: {
+  productOptions: MappedProductOptions[];
+  category: string;
+  selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+}) {
+  const [currentVaraint, setSelectedVariant] = useState(selectedVariant);
+  const [variantSelected, setVariantSelected] = useState(
+    productOptions.every((option) => option.optionValues.length === 1),
+  );
+
+  return (
+    <div className="product-form ">
+      {productOptions.map((option) => {
+        if (option.optionValues.length === 1) return null;
+
+        return (
+          <div
+            className="product-options flex flex-col justify-end h-full mb-1"
+            key={option.name}
+          >
+            <h5 className="uppercase sr-only">{option.name}</h5>
+            <div className="flex gap-2">
+              {option.optionValues.map((value) => {
+                const {
+                  title,
+                  handle,
+                  variantUriQuery,
+                  selected,
+                  availableForSale,
+                  exists,
+                  isDifferentProduct,
+                  swatch,
+                } = value.firstSelectableVariant;
+
+                if (isDifferentProduct) {
+                  return (
+                    <Link
+                      className={`product-options-item ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      key={option.name + title}
+                      prefetch="intent"
+                      preventScrollReset
+                      replace
+                      to={
+                        availableForSale
+                          ? `/products/${handle}?${variantUriQuery}`
+                          : '#'
+                      }
+                      onClick={() =>
+                        availableForSale && setVariantSelected(true)
+                      }
+                      style={{
+                        border: selected
+                          ? '1px solid black'
+                          : '1px solid transparent',
+                      }}
+                    >
+                      <ProductOptionSwatch swatch={swatch} name={title} />
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <>
+                      <button
+                        type="button"
+                        className={`product-options-item !bg-black text-white rounded-md px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
+                          exists && !selected ? ' link' : ''
+                        } ${variantSelected ? 'hidden' : ''}`}
+                        key={option.name + title}
+                        style={{
+                          border: selected
+                            ? '1px solid black'
+                            : '1px solid transparent',
+                        }}
+                        // disabled={!exists || !availableForSale}
+                        onClick={() => {
+                          if (!selected && availableForSale) {
+                            setVariantSelected(true);
+                            setSelectedVariant(value?.firstSelectableVariant);
+                          }
+                        }}
+                      >
+                        <ProductOptionSwatch swatch={swatch} name={title} />
+                      </button>
+                    </>
+                  );
+                }
+              })}
+            </div>
+            <br />
+          </div>
+        );
+      })}
+
+      {variantSelected && (
+        <div className="flex items-center justify-between gap-2">
+          {variantSelected && productOptions[0].optionValues.length > 1 && (
+            <div className="">
+              <button
+                onClick={() => {
+                  setVariantSelected(false);
+                }}
+                className="text-white bg-black px-2 py-1 rounded-md"
+              >
+                {currentVaraint?.title}
+              </button>
+            </div>
+          )}
+          <div className="w-full">
+            <AddToCartButton
+              disabled={!selectedVariant || !selectedVariant.availableForSale}
+              onClick={() => {
+                // open('cart');
+              }}
+              lines={
+                currentVaraint
+                  ? [
+                      {
+                        merchandiseId: currentVaraint?.id,
+                        quantity: 1,
+                        selectedVariant: currentVaraint,
+                        attributes: [
+                          {
+                            key: 'category',
+                            value: category?.toLowerCase() || '',
+                          },
+                        ],
+                      },
+                    ]
+                  : []
+              }
+            >
+              {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+            </AddToCartButton>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -18,40 +18,37 @@ export const PAGE_QUERY = `#graphql
 export const PRODUCT_VARIANT_FIELDS_OG = `#graphql
   fragment ProductVariantFields on ProductVariant {
     availableForSale
-    product {
-      id
-    }
-    compareAtPriceV2 {
-      currencyCode
+    compareAtPrice {
       amount
+      currencyCode
     }
     id
-    sku
     image {
-      altText
-      height
+      __typename
       id
       url
+      altText
       width
+      height
     }
-    priceV2 {
-      currencyCode
-      amount
-    }
-
     price {
       amount
       currencyCode
     }
-    unitPrice {
-      amount
-      currencyCode
+    product {
+      title
+      handle
     }
     selectedOptions {
       name
       value
     }
+    sku
     title
+    unitPrice {
+      amount
+      currencyCode
+    }
   }
 `;
 

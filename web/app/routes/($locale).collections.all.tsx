@@ -23,7 +23,6 @@ export async function loader(args: LoaderFunctionArgs) {
 
   if (category) {
     const filteredProducts = criticalData.products.nodes.filter((product) => {
-      console.log('product', product, category.toLocaleUpperCase());
       return product.tags
         .map((tag) => tag.toUpperCase())
         .includes(category.toUpperCase());
@@ -77,9 +76,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Collection() {
   const {filteredProducts, grid, category} = useLoaderData<typeof loader>();
-
-  console.log('filteredProducts', filteredProducts);
-
   return (
     <div className="collection bg-gray-100">
       {!grid && (
@@ -137,10 +133,10 @@ export default function Collection() {
         </div>
       )}
       {grid && (
-        <div className="grid grid-cols-10 text-white gap-0 bg-black">
-          <div className="col-span-2 p-2">SKU</div>
+        <div className="hidden 800:grid grid-cols-10 text-white gap-0 bg-black">
+          <div className="col-span-2 p-2 hidden 800:block">SKU</div>
           <div className="col-span-1 p-2">Thumbnail</div>
-          <div className="col-span-4 p-2">Product</div>
+          <div className="col-span-6 800:col-span-4 p-2">Product</div>
           <div className="col-span-2 p-2">Price</div>
           <div className="col-span-1 p-2"></div>
         </div>
@@ -172,6 +168,40 @@ export default function Collection() {
 }
 
 const COLLECTION_ITEM_FRAGMENT = `#graphql
+  fragment ProductVariantFields on ProductVariant {
+    availableForSale
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    id
+    image {
+      __typename
+      id
+      url
+      altText
+      width
+      height
+    }
+    price {
+      amount
+      currencyCode
+    }
+    product {
+      title
+      handle
+    }
+    selectedOptions {
+      name
+      value
+    }
+    sku
+    title
+    unitPrice {
+      amount
+      currencyCode
+    }
+  }
   fragment MoneyCollectionItem on MoneyV2 {
     amount
     currencyCode
@@ -187,6 +217,31 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       url
       width
       height
+    }
+    selectedOrFirstAvailableVariant(ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      ...ProductVariantFields
+    }
+    options {
+      name
+      optionValues {
+        name
+        firstSelectableVariant {
+          ...ProductVariantFields
+        }
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    variants(first: 250) {
+      nodes {
+        ...ProductVariantFields
+      }
     }
     priceRange {
       minVariantPrice {

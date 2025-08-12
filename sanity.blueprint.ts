@@ -11,5 +11,13 @@ export default defineBlueprint({
         filter: '_type == "product" && slug != store.slug.current'
       }
     }),
+    defineDocumentFunction({
+      name: 'product-map',
+      src: 'functions/product-map',
+      event: {
+        on: ['publish'],
+        filter: '_type == "product"'
+      }
+    }),
   ]
 })

@@ -158,11 +158,11 @@ function CartLines({
           attribute.key === 'category' && attribute.value === 'hats',
       ),
     ) || [];
-  const shirts =
+  const clothing =
     cart?.lines?.nodes.filter((line) =>
       line.attributes.some(
         (attribute) =>
-          attribute.key === 'category' && attribute.value === 'shirts',
+          attribute.key === 'category' && attribute.value === 'clothing',
       ),
     ) || [];
   const accessories =
@@ -180,14 +180,16 @@ function CartLines({
       ),
     ) || [];
 
+  console.log('cart', clothing);
+
   return (
     <>
       <button
         className={clsx(
           'p-2 h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
-          {
-            '800:!hidden': collapsed,
-          },
+          // {
+          //   '800:!hidden': !collapsed,
+          // },
         )}
         onClick={() => setIsCollapsed(!collapsed)}
       >
@@ -217,16 +219,17 @@ function CartLines({
       </button>
       <div
         className={clsx('p-4 h-full hidden 800:flex flex-col gap-4', {
-          '800:!hidden': collapsed,
+          '800:!hidden ': collapsed,
+          '!h-[calc(100%-40px)]': !collapsed,
           '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
         })}
       >
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black uppercase">
             hats ({hats?.length ?? 0})
           </div>
           {hats?.length > 0 ? (
-            <ul className="relative flex flex-row h-full">
+            <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {hats?.map((hat) => (
                 <CartLineSimple key={hat.id} line={hat} />
               ))}
@@ -241,30 +244,30 @@ function CartLines({
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
-            shirts ({shirts?.length ?? 0})
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black uppercase">
+            clothing ({clothing?.length ?? 0})
           </div>
-          {shirts?.length > 0 ? (
-            <ul className="relative flex flex-row h-full">
-              {shirts?.map((shirt) => (
-                <CartLineSimple key={shirt.id} line={shirt} />
+          {clothing?.length > 0 ? (
+            <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
+              {clothing?.map((clothing) => (
+                <CartLineSimple key={clothing.id} line={clothing} />
               ))}
             </ul>
           ) : (
             <Link
-              to="/collections/all?category=shirts"
+              to="/collections/all?category=clothing"
               className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
-              Select shirts
+              Select clothing
             </Link>
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black uppercase">
             accessories ({accessories?.length ?? 0})
           </div>
           {accessories?.length > 0 ? (
-            <ul className="relative flex flex-row h-full">
+            <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {accessories?.map((accessory) => (
                 <CartLineSimple key={accessory.id} line={accessory} />
               ))}
@@ -280,11 +283,11 @@ function CartLines({
         </div>
 
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black">
+          <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black uppercase">
             goods ({goods?.length ?? 0})
           </div>
           {goods?.length > 0 ? (
-            <ul className="relative flex flex-row h-full">
+            <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {goods?.map((good) => (
                 <CartLineSimple key={good.id} line={good} />
               ))}
@@ -305,69 +308,5 @@ function CartLines({
         </ul> */}
       </div>
     </>
-  );
-}
-
-function CartEmpty({
-  hidden = false,
-  collapsed = false,
-  setIsCollapsed,
-}: {
-  hidden: boolean;
-  collapsed: boolean;
-  setIsCollapsed: (collapsed: boolean) => void;
-  layout?: CartMainProps['layout'];
-}) {
-  return (
-    <div
-      className={clsx({
-        hidden: hidden,
-      })}
-    >
-      {collapsed && (
-        <button
-          className="p-2 h-[40px] bg-brand-yellow"
-          onClick={() => setIsCollapsed(false)}
-        >
-          <div className="">
-            <span>goods</span>
-            <span>0</span>
-          </div>
-          +
-        </button>
-      )}
-      <div
-        hidden={hidden}
-        className={clsx('p-4 h-full flex flex-col gap-4', {
-          '800:hidden': collapsed,
-        })}
-      >
-        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-center items-center relative">
-          <div className="absolute top-0 left-0 px-1 text-white bg-black">
-            Hats (0)
-          </div>
-          Select hats
-        </div>
-        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-center items-center relative">
-          <div className="absolute top-0 left-0 px-1 text-white bg-black">
-            Shirts (0)
-          </div>
-          Select shirts
-        </div>
-        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-center items-center relative">
-          <div className="absolute top-0 left-0 px-1 text-white bg-black">
-            accessories (0)
-          </div>
-          Select accessories
-        </div>
-
-        <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-center items-center relative">
-          <div className="absolute top-0 left-0 px-1 text-white bg-black">
-            goods (0)
-          </div>
-          Select goods
-        </div>
-      </div>
-    </div>
   );
 }
