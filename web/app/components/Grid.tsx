@@ -7,7 +7,7 @@ import type {
 import {useVariantUrl} from '~/lib/variants';
 import {PortableText} from '@portabletext/react';
 import {useLoaderData} from 'react-router';
-import {ProductForm} from './ProductForm';
+import {ProductVariantForm} from './ProductForm';
 
 interface GridProps {
   items: Array<{
@@ -90,7 +90,7 @@ function GridItem({
       </Link>
       <div className="absolute bottom-0 opacity-0 800:group-hover:opacity-100 transition-opacity duration-300 p-2 text-center w-full left-0 right-0 z-10">
         {shopifyProduct && (
-          <ProductForm
+          <ProductVariantForm
             productOptions={shopifyProduct.options}
             selectedVariant={shopifyProduct.selectedOrFirstAvailableVariant}
             category={product.category?.slug.current}

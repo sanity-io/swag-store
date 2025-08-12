@@ -18,9 +18,9 @@ export function ProductItem({
   const image = product.featuredImage;
 
   return (
-    <div className="relative" key={product.id}>
+    <div className="relative group" key={product.id}>
       <Link
-        className="group relative"
+        className="relative"
         key={product.id}
         prefetch="intent"
         to={variantUrl}
@@ -35,7 +35,7 @@ export function ProductItem({
           />
         )}
       </Link>
-      <div className="absolute bottom-0 opacity-100 z-10 800:group-hover:opacity-100 transition-opacity duration-300 p-2 text-center w-full left-0 right-0 ">
+      <div className="absolute bottom-0 opacity-0 z-10 800:group-hover:opacity-100 transition-opacity duration-300 p-2 text-center w-full left-0 right-0 ">
         <ProductVariantForm
           productOptions={product.options}
           selectedVariant={product.selectedOrFirstAvailableVariant}
