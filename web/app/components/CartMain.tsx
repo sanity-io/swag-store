@@ -180,8 +180,6 @@ function CartLines({
       ),
     ) || [];
 
-  console.log('cart', clothing);
-
   return (
     <>
       <button

@@ -109,6 +109,9 @@ importers:
       '@sanity/asset-utils':
         specifier: ^1.3.2
         version: 1.3.2
+      '@sanity/frontend-analytics':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@sanity/image-url':
         specifier: ^1.1.0
         version: 1.1.0
@@ -2487,6 +2490,9 @@ packages:
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
 
+  '@rudderstack/analytics-js@3.23.0':
+    resolution: {integrity: sha512-CKGxD2K1WJBjGZ1BXY1EEuQP3zIdgf12SBD1vONi66YXA3Am4zMTWJCqNDogL1WvaZdvB/wUSWnkOLVLTp4xXw==}
+
   '@sanity/asset-utils@1.3.2':
     resolution: {integrity: sha512-dixN6MpMXsCEVh0Dr932cgZ4cU3Z2JnNOYBxjV+dgO6AnqVpNQTY+KgGMYlA1ca5zCztQI1VSk/MBCPSxihPqQ==}
     engines: {node: '>=10'}
@@ -2591,6 +2597,9 @@ packages:
   '@sanity/export@3.45.2':
     resolution: {integrity: sha512-k6b2JAgZugngKDxQYa8uV6TjWkDArhAh5e67L5DbQDqkKnFFPGQCVGv6oXH/Ni+JUvFhKGHYw/E2ksCnuMmH5A==}
     engines: {node: '>=18'}
+
+  '@sanity/frontend-analytics@1.0.0':
+    resolution: {integrity: sha512-AjofbP51EvGdpRfjwnPlFN7NLvEQudkvFm7pxQbijLE7qnLnpsgoXkisopeNLOQ/AYihGVMc7fX7wwZhlRrxMg==}
 
   '@sanity/generate-help-url@3.0.0':
     resolution: {integrity: sha512-wtMYcV5GIDIhVyF/jjmdwq1GdlK07dRL40XMns73VbrFI7FteRltxv48bhYVZPcLkRXb0SHjpDS/icj9/yzbVA==}
@@ -10951,6 +10960,8 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
+  '@rudderstack/analytics-js@3.23.0': {}
+
   '@sanity/asset-utils@1.3.2': {}
 
   '@sanity/asset-utils@2.2.1': {}
@@ -11160,6 +11171,10 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
+
+  '@sanity/frontend-analytics@1.0.0':
+    dependencies:
+      '@rudderstack/analytics-js': 3.23.0
 
   '@sanity/generate-help-url@3.0.0': {}
 
