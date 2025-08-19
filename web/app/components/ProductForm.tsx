@@ -373,33 +373,6 @@ export function ProductFormPDP({
           </div>
         );
       })}
-
-      <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          // open('cart');
-        }}
-        className="absolute 800:fixed bottom-[0px] 800:bottom-[40px] w-full left-0 text-center 800:!w-2/3 bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                  selectedVariant,
-                  attributes: [
-                    {
-                      key: 'category',
-                      value: category || '',
-                    },
-                  ],
-                },
-              ]
-            : []
-        }
-      >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
     </div>
   );
 }

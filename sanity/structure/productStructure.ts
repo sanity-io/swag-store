@@ -8,8 +8,7 @@ export default defineStructure<ListItemBuilder>((S) =>
     .schemaType('product')
     .child(
       S.documentTypeList('product')
-        // .defaultLayout('detail')
-        .child(async (id) =>
+        .child((id) =>
           S.list()
             .title('Product')
             .canHandleIntent(
@@ -31,6 +30,7 @@ export default defineStructure<ListItemBuilder>((S) =>
                   S.documentList()
                     .title('Variants')
                     .schemaType('productVariant')
+                    .apiVersion('2024-03-13')
                     .filter(
                       `
                       _type == "productVariant"

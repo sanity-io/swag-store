@@ -1,0 +1,78 @@
+import {defineField, defineType} from 'sanity'
+
+export const postType = defineField({
+  name: 'post',
+  title: 'Post',
+  type: 'document',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      validation: (Rule: any) => Rule.required(),
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'Heading 1', value: 'h1'},
+            {title: 'Heading 2', value: 'h2'},
+            {title: 'Heading 3', value: 'h3'},
+            {title: 'Quote', value: 'blockquote'},
+          ],
+          marks: {
+            decorators: [
+              {title: 'Strong', value: 'strong'},
+              {title: 'Emphasis', value: 'em'},
+              {title: 'Underline', value: 'underline'},
+            ],
+          },
+        },
+        {
+          type: 'image',
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alternative text',
+              description: 'Important for SEO and accessibility.',
+            },
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'In Progress', value: 'inprogress'},
+          {title: 'Review', value: 'review'},
+          {title: 'Ready', value: 'ready'},
+          {title: 'Sent', value: 'sent'},
+        ],
+      },
+      validation: (Rule: any) => Rule.required(),
+      initialValue: 'inprogress',
+    }),
+    defineField({
+      name: 'marketingCampaign',
+      title: 'Marketing Campaign',
+      type: 'reference',
+      to: [{type: 'marketingCampaign'}],
+      weak: true,
+    }),
+    defineField({
+      name: 'klaviyoListId',
+      title: 'Klaviyo List ID',
+      type: 'string',
+      description: 'Optional: Override the default Klaviyo list ID for this post',
+    }),
+  ],
+})

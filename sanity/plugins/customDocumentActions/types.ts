@@ -5,6 +5,7 @@ export type ShopifyDocument = SanityDocument & {
     id: number
     productId: number
     isDeleted: boolean
+    tags?: string[] | string
   }
 }
 

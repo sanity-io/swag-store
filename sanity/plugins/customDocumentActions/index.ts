@@ -6,7 +6,7 @@ import {
 } from 'sanity'
 import shopifyDelete from './shopifyDelete'
 import shopifyLink from './shopifyLink'
-import ProductTagProcessor from './productTagProcessor'
+// import ProductTagProcessor from './productTagProcessor'
 
 import {LOCKED_DOCUMENT_TYPES, SHOPIFY_DOCUMENT_TYPES} from '../../constants'
 
@@ -30,7 +30,7 @@ export const resolveDocumentActions: DocumentActionsResolver = (prev, {schemaTyp
       ...prev,
       shopifyDelete as DocumentActionComponent,
       shopifyLink as DocumentActionComponent,
-      ProductTagProcessor as DocumentActionComponent,
+      // ProductTagProcessor as DocumentActionComponent,
     ]
   }
 

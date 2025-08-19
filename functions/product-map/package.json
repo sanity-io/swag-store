@@ -1,5 +1,5 @@
 {
-  "name": "sanity-shopify-product-slug",
+  "name": "product-map",
   "type": "module",
   "main": "index.ts",
   "dependencies": {

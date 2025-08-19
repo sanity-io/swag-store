@@ -1,4 +1,4 @@
-import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Link, useLoaderData, type MetaFunction} from 'react-router';
 import {
   getSelectedProductOptions,
@@ -14,6 +14,7 @@ import {ProductFormPDP} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {Arrow} from '~/components/Icons';
 import SanityImage from '~/components/SanityImage';
+import {AddToCartButton} from '~/components/AddToCartButton';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -124,7 +125,7 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product bg-gray grid grid-cols-2">
+    <div className="product bg-gray grid grid-cols-2 gap-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -148,29 +149,32 @@ export default function Product() {
       />
       <Link
         to="/collections/all"
-        className="fixed top-4 w-[80px] h-[80px] left-4"
+        className="fixed top-4 w-[80px] h-[80px] z-20 left-4"
       >
         <Arrow />
       </Link>
-      <div
-        className="col-span-2 800:col-span-1"
-        style={{
-          backgroundImage: 'url(/images/grid-bg.png)',
-          backgroundSize: '5px',
-          backgroundRepeat: 'repeat',
-        }}
-      >
-        <ProductImage image={selectedVariant?.image} />
-        {sanityProduct?.images?.map((image) => (
-          <SanityImage
-            image={image}
-            width={600}
-            containerClasses="w-full !max-w-full object-contain"
-          />
-        ))}
+      <div className="col-span-2 800:col-span-1 relative">
+        <div
+          className="absolute top-0 left-0 w-full h-[125%]"
+          style={{
+            backgroundImage: 'url(/images/grid-bg.png)',
+            backgroundSize: '5px',
+            backgroundRepeat: 'repeat',
+          }}
+        />
+        <div className="relative z-10">
+          <ProductImage image={selectedVariant?.image} />
+          {sanityProduct?.images?.map((image) => (
+            <SanityImage
+              image={image}
+              width={600}
+              containerClasses="w-full !max-w-full object-contain"
+            />
+          ))}
+        </div>
       </div>
       <div className="col-span-2 800:col-span-1">
-        <div className="p-4 flex 800:h-screen sticky top-0 flex-col justify-between">
+        <div className="p-4 flex 800:h-[calc(100vh-30px)] sticky top-0 flex-col justify-between">
           <div>
             <h1 className="text-24 800:text-56 font-sans mt-0 leading-none">
               {title}
@@ -182,6 +186,8 @@ export default function Product() {
             </h1>
           </div>
           <div className="pb-[60px]">
+            <br />
+            <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
             <p className="uppercase mb-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
               ultricies velit metus, nec fringilla odio tincidunt eu. Nulla
@@ -193,10 +199,9 @@ export default function Product() {
               selectedVariant={selectedVariant}
             />
             <br />
-            <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-            <br />
           </div>
         </div>
+
         <Analytics.ProductView
           data={{
             products: [
@@ -212,6 +217,34 @@ export default function Product() {
             ],
           }}
         />
+      </div>
+      <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px]">
+        <AddToCartButton
+          disabled={!selectedVariant || !selectedVariant.availableForSale}
+          onClick={() => {
+            // open('cart');
+          }}
+          className="w-full bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
+          lines={
+            selectedVariant
+              ? [
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: 1,
+                    selectedVariant,
+                    attributes: [
+                      {
+                        key: 'category',
+                        value: sanityProduct?.category?.slug.current || '',
+                      },
+                    ],
+                  },
+                ]
+              : []
+          }
+        >
+          {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+        </AddToCartButton>
       </div>
     </div>
   );
