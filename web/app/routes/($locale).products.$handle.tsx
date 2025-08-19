@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction} from 'react-router';
+import {LocalizedLink} from '~/components/LocalizedLink';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -147,12 +148,12 @@ export default function Product() {
           }),
         }}
       />
-      <Link
+      <LocalizedLink
         to="/collections/all"
         className="fixed top-4 w-[80px] h-[80px] z-20 left-4"
       >
         <Arrow />
-      </Link>
+      </LocalizedLink>
       <div className="col-span-2 800:col-span-1 relative">
         <div
           className="absolute top-0 left-0 w-full h-[125%]"
@@ -164,13 +165,27 @@ export default function Product() {
         />
         <div className="relative z-10">
           <ProductImage image={selectedVariant?.image} />
-          {sanityProduct?.images?.map((image) => (
-            <SanityImage
-              image={image}
-              width={600}
-              containerClasses="w-full !max-w-full object-contain"
-            />
-          ))}
+          {sanityProduct?.images?.map((image: any, index: number) => {
+            // Handle Sanity image data structure
+            const imageAsset = image?.asset;
+            const imageUrl = imageAsset?.url || '';
+            const aspectRatio =
+              imageAsset?.metadata?.dimensions?.aspectRatio || 1;
+
+            return (
+              <SanityImage
+                key={image._key || index}
+                image={image}
+                alt={image.alt || `Product image ${index + 1}`}
+                src={imageUrl}
+                aspect={aspectRatio}
+                srcSet=""
+                maxWidth={800}
+                width={600}
+                containerClasses="w-full !max-w-full object-contain"
+              />
+            );
+          })}
         </div>
       </div>
       <div className="col-span-2 800:col-span-1">

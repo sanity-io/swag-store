@@ -1,4 +1,4 @@
-import {Link} from 'react-router';
+import {LocalizedLink} from './LocalizedLink';
 import {Image} from '@shopify/hydrogen';
 import type {
   ProductItemFragment,
@@ -41,12 +41,13 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
         }
         if (item?._type === 'gridItem') {
           return (
-            <div
-              key={item._key}
-              className="bg-black aspect-square p-4 text-white"
+            <LocalizedLink
+              to={item.url}
+              className="grid-item"
+              prefetch="intent"
             >
-              <PortableText value={item.body} />
-            </div>
+              {item.title}
+            </LocalizedLink>
           );
         }
         return null;
@@ -75,7 +76,11 @@ function GridItem({
       className="relative group grid-item w-full"
       style={{backgroundColor: backgroundColor}}
     >
-      <Link className="grid-item relative" prefetch="intent" to={variantUrl}>
+      <LocalizedLink
+        className="grid-item relative"
+        prefetch="intent"
+        to={variantUrl}
+      >
         {product.store?.previewImageUrl && (
           <Image
             alt={product.store?.title || product.title}
@@ -87,7 +92,7 @@ function GridItem({
         )}
 
         {/* <h4>{product.store?.title || product.title}</h4> */}
-      </Link>
+      </LocalizedLink>
       <div className="absolute bottom-0 opacity-0 800:group-hover:opacity-100 transition-opacity duration-300 p-2 text-center w-full left-0 right-0 z-10">
         {shopifyProduct && (
           <ProductVariantForm

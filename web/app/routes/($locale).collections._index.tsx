@@ -1,6 +1,7 @@
-import {useLoaderData, Link} from 'react-router';
+import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
+import {LocalizedLink} from '~/components/LocalizedLink';
+import {useLoaderData, type MetaFunction} from 'react-router';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 
@@ -72,23 +73,12 @@ function CollectionItem({
   index: number;
 }) {
   return (
-    <Link
-      className="collection-item"
-      key={collection.id}
+    <LocalizedLink
       to={`/collections/${collection.handle}`}
-      prefetch="intent"
+      className="text-24 800:text-56 mr-6"
     >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
-      <h5>{collection.title}</h5>
-    </Link>
+      {collection.title}
+    </LocalizedLink>
   );
 }
 

@@ -1,5 +1,7 @@
 import {Suspense} from 'react';
-import {Await, Link, NavLink, useAsyncValue} from 'react-router';
+import {Await, useAsyncValue} from 'react-router';
+import {LocalizedLink, LocalizedNavLink} from './LocalizedLink';
+import {CartMain} from './CartMain';
 import {
   type CartViewPayload,
   useAnalytics,
@@ -44,33 +46,30 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
       >
         {pathname.includes('/collections/all') && (
           <div className="w-full  h-[40px] flex items-center justify-center">
-            <Link
+            <LocalizedLink
+              to="/collections/all"
               className={clsx(
                 'w-full text-center inline-flex h-full justify-center items-center font-bold',
                 grid !== 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
               )}
-              to="/collections/all"
             >
               Catalogue
-            </Link>
-            <Link
+            </LocalizedLink>
+            <LocalizedLink
+              to="/collections/all?grid=true"
               className={clsx(
                 'w-full text-center inline-flex h-full justify-center items-center font-bold',
                 grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
               )}
-              to="/collections/all?grid=true"
             >
-              Grid
-            </Link>
+              Grid View
+            </LocalizedLink>
           </div>
         )}
         <div className="w-full justify-between h-[40px] flex items-center">
-          <NavLink
+          <LocalizedNavLink
             className="p-0 h-full inline-flex justify-between items-center"
-            prefetch="intent"
             to="/"
-            style={activeLinkStyle}
-            end
           >
             <span className="800:bg-brand-green 800:min-w-[180px] px-2 inline-flex items-center justify-center h-full">
               Sanity
@@ -78,7 +77,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
             <span className="bg-black hidden  text-white px-8 800:inline-flex items-center justify-center h-full">
               Components&reg;
             </span>
-          </NavLink>
+          </LocalizedNavLink>
           <HeaderMenu
             menu={menu}
             viewport="desktop"
@@ -108,9 +107,7 @@ export function HeaderMenu({
   return (
     <nav className={className} role="navigation">
       {viewport === 'mobile' && (
-        <NavLink end prefetch="intent" style={activeLinkStyle} to="/">
-          Information
-        </NavLink>
+        <LocalizedNavLink to="/">Home</LocalizedNavLink>
       )}
       {FALLBACK_HEADER_MENU.items.map((item) => {
         if (!item.url) return null;
@@ -123,16 +120,9 @@ export function HeaderMenu({
             ? new URL(item.url).pathname
             : item.url;
         return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
+          <LocalizedNavLink className="header-menu-item" key={item.id} to={url}>
             {item.title}
-          </NavLink>
+          </LocalizedNavLink>
         );
       })}
     </nav>
@@ -203,16 +193,3 @@ const FALLBACK_HEADER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
-  };
-}

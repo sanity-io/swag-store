@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, Link} from 'react-router';
+import {useLoaderData, type MetaFunction} from 'react-router';
+import {LocalizedLink} from '~/components/LocalizedLink';
 
 export async function loader({context}: LoaderFunctionArgs) {
   const data = await context.storefront.query(POLICIES_QUERY);
@@ -23,7 +24,9 @@ export default function Policies() {
           if (!policy) return null;
           return (
             <fieldset key={policy.id}>
-              <Link to={`/policies/${policy.handle}`}>{policy.title}</Link>
+              <LocalizedLink to={`/policies/${policy.handle}`}>
+                {policy.title}
+              </LocalizedLink>
             </fieldset>
           );
         })}

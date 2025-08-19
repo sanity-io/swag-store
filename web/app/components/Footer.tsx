@@ -1,17 +1,22 @@
 import {Suspense} from 'react';
-import {Await, Link, NavLink} from 'react-router';
+import {Await, NavLink} from 'react-router';
 import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import {CountrySelector} from './CountrySelector';
+import {LocalizedLink} from './LocalizedLink';
+import type {I18nLocale} from '~/lib/i18n';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
   header: HeaderQuery;
   publicStoreDomain: string;
+  currentLocale: I18nLocale;
 }
 
 export function Footer({
   footer: footerPromise,
   header,
   publicStoreDomain,
+  currentLocale,
 }: FooterProps) {
   return (
     <Suspense>
@@ -75,12 +80,12 @@ export function Footer({
                         Join our community newsletter
                       </span>
 
-                      <Link
+                      <LocalizedLink
                         to="/subscribe"
                         className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
                       >
                         SUBSCRIBE
-                      </Link>
+                      </LocalizedLink>
                     </div>
                   </div>
                 </div>
@@ -91,6 +96,7 @@ export function Footer({
                 menu={footer.menu}
                 primaryDomainUrl={header.shop.primaryDomain.url}
                 publicStoreDomain={publicStoreDomain}
+                currentLocale={currentLocale}
               />
             )}
           </footer>
@@ -104,10 +110,12 @@ function FooterMenu({
   menu,
   primaryDomainUrl,
   publicStoreDomain,
+  currentLocale,
 }: {
   menu: FooterQuery['menu'];
   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
   publicStoreDomain: string;
+  currentLocale: I18nLocale;
 }) {
   return (
     <nav
@@ -135,19 +143,16 @@ function FooterMenu({
               {item.title}
             </a>
           ) : (
-            <NavLink
-              end
-              key={item.id}
-              prefetch="intent"
-              style={activeLinkStyle}
-              to={url}
-            >
+            <LocalizedLink key={item.id} to={url}>
               {item.title}
-            </NavLink>
+            </LocalizedLink>
           );
         })}
       </div>
-      <div>Sanity &copy; {new Date().getFullYear()}</div>
+      <div className="flex items-center gap-4">
+        <CountrySelector currentLocale={currentLocale} />
+        <span>Sanity &copy; {new Date().getFullYear()}</span>
+      </div>
     </nav>
   );
 }
@@ -193,16 +198,3 @@ const FALLBACK_FOOTER_MENU = {
     },
   ],
 };
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'black' : 'black',
-  };
-}

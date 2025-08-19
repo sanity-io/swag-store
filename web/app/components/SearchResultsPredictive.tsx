@@ -1,12 +1,13 @@
-import {Link, useFetcher, type Fetcher} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
 import React, {useRef, useEffect} from 'react';
+import {useFetcher, type Fetcher} from 'react-router';
 import {
   getEmptyPredictiveSearchResult,
   urlWithTrackingParams,
   type PredictiveSearchReturn,
 } from '~/lib/search';
 import {useAside} from './Aside';
+import {LocalizedLink} from './LocalizedLink';
 
 type PredictiveSearchItems = PredictiveSearchReturn['result']['items'];
 
@@ -100,19 +101,9 @@ function SearchResultsPredictiveArticles({
 
           return (
             <li className="predictive-search-result-item" key={article.id}>
-              <Link onClick={closeSearch} to={articleUrl}>
-                {article.image?.url && (
-                  <Image
-                    alt={article.image.altText ?? ''}
-                    src={article.image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <span>{article.title}</span>
-                </div>
-              </Link>
+              <LocalizedLink onClick={closeSearch} to={articleUrl}>
+                {article.title}
+              </LocalizedLink>
             </li>
           );
         })}
@@ -141,19 +132,9 @@ function SearchResultsPredictiveCollections({
 
           return (
             <li className="predictive-search-result-item" key={collection.id}>
-              <Link onClick={closeSearch} to={collectionUrl}>
-                {collection.image?.url && (
-                  <Image
-                    alt={collection.image.altText ?? ''}
-                    src={collection.image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <span>{collection.title}</span>
-                </div>
-              </Link>
+              <LocalizedLink onClick={closeSearch} to={collectionUrl}>
+                {collection.title}
+              </LocalizedLink>
             </li>
           );
         })}
@@ -182,11 +163,9 @@ function SearchResultsPredictivePages({
 
           return (
             <li className="predictive-search-result-item" key={page.id}>
-              <Link onClick={closeSearch} to={pageUrl}>
-                <div>
-                  <span>{page.title}</span>
-                </div>
-              </Link>
+              <LocalizedLink onClick={closeSearch} to={pageUrl}>
+                {page.title}
+              </LocalizedLink>
             </li>
           );
         })}
@@ -217,20 +196,9 @@ function SearchResultsPredictiveProducts({
           const image = product?.selectedOrFirstAvailableVariant?.image;
           return (
             <li className="predictive-search-result-item" key={product.id}>
-              <Link to={productUrl} onClick={closeSearch}>
-                {image && (
-                  <Image
-                    alt={image.altText ?? ''}
-                    src={image.url}
-                    width={50}
-                    height={50}
-                  />
-                )}
-                <div>
-                  <p>{product.title}</p>
-                  <small>{price && <Money data={price} />}</small>
-                </div>
-              </Link>
+              <LocalizedLink to={productUrl} onClick={closeSearch}>
+                {product.title}
+              </LocalizedLink>
             </li>
           );
         })}

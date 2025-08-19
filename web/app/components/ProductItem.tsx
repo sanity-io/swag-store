@@ -1,5 +1,5 @@
-import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
+import {LocalizedLink} from './LocalizedLink';
 import type {
   ProductItemFragment,
   CollectionItemFragment,
@@ -19,22 +19,17 @@ export function ProductItem({
 
   return (
     <div className="relative group" key={product.id}>
-      <Link
-        className="relative"
-        key={product.id}
-        prefetch="intent"
-        to={variantUrl}
-      >
+      <LocalizedLink to={variantUrl} className="product-item">
         {image && (
           <Image
-            alt={image.altText || product.title}
+            alt={image.altText ?? ''}
             aspectRatio="1/1"
             data={image}
             loading={loading}
             sizes="(min-width: 45em) 400px, 100vw"
           />
         )}
-      </Link>
+      </LocalizedLink>
       <div className="absolute bottom-0 opacity-0 z-10 800:group-hover:opacity-100 transition-opacity duration-300 p-2 text-center w-full left-0 right-0 ">
         <ProductVariantForm
           productOptions={product.options}
@@ -82,7 +77,7 @@ export function GridProductItem({
         <Money data={product.priceRange.minVariantPrice} />
       </div>
       <div className="col-span-1 flex items-end justify-end h-full">
-        <Link
+        <LocalizedLink
           to={variantUrl}
           className="bg-black 800:hidden flex items-center justify-center w-full h-full"
         >
@@ -116,7 +111,7 @@ export function GridProductItem({
               </clipPath>
             </defs>
           </svg>
-        </Link>
+        </LocalizedLink>
         <ProductVariantForm
           productOptions={product.options}
           selectedVariant={product.selectedOrFirstAvailableVariant}

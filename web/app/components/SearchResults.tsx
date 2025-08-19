@@ -1,5 +1,5 @@
-import {Link} from 'react-router';
 import {Image, Money, Pagination} from '@shopify/hydrogen';
+import {LocalizedLink} from './LocalizedLink';
 import {urlWithTrackingParams, type RegularSearchReturn} from '~/lib/search';
 
 type SearchItems = RegularSearchReturn['result']['items'];
@@ -51,9 +51,7 @@ function SearchResultsArticles({
 
           return (
             <div className="search-results-item" key={article.id}>
-              <Link prefetch="intent" to={articleUrl}>
-                {article.title}
-              </Link>
+              <LocalizedLink to={articleUrl}>{article.title}</LocalizedLink>
             </div>
           );
         })}
@@ -81,9 +79,7 @@ function SearchResultsPages({term, pages}: PartialSearchResult<'pages'>) {
 
           return (
             <div className="search-results-item" key={page.id}>
-              <Link prefetch="intent" to={pageUrl}>
-                {page.title}
-              </Link>
+              <LocalizedLink to={pageUrl}>{page.title}</LocalizedLink>
             </div>
           );
         })}
@@ -118,7 +114,7 @@ function SearchResultsProducts({
 
             return (
               <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={productUrl}>
+                <LocalizedLink to={productUrl}>
                   {image && (
                     <Image data={image} alt={product.title} width={50} />
                   )}
@@ -126,7 +122,7 @@ function SearchResultsProducts({
                     <p>{product.title}</p>
                     <small>{price && <Money data={price} />}</small>
                   </div>
-                </Link>
+                </LocalizedLink>
               </div>
             );
           });

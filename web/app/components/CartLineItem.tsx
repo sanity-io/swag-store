@@ -7,6 +7,7 @@ import {ProductPrice} from './ProductPrice';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {useState} from 'react';
 import clsx from 'clsx';
+import {LocalizedLink} from './LocalizedLink';
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
@@ -39,19 +40,13 @@ export function CartLineItem({
       )}
 
       <div>
-        <Link
-          prefetch="intent"
+        <LocalizedLink
           to={lineItemUrl}
-          onClick={() => {
-            if (layout === 'aside') {
-              // close();
-            }
-          }}
+          className="cart-line-item-title"
+          prefetch="intent"
         >
-          <p>
-            <strong>{product.title}</strong>
-          </p>
-        </Link>
+          {product.title}
+        </LocalizedLink>
         <ProductPrice price={line?.cost?.totalAmount} />
         <ul>
           {selectedOptions.map((option) => (

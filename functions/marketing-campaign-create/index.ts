@@ -203,13 +203,13 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
               "custom_tracking_params": [
                 {
                   "type": "dynamic",
-                  "value": "campaign_id",
+                  "value": "campaign_id", 
                   "name": "utm_medium"
                 },
                 {
                   "type": "static",
-                  "value": "string",
-                  "name": "utm_medium"
+                  "value": "email",
+                  "name": "utm_source"
                 }
               ],
               "is_tracking_clicks": true,

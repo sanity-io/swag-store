@@ -1,4 +1,4 @@
-import {Await, Link, useLocation} from 'react-router';
+import {Await, useLocation} from 'react-router';
 import {Suspense, useId} from 'react';
 import clsx from 'clsx';
 import type {
@@ -9,6 +9,7 @@ import type {
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
 import {CartMain} from '~/components/CartMain';
+import {useLocale} from '~/hooks/useLocale';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
@@ -30,6 +31,9 @@ export function PageLayout({
   const location = useLocation();
   const collectionPage = location.pathname.includes('/collections/');
   const isPage = location.pathname.includes('/pages/');
+
+  // Get the current locale using our custom hook
+  const {currentLocale} = useLocale();
 
   // Full screen if collection page or content page
   const cartPage = collectionPage || isPage;
@@ -71,6 +75,7 @@ export function PageLayout({
           footer={footer}
           header={header}
           publicStoreDomain={publicStoreDomain}
+          currentLocale={currentLocale}
         />
       </div>
     </div>

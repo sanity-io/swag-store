@@ -1,5 +1,6 @@
 import {useOptimisticCart, Money} from '@shopify/hydrogen';
-import {Link, useLocation} from 'react-router';
+import {LocalizedLink} from './LocalizedLink';
+import {useLocation} from 'react-router';
 import {useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {CartLineItem, CartLineSimple} from '~/components/CartLineItem';
@@ -233,12 +234,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <Link
+            <LocalizedLink
               to="/collections/all?category=hats"
               className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select hats
-            </Link>
+            </LocalizedLink>
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
@@ -252,12 +253,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <Link
+            <LocalizedLink
               to="/collections/all?category=clothing"
               className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select clothing
-            </Link>
+            </LocalizedLink>
           )}
         </div>
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
@@ -271,12 +272,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <Link
+            <LocalizedLink
               to="/collections/all?category=accessories"
               className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select accessories
-            </Link>
+            </LocalizedLink>
           )}
         </div>
 
@@ -291,12 +292,12 @@ function CartLines({
               ))}
             </ul>
           ) : (
-            <Link
+            <LocalizedLink
               to="/collections/all?category=goods"
               className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select goods
-            </Link>
+            </LocalizedLink>
           )}
         </div>
         {/* <ul className={clsx(' p-4')}>

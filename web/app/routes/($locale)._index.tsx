@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
+import {Await, useLoaderData, type MetaFunction} from 'react-router';
+import {LocalizedLink} from '~/components/LocalizedLink';
 
 import PageComponentList from '~/components/PageComponentList';
 
@@ -74,6 +75,12 @@ export default function Home() {
   return (
     <div className="home bg-gray-100">
       <PageComponentList components={modules} />
+      <LocalizedLink
+        to="/collections/all"
+        className="text-14 font-sans text-black hover:text-gray-600 transition-colors"
+      >
+        View All Products
+      </LocalizedLink>
     </div>
   );
 }

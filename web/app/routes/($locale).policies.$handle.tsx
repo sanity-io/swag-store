@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction} from 'react-router';
+import {LocalizedLink} from '~/components/LocalizedLink';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
 
 type SelectedPolicies = keyof Pick<
@@ -49,7 +50,7 @@ export default function Policy() {
       <br />
       <br />
       <div>
-        <Link to="/policies">← Back to Policies</Link>
+        <LocalizedLink to="/policies">← Back to Policies</LocalizedLink>
       </div>
       <br />
       <h1>{policy.title}</h1>

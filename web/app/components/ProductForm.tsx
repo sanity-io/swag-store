@@ -1,4 +1,4 @@
-import {Link, useNavigate} from 'react-router';
+import {useNavigate} from 'react-router';
 import {type MappedProductOptions} from '@shopify/hydrogen';
 import type {
   Maybe,
@@ -8,6 +8,7 @@ import {AddToCartButton} from './AddToCartButton';
 // import {useAside} from './Aside';
 import {useState} from 'react';
 import type {ProductFragment} from 'storefrontapi.generated';
+import {LocalizedLink} from './LocalizedLink';
 
 export function ProductForm({
   productOptions,
@@ -48,13 +49,13 @@ export function ProductForm({
                   // that leads to a different url, we need to render it
                   // as an anchor tag
                   return (
-                    <Link
+                    <LocalizedLink
+                      to={`/products/${handle}?${variantUriQuery}`}
                       className="product-options-item"
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
-                      to={`/products/${handle}?${variantUriQuery}`}
                       style={{
                         border: selected
                           ? '1px solid black'
@@ -63,7 +64,7 @@ export function ProductForm({
                       }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
-                    </Link>
+                    </LocalizedLink>
                   );
                 } else {
                   // SEO
@@ -174,17 +175,17 @@ export function ProductVariantForm({
 
                 if (isDifferentProduct) {
                   return (
-                    <Link
-                      className={`product-options-item ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
-                      key={option.name + title}
-                      prefetch="intent"
-                      preventScrollReset
-                      replace
+                    <LocalizedLink
                       to={
                         availableForSale
                           ? `/products/${handle}?${variantUriQuery}`
                           : '#'
                       }
+                      className={`product-options-item ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      key={option.name + title}
+                      prefetch="intent"
+                      preventScrollReset
+                      replace
                       onClick={() =>
                         availableForSale && setVariantSelected(true)
                       }
@@ -195,13 +196,13 @@ export function ProductVariantForm({
                       }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={title} />
-                    </Link>
+                    </LocalizedLink>
                   );
                 } else {
                   return (
                     <>
-                      <button
-                        type="button"
+                      <LocalizedLink
+                        to={`/products/${handle}?${variantUriQuery}`}
                         className={`product-options-item !bg-black text-white rounded-md px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
@@ -220,7 +221,7 @@ export function ProductVariantForm({
                         }}
                       >
                         <ProductOptionSwatch swatch={swatch} name={title} />
-                      </button>
+                      </LocalizedLink>
                     </>
                   );
                 }
@@ -320,20 +321,20 @@ export function ProductFormPDP({
                   // that leads to a different url, we need to render it
                   // as an anchor tag
                   return (
-                    <Link
+                    <LocalizedLink
+                      to={`/products/${handle}?${variantUriQuery}`}
                       className="product-options-item"
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
                       replace
-                      to={`/products/${handle}?${variantUriQuery}`}
                       style={{
                         backgroundColor: selected ? 'black' : 'transparent',
                         opacity: available ? 1 : 0.3,
                       }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
-                    </Link>
+                    </LocalizedLink>
                   );
                 } else {
                   // SEO

@@ -1,6 +1,7 @@
 'use client';
 
-import {Link} from 'react-router';
+import {PortableText} from '@portabletext/react';
+import {LocalizedLink} from '~/components/LocalizedLink';
 
 const Marks = {
   strong: ({children}: {children: React.ReactNode}) => (
@@ -10,16 +11,16 @@ const Marks = {
     <em className="font-serif">{children}</em>
   ),
 
-  link: ({children, value}: {children: React.ReactNode; value?: any}) => {
-    return (
-      <Link
-        className="underline"
-        to={value?.href || '#'}
-        target={value?.openInNewWindow ? '_blank' : '_self'}
-      >
-        {children}
-      </Link>
-    );
+  link: ({value, children}) => {
+    const {href} = value;
+    if (href.startsWith('http')) {
+      return (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {children}
+        </a>
+      );
+    }
+    return <LocalizedLink to={href}>{children}</LocalizedLink>;
   },
 };
 

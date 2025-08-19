@@ -18,6 +18,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import {useLocale} from './hooks/useLocale';
 
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
 
@@ -82,6 +83,9 @@ export async function loader(args: LoaderFunctionArgs) {
     ...deferredData,
     ...criticalData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
+    storefront: {
+      i18n: storefront.i18n,
+    },
     shop: getShopAnalytics({
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
@@ -150,8 +154,12 @@ export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
 
+  // Get the current language for the HTML lang attribute
+  const {currentLocale} = useLocale();
+  const currentLanguage = currentLocale.language.toLowerCase();
+
   return (
-    <html lang="en">
+    <html lang={currentLanguage}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

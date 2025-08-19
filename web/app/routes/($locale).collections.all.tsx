@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Link, useLoaderData, type MetaFunction} from 'react-router';
+import {LocalizedLink} from '~/components/LocalizedLink';
+import {useLoaderData, type MetaFunction} from 'react-router';
 import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {GridProductItem, ProductItem} from '~/components/ProductItem';
@@ -84,51 +85,51 @@ export default function Collection() {
             <span className="text-sm relative top-2 inline-block mr-8">
               FILTER
             </span>
-            <Link
+            <LocalizedLink
               to="/collections/all"
               className={clsx(
                 'text-24 800:text-56 mr-6',
                 category === null && 'italic',
               )}
             >
-              Everything(14)
-            </Link>
-            <Link
+              All Products (12)
+            </LocalizedLink>
+            <LocalizedLink
               to="/collections/all?category=hats"
               className={clsx(
                 'text-24 800:text-56 mr-6',
                 category === 'hats' && 'italic',
               )}
             >
-              Hats(3)
-            </Link>
-            <Link
-              to="/collections/all?category=shirts"
+              Hats
+            </LocalizedLink>
+            <LocalizedLink
+              to="/collections/all?category=clothing"
               className={clsx(
                 'text-24 800:text-56 mr-6',
-                category === 'shirts' && 'italic',
+                category === 'clothing' && 'italic',
               )}
             >
-              Shirts(4)
-            </Link>
-            <Link
+              Shirts
+            </LocalizedLink>
+            <LocalizedLink
               to="/collections/all?category=accessories"
               className={clsx(
                 'text-24 800:text-56 mr-6',
                 category === 'accessories' && 'italic',
               )}
             >
-              Accessories(4)
-            </Link>
-            <Link
+              Accessories
+            </LocalizedLink>
+            <LocalizedLink
               to="/collections/all?category=goods"
               className={clsx(
                 'text-24 800:text-56 mr-6',
                 category === 'goods' && 'italic',
               )}
             >
-              Goods(1)
-            </Link>
+              Goods
+            </LocalizedLink>
           </div>
         </div>
       )}
