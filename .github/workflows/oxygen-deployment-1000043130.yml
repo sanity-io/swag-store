@@ -75,6 +75,19 @@ jobs:
           ls -la web/node_modules/ | head -5
         working-directory: .
 
+      - name: Ensure lockfile in web directory
+        run: |
+          # Copy the lockfile to the web directory if it doesn't exist
+          if [ ! -f pnpm-lock.yaml ]; then
+            echo "Copying lockfile from root to web directory..."
+            cp ../pnpm-lock.yaml pnpm-lock.yaml
+          fi
+
+          # Verify the lockfile exists
+          ls -la pnpm-lock.yaml
+          echo "Lockfile size: $(wc -c < pnpm-lock.yaml) bytes"
+        working-directory: web
+
       - name: Build and Publish to Oxygen
         run: npx shopify hydrogen deploy --force
         env:
