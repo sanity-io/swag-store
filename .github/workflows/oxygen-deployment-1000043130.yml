@@ -60,6 +60,6 @@ jobs:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
 
       - name: Build and Publish to Oxygen
-        run: npx shopify hydrogen deploy
+        run: npx shopify hydrogen deploy --force
         env:
           SHOPIFY_HYDROGEN_DEPLOYMENT_TOKEN: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_1000043130 }}
