@@ -37,9 +37,9 @@ jobs:
           echo "always-auth=true" >> ~/.npmrc
 
           # Also create .npmrc in the web directory for pnpm
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-          echo "@sanity:registry=https://registry.npmjs.org/" >> .npmrc
-          echo "always-auth=true" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > web/.npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> web/.npmrc
+          echo "always-auth=true" >> web/.npmrc
 
       - name: Get pnpm store directory
         shell: bash
@@ -54,10 +54,25 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: |
+          # Install dependencies for the entire workspace from root
+          pnpm install --no-frozen-lockfile
         env:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+        working-directory: .
+
+      - name: Verify web directory setup
+        run: |
+          # Check that web directory has access to necessary files
+          ls -la
+          echo "--- Checking for lockfile ---"
+          ls -la pnpm-lock.yaml || echo "Lockfile not found in root"
+          echo "--- Checking web directory ---"
+          ls -la web/
+          echo "--- Checking web node_modules ---"
+          ls -la web/node_modules/ | head -5
+        working-directory: .
 
       - name: Build and Publish to Oxygen
         run: npx shopify hydrogen deploy --force
