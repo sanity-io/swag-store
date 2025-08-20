@@ -27,6 +27,15 @@ jobs:
           node-version: "lts/*"
           check-latest: true
           cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Setup Sanity authentication
+        run: |
+          # This NPM_TOKEN needs to be configured in your GitHub repository's secrets
+          # Go to Settings > Secrets and Variables > Actions
+          # Add a new secret named NPM_TOKEN with your npm authentication token
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> ~/.npmrc
 
       - name: Get pnpm store directory
         shell: bash
