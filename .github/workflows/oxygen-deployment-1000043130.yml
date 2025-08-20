@@ -37,9 +37,9 @@ jobs:
           echo "always-auth=true" >> ~/.npmrc
 
           # Also create .npmrc in the web directory for pnpm
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > web/.npmrc
-          echo "@sanity:registry=https://registry.npmjs.org/" >> web/.npmrc
-          echo "always-auth=true" >> web/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> .npmrc
+          echo "always-auth=true" >> .npmrc
 
       - name: Get pnpm store directory
         shell: bash
