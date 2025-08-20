@@ -25,7 +25,7 @@ export const marketingCampaignType = defineType({
       options: {
         list: [
           {title: 'Draft', value: 'draft'},
-          {title: 'Ready', value: 'ready'},
+          {title: 'Ready (will trigger Klaviyo Send)', value: 'ready'},
           {title: 'Sent', value: 'sent'},
         ],
       },
@@ -33,25 +33,43 @@ export const marketingCampaignType = defineType({
       initialValue: 'draft',
     }),
     defineField({
-      name: 'templateId',
+      name: 'klaviyoTemplateId',
       title: 'Klaviyo Template ID',
       type: 'string',
       description: 'The template ID from Klaviyo',
       validation: (Rule: any) => Rule.required(),
     }),
     defineField({
-      name: 'campaignId',
+      name: 'klaviyoCampaignId',
       title: 'Klaviyo Campaign ID',
       type: 'string',
       description: 'The campaign ID from Klaviyo',
       validation: (Rule: any) => Rule.required(),
     }),
     defineField({
-      name: 'listId',
-      title: 'Klaviyo List ID',
-      type: 'string',
-      description: 'The list ID from Klaviyo that this campaign will be sent to',
+      name: 'updatedAt',
+      title: 'Last Updated',
+      type: 'datetime',
       validation: (Rule: any) => Rule.required(),
     }),
+    defineField({
+      name: 'createdAt',
+      title: 'Created At',
+      type: 'datetime',
+      validation: (Rule: any) => Rule.required(),
+    }),
+    defineField({
+      name: 'description',
+      title: 'Description',
+      type: 'string',
+      description: 'A description of this marketing campaign',
+    }),
+    // defineField({
+    //   name: 'listId',
+    //   title: 'Klaviyo List ID',
+    //   type: 'string',
+    //   description: 'The list ID from Klaviyo that this campaign will be sent to',
+    //   validation: (Rule: any) => Rule.required(),
+    // }),
   ],
 })

@@ -53,7 +53,7 @@ export const postType = defineField({
       options: {
         list: [
           {title: 'In Progress', value: 'inprogress'},
-          {title: 'Review', value: 'review'},
+          {title: 'Ready for Review', value: 'ready-for-review'},
           {title: 'Ready', value: 'ready'},
           {title: 'Sent', value: 'sent'},
         ],

@@ -35,8 +35,21 @@ export default defineBlueprint({
       src: 'functions/marketing-campaign-create',
       event: {
         on: ['publish'],
-        filter: '_type == "post" && !defined(marketingCampaign)',
+        filter: '_type == "post" && !defined(marketingCampaign) && status != "sent"',
         projection: '{_id, _type, title, slug, body, marketingCampaign, klaviyoListId}',
+      },
+      env: {
+        KLAVIYO_API_KEY,
+        KLAVIYO_LIST_ID,
+      }
+    }),
+    defineDocumentFunction({
+      name: 'marketing-campaign-send',
+      src: 'functions/marketing-campaign-send',
+      event: {
+        on: ['publish'],
+        filter: '_type == "marketingCampaign" && status == "ready"',
+        projection: '{_id, _type, title, post->, klaviyoCampaignId}',
       },
       env: {
         KLAVIYO_API_KEY,

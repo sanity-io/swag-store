@@ -215,7 +215,7 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
               "is_tracking_clicks": true,
               "is_tracking_opens": true
             },
-          },
+
           "campaign-messages": {
             "data": [
               {
@@ -234,17 +234,10 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
                       "bcc_email": process.env.KLAVIYO_BCC_EMAIL || 'bcc@yourdomain.com'
                     }
                   }
-                },
-                "relationships": {
-                  "image": {
-                    "data": {
-                      "type": "image",
-                      "id": "string"
-                    }
-                  }
                 }
               }
             ]
+          }
           }
         }
       }
@@ -287,6 +280,45 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
 
       const campaign: KlaviyoCampaignResponse = await campaignResponse.json()
       console.log('✅ Created Klaviyo campaign:', campaign.data.id, 'Name:', campaign.data.attributes.name)
+
+      // Assign template to campaign message
+      console.log('📎 Assigning template to campaign message...')
+      // Wait a moment for the campaign to be fully created before assigning template
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const campaignMessageId = campaign.data.relationships['campaign-messages'].data[0].id
+      
+      const assignTemplateResponse = await fetch(`https://a.klaviyo.com/api/campaign-message-assign-template`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+          'Content-Type': 'application/json',
+          'accept': 'application/vnd.api+json',
+          'revision': '2025-07-15'
+        },
+        body: JSON.stringify({
+          data: {
+            type: "campaign-message",
+            id: campaignMessageId,
+            "relationships": {
+              "template": {
+                "data": {
+                  "type": "template",
+                  "id": template.data.id
+                }
+              }
+            }
+          }
+        })
+      })
+
+      if (!assignTemplateResponse.ok) {
+        const errorText = await assignTemplateResponse.text()
+        console.error('❌ Failed to assign template to campaign:', assignTemplateResponse.status, errorText)
+        throw new Error(`Failed to assign template: ${errorText}`)
+      }
+
+      console.log('✅ Template assigned successfully to campaign message')
 
       // Create marketingCampaign document in Sanity
       console.log('💾 Creating marketingCampaign document in Sanity')
