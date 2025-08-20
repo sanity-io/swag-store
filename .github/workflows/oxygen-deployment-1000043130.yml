@@ -31,11 +31,15 @@ jobs:
 
       - name: Setup Sanity authentication
         run: |
-          # This NPM_TOKEN needs to be configured in your GitHub repository's secrets
-          # Go to Settings > Secrets and Variables > Actions
-          # Add a new secret named NPM_TOKEN with your npm authentication token
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          # Create .npmrc file with proper authentication
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "@sanity:registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+
+          # Also create .npmrc in the web directory for pnpm
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > web/.npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> web/.npmrc
+          echo "always-auth=true" >> web/.npmrc
 
       - name: Get pnpm store directory
         shell: bash
@@ -51,6 +55,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
 
       - name: Build and Publish to Oxygen
         run: npx shopify hydrogen deploy
