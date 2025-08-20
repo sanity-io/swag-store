@@ -31,7 +31,7 @@ jobs:
 
       - name: Setup Sanity authentication
         run: |
-          # Create .npmrc file with proper authentication
+          # Create .npmrc file with proper authentication in home directory
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
           echo "@sanity:registry=https://registry.npmjs.org/" >> ~/.npmrc
           echo "always-auth=true" >> ~/.npmrc
@@ -40,6 +40,7 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > web/.npmrc
           echo "@sanity:registry=https://registry.npmjs.org/" >> web/.npmrc
           echo "always-auth=true" >> web/.npmrc
+        working-directory: .
 
       - name: Get pnpm store directory
         shell: bash
