@@ -11,16 +11,26 @@ if (typeof KLAVIYO_LIST_ID !== 'string') {
   throw new Error('KLAVIYO_LIST_ID must be set')
 }
 
+const {ALGOLIA_APP_ID, ALGOLIA_WRITE_KEY} = process.env
+if (typeof ALGOLIA_APP_ID !== 'string' || typeof ALGOLIA_WRITE_KEY !== 'string') {
+  throw new Error('ALGOLIA_APP_ID and ALGOLIA_WRITE_KEY must be set')
+}
+
 export default defineBlueprint({
   "resources": [
-    // defineDocumentFunction({
-    //   name: 'sanity-shopify-product-slug',
-    //   src: 'functions/sanity-shopify-product-slug',
-    //   event: {
-    //     on: ['publish'],
-    //     filter: '_type == "product" && slug != store.slug.current'
-    //   }
-    // }),
+    defineDocumentFunction({
+      name: 'algolia-sync',
+      src: 'functions/algolia-sync',
+      event: {
+        on: ['create', 'update', 'delete'],
+        filter: "_type == 'product'",
+        projection: '{_id, title, hideFromSearch, "operation": delta::operation()}',
+      },
+      env: {
+        ALGOLIA_APP_ID,
+        ALGOLIA_WRITE_KEY,
+      }
+    }),
     defineDocumentFunction({
       name: 'product-map',
       src: 'functions/product-map',

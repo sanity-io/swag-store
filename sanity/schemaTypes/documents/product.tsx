@@ -88,6 +88,12 @@ export const productType = defineType({
       group: 'shopifySync',
     }),
     defineField({
+      name: 'hideFromSearch',
+      title: 'Hide from Search',
+      type: 'boolean',
+      group: 'editorial',
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO',
       type: 'seo',

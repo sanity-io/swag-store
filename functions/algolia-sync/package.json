@@ -1,0 +1,10 @@
+{
+  "name": "product-map",
+  "type": "module",
+  "main": "index.ts",
+  "dependencies": {
+    "@sanity/client": "^7.8.2",
+    "@sanity/functions": "1.0.3",
+    "algoliasearch": "^5.36.0"
+  }
+}

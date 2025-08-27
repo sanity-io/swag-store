@@ -11,63 +11,13 @@ import {LocalizedLink} from './LocalizedLink';
 
 type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 
-/**
- * A single line item in the cart. It displays the product image, title, price.
- * It also provides controls to update the quantity or remove the line item.
- */
-export function CartLineItem({
-  layout,
-  line,
-}: {
-  layout: CartLayout;
-  line: CartLine;
-}) {
-  const {id, merchandise} = line;
-  const {product, title, image, selectedOptions} = merchandise;
-  const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
-
-  return (
-    <li key={id} className="cart-line bg-brand-yellow my-4 p-2">
-      {image && (
-        <Image
-          alt={title}
-          aspectRatio="1/1"
-          data={image}
-          height={100}
-          loading="lazy"
-          width={100}
-        />
-      )}
-
-      <div>
-        <LocalizedLink
-          to={lineItemUrl}
-          className="cart-line-item-title"
-          prefetch="intent"
-        >
-          {product.title}
-        </LocalizedLink>
-        <ProductPrice price={line?.cost?.totalAmount} />
-        <ul>
-          {selectedOptions.map((option) => (
-            <li key={option.name}>
-              <small>
-                {option.name}: {option.value}
-              </small>
-            </li>
-          ))}
-        </ul>
-        <CartLineQuantity line={line} />
-      </div>
-    </li>
-  );
-}
-
-export function CartLineSimple({line}: {line: CartLine}) {
+export function CartLineItem({line}: {line: CartLine}) {
   const {id: lineId, isOptimistic, merchandise} = line;
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const [isRemoving, setIsRemoving] = useState(false);
+
+  console.log('line', line);
 
   return (
     <div

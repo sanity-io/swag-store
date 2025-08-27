@@ -3,7 +3,7 @@ import {LocalizedLink} from './LocalizedLink';
 import {useLocation} from 'react-router';
 import {useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
-import {CartLineItem, CartLineSimple} from '~/components/CartLineItem';
+import {CartLineItem} from '~/components/CartLineItem';
 import {CartSummary} from './CartSummary';
 import clsx from 'clsx';
 import {CartForm} from '@shopify/hydrogen';
@@ -152,6 +152,7 @@ function CartLines({
   setIsCollapsedMobile: (collapsed: boolean) => void;
   setIsCollapsed: (collapsed: boolean) => void;
 }) {
+  console.log('cart', cart?.lines?.nodes);
   const hats =
     cart?.lines?.nodes.filter((line) =>
       line.attributes.some(
@@ -194,8 +195,8 @@ function CartLines({
       >
         <div className="">
           <span>
-            DESKTOP is d: {collapsed ? 'true' : 'false'} m:{' '}
-            {isCollapsedMobile ? 'true' : 'false'}
+            Cart
+            {/* {isCollapsedMobile ? 'true' : 'false'} */}
           </span>
           <span>({cart?.totalQuantity ?? 0})</span>
         </div>
@@ -211,8 +212,9 @@ function CartLines({
         onClick={() => setIsCollapsedMobile(!isCollapsedMobile)}
       >
         <div className="">
-          <span>mobile ism: {isCollapsedMobile ? 'true' : 'false'}</span>
-          <span>({cart?.totalQuantity ?? 0})</span>
+          Cart
+          {/* <span>mobile ism: {isCollapsedMobile ? 'true' : 'false'}</span> */}
+          {/* <span>({cart?.totalQuantity ?? 0})</span> */}
         </div>
         +
       </button>
@@ -230,7 +232,7 @@ function CartLines({
           {hats?.length > 0 ? (
             <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {hats?.map((hat) => (
-                <CartLineSimple key={hat.id} line={hat} />
+                <CartLineItem key={hat.id} line={hat} />
               ))}
             </ul>
           ) : (
@@ -249,7 +251,7 @@ function CartLines({
           {clothing?.length > 0 ? (
             <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {clothing?.map((clothing) => (
-                <CartLineSimple key={clothing.id} line={clothing} />
+                <CartLineItem key={clothing.id} line={clothing} />
               ))}
             </ul>
           ) : (
@@ -268,7 +270,7 @@ function CartLines({
           {accessories?.length > 0 ? (
             <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {accessories?.map((accessory) => (
-                <CartLineSimple key={accessory.id} line={accessory} />
+                <CartLineItem key={accessory.id} line={accessory} />
               ))}
             </ul>
           ) : (
@@ -288,7 +290,7 @@ function CartLines({
           {goods?.length > 0 ? (
             <ul className="relative flex flex-row h-full overflow-x-scroll gap-2">
               {goods?.map((good) => (
-                <CartLineSimple key={good.id} line={good} />
+                <CartLineItem key={good.id} line={good} />
               ))}
             </ul>
           ) : (

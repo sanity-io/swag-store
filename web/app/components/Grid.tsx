@@ -41,13 +41,12 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
         }
         if (item?._type === 'gridItem') {
           return (
-            <LocalizedLink
-              to={item.url}
-              className="grid-item"
-              prefetch="intent"
+            <div
+              className="grid-item text-white p-2"
+              style={{backgroundColor: 'black'}}
             >
-              {item.title}
-            </LocalizedLink>
+              <PortableText value={item.body} />
+            </div>
           );
         }
         return null;

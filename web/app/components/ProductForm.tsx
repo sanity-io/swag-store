@@ -201,7 +201,7 @@ export function ProductVariantForm({
                 } else {
                   return (
                     <>
-                      <LocalizedLink
+                      <button
                         to={`/products/${handle}?${variantUriQuery}`}
                         className={`product-options-item !bg-black text-white rounded-md px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
@@ -221,7 +221,7 @@ export function ProductVariantForm({
                         }}
                       >
                         <ProductOptionSwatch swatch={swatch} name={title} />
-                      </LocalizedLink>
+                      </button>
                     </>
                   );
                 }

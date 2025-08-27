@@ -71,6 +71,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
 export default function Home() {
   const data = useLoaderData<typeof loader>();
   const modules = data.sanityData?.modules;
+  console.log('modules', modules);
 
   return (
     <div className="home bg-gray-100">
