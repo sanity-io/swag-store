@@ -188,12 +188,7 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
               "included": [localKlaviyoListId]
             },
             "send_strategy": {
-              "method": "static",
-              "datetime": new Date().toISOString(),
-              "options": {
-                "send_past_recipients_immediately": false,
-                "is_local": true
-              }
+              "method": "immediate"
             },
             "send_options": {
               "use_smart_sending": true

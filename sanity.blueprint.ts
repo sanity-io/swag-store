@@ -59,7 +59,7 @@ export default defineBlueprint({
       event: {
         on: ['publish'],
         filter: '_type == "marketingCampaign" && status == "ready"',
-        projection: '{_id, _type, title, post->, klaviyoCampaignId}',
+        projection: '{_id, _type, title, post, klaviyoCampaignId}',
       },
       env: {
         KLAVIYO_API_KEY,
