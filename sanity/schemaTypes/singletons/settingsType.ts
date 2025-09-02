@@ -13,8 +13,8 @@ export const settingsType = defineType({
   icon: CogIcon,
   groups: [
     {
-      name: 'home',
-      title: 'Home',
+      name: 'main',
+      title: 'Main',
       icon: HomeIcon,
       default: true,
     },
@@ -45,7 +45,13 @@ export const settingsType = defineType({
       title: 'Homepage',
       type: 'reference',
       to: [{type: 'home'}],
-      group: 'home',
+      group: 'main',
+    }),
+    defineField({
+      name: 'siteLogo',
+      title: 'Site logo',
+      type: 'image',
+      group: 'main',
     }),
     defineField({
       name: 'menu',

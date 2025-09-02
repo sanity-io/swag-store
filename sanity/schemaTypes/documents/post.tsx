@@ -1,8 +1,9 @@
 import {defineField, defineType} from 'sanity'
+import {BasketIcon, ImageIcon} from '@sanity/icons'
 
 export const postType = defineField({
   name: 'post',
-  title: 'Post',
+  title: 'Emails',
   type: 'document',
   fields: [
     defineField({
@@ -34,7 +35,29 @@ export const postType = defineField({
           },
         },
         {
+          name: 'products',
+          type: 'object',
+          title: 'Products',
+          icon: BasketIcon,
+          fields: [
+            {name: 'products', type: 'array', of: [{type: 'reference', to: [{type: 'product'}]}]},
+          ],
+          preview: {
+            select: {
+              products: 'products',
+            },
+            prepare(selection: any) {
+              const {products} = selection
+              return {
+                title: 'Products',
+                subtitle: `${products.length} products`,
+              }
+            },
+          },
+        },
+        {
           type: 'image',
+          icon: ImageIcon,
           fields: [
             {
               name: 'alt',
@@ -75,4 +98,19 @@ export const postType = defineField({
       description: 'Optional: Override the default Klaviyo list ID for this post',
     }),
   ],
+  preview: {
+    select: {
+      title: 'title',
+      status: 'status',
+      media: 'body.0.asset',
+    },
+    prepare(selection: any) {
+      const {title, status, media} = selection
+      return {
+        title: title || 'Untitled Post',
+        subtitle: status ? `Status: ${status}` : 'No status',
+        media: media,
+      }
+    },
+  },
 })

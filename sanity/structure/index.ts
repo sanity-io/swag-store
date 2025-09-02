@@ -3,6 +3,7 @@ import collections from './collectionStructure'
 import colorThemes from './colorThemeStructure'
 import home from './homeStructure'
 import pages from './pageStructure'
+import posts from './postStructure'
 import products from './productStructure'
 import settings from './settingStructure'
 
@@ -30,9 +31,12 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
   return ![
     'collection',
     'colorTheme',
+    'colorVariant',
+    'productMap',
     'home',
     'media.tag',
     'page',
+    'post',
     'product',
     'productVariant',
     'settings',
@@ -45,6 +49,7 @@ export const structure: StructureResolver = (S, context) =>
     .items([
       home(S, context),
       pages(S, context),
+      posts(S, context),
       S.divider(),
       collections(S, context),
       products(S, context),

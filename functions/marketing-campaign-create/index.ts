@@ -125,9 +125,59 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
         console.error('❌ Post title is required for template creation')
         return
       }
+
+      // Lets fetch nested data in the body for html rendering:
+      const {body: bodyData} = await client.fetch(`*[_id == "${_id}"][0]{
+        body[]{
+          _type,
+          _key,
+          // Handle image blocks
+          _type == "image" => {
+            asset->{
+              url,
+              metadata
+            },
+            alt
+          },
+          // Handle product blocks
+          _type == "products" => {
+            _type,
+            products[]->{
+              _type,
+              ...,
+              store
+            }
+          },
+          // Handle text blocks
+          _type == "block" => {
+            ...,
+            children[]{
+              ...,
+              // Resolve any marks that might have references
+              _type == "span" => {
+                ...,
+                markDefs[]{
+                  ...,
+                  _type == "link" => {
+                    ...,
+                    internalLink->{
+                      _id,
+                      _type,
+                      title,
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`)
+
+      console.log('📋 Body data:', bodyData)
       
       // Generate email templates
-      const htmlContent = await generateEmailTemplate(title, slug?.current, event.data.body)
+      const htmlContent = await generateEmailTemplate(title, slug?.current, bodyData)
       const textContent = generateTextContent(title, slug?.current)
       
       const templateData = {
@@ -374,51 +424,99 @@ async function generateEmailTemplate(title: string | undefined, slug: string | u
   const postUrl = slug ? `https://yourdomain.com/posts/${slug}` : '#'
   
   return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${title || 'New Post'}</title>
-    </head>
-    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-        <tr>
-          <td style="padding: 20px 0; text-align: center; background-color: #ffffff;">
-            <h1 style="font-size: 24px; color: #333333; margin-bottom: 20px;">
-              ${title || 'New Post'}
-            </h1>
-            <div style="text-align: left; padding: 0 20px; margin-bottom: 30px;">
-              ${toHTML(body || [], {
-                components: {
-                  types: {
-                    image: ({value}) => {
-                      return `<img src="${value.asset.url}" alt="${value.alt || ''}" style="max-width: 100%; height: auto; margin: 20px 0;" />`
-                    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title || 'New Post'}</title>
+    <style>
+body,table,td,p,a,li,blockquote{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}table,td{mso-table-lspace:0pt;mso-table-rspace:0pt}img{-ms-interpolation-mode:bicubic;border:0;height:auto;line-height:100%;outline:none;text-decoration:none}body{margin:0;padding:0;background-color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}.email-container{max-width:600px;margin:0 auto;background-color:#fff}.header{text-align:center;padding:48px 24px}.logo{font-size:24px;font-weight:700;color:#d97706;letter-spacing:2px;margin-bottom:4px}.logo-subtitle{font-size:12px;color:#6b7280;letter-spacing:3px;margin-bottom:32px}.main-headline{font-size:32px;font-weight:300;color:#111827;margin-bottom:16px;line-height:1.2}.main-description{font-size:16px;color:#6b7280;line-height:1.6;max-width:400px;margin:0 auto}.product-section{padding:0 24px}.product-card{margin-bottom:32px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}.product-image{width:100%;height:320px;object-fit:contain;display:block}.product-badge{position:absolute;top:16px;left:16px;background-color:#ec4899;color:#fff;padding:4px 12px;font-size:12px;font-weight:500;border-radius:20px}.product-info{padding:24px;background-color:#fff}.product-name{font-size:20px;font-weight:500;color:#111827;margin-bottom:8px}.product-pricing{margin-bottom:16px}.product-price{font-size:20px;font-weight:300;color:#d97706;margin-right:12px}.product-original-price{font-size:16px;color:#6b7280;text-decoration:line-through}.btn{display:inline-block;padding:12px 24px;text-decoration:none;border-radius:6px;font-weight:500;text-align:center;width:100%;box-sizing:border-box}.btn-primary{background-color:#d97706;color:#fff}.btn-outline{background-color:transparent;color:#d97706;border:2px solid #d97706}.btn-secondary{background-color:#ec4899;color:#fff}.collection-cta{padding:48px 24px}.collection-card{background-color:#f9fafb;padding:32px;border-radius:8px;text-align:center}.collection-title{font-size:24px;font-weight:300;color:#111827;margin-bottom:12px}.collection-description{color:#6b7280;margin-bottom:24px;line-height:1.6}.experience-cta{padding:0 24px 48px;text-align:center}.experience-title{font-size:24px;font-weight:300;color:#111827;margin-bottom:12px}.experience-description{color:#6b7280;margin-bottom:24px;line-height:1.6;max-width:400px;margin:0 auto}.footer{padding:32px 24px;border-top:1px solid #e5e7eb;text-align:center}.footer-links{margin-bottom:16px}.footer-link{color:#6b7280;text-decoration:none;margin:0 12px}.footer-text{font-size:12px;color:#6b7280;margin-bottom:8px}.footer-link:hover{color:#ec4899}@media only screen and (max-width:600px){.main-headline{font-size:28px}.product-section{padding:0 16px}.collection-cta,.experience-cta{padding-left:16px;padding-right:16px}}
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">SANITY</div>
+            <div class="logo-subtitle">Squiggle Mart</div>
+            
+            ${toHTML(body || [], {
+              components: {
+                types: {
+                  image: ({value}) => {
+                    return `<img src="${value.asset.url}" alt="${value.alt || ''}" style="max-width: 100%; height: auto; margin: 20px 0;" />`
                   },
-                  marks: {
-                    strong: ({children}) => `<strong>${children}</strong>`,
-                    em: ({children}) => `<em>${children}</em>`,
-                    underline: ({children}) => `<u>${children}</u>`
-                  },
-                  block: {
-                    h1: ({children}) => `<h1 style="font-size: 24px; margin: 24px 0;">${children}</h1>`,
-                    h2: ({children}) => `<h2 style="font-size: 20px; margin: 20px 0;">${children}</h2>`, 
-                    h3: ({children}) => `<h3 style="font-size: 18px; margin: 18px 0;">${children}</h3>`,
-                    normal: ({children}) => `<p style="font-size: 16px; line-height: 1.6; margin: 16px 0;">${children}</p>`,
-                    blockquote: ({children}) => `<blockquote style="font-style: italic; margin: 20px 0; padding-left: 20px; border-left: 4px solid #ccc;">${children}</blockquote>`
-                  }
-                }
-              })}
+                  products: ({value}) => {
+                          console.log('Products block value:', value)
+                          if (!value?.products || !Array.isArray(value.products)) return ''
+                          console.log('Products:', value.products)
+                          return `
+                             <div class="product-section">
+                               ${value.products
+                                 .map(
+                                   (product: any) => `
+                                     <div class="product-card">
+                                       <div style="position: relative;">
+                                         <img src="${product.store.previewImageUrl || ''}" alt="${product.title || 'Product'}" class="product-image">
+                                         ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+                                       </div>
+                                       <div class="product-info">
+                                         <h3 class="product-name">${product.store.title || 'Untitled Product'}</h3>
+                                         <div class="product-pricing">
+                                           <span class="">$${product.store?.priceRange?.minVariantPrice}</span>
+                                         </div>
+                                         <a href="https://squigglemart.com/products/${product.slug || '#'}" class="btn btn-primary">Shop Now</a>
+                                       </div>
+                                     </div>
+                                   `,
+                                 )
+                                 .join('')}
+                             </div>`
+                        },
+                      },
+                marks: {
+                  strong: ({children}) => `<strong>${children}</strong>`,
+                  em: ({children}) => `<em>${children}</em>`,
+                  underline: ({children}) => `<u>${children}</u>`
+                },
+                block: {
+                  h1: ({children}) => `<h1 style="font-size: 24px; margin: 24px 0;">${children}</h1>`,
+                  h2: ({children}) => `<h2 style="font-size: 20px; margin: 20px 0;">${children}</h2>`, 
+                  h3: ({children}) => `<h3 style="font-size: 18px; margin: 18px 0;">${children}</h3>`,
+                  normal: ({children}) => `<p style="font-size: 16px; line-height: 1.6; margin: 16px 0;">${children}</p>`,
+                  blockquote: ({children}) => `<blockquote style="font-style: italic; margin: 20px 0; padding-left: 20px; border-left: 4px solid #ccc;">${children}</blockquote>`
+                },
+
+              }
+            })}
+        </div>
+        <!-- Collection CTA -->
+        <div class="collection-cta">
+            <div class="collection-card">
+                <h3 class="collection-title">Explore the Complete Collection'</h3>
+                <p class="collection-description">
+                    Show your love for Squiggle Mart with this limited edition collection.
+                </p>
+                <a href="https://squigglemart.com/collections/all" class="btn btn-outline">View All Items</a>
             </div>
-            <a href="${postUrl}" style="display: inline-block; background-color: #007bff; color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 5px; font-weight: bold;">
-              Read More
-            </a>
-          </td>
-        </tr>
-      </table>
-    </body>
-    </html>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://www.instagram.com/squigglemart" class="footer-link">Instagram</a>
+                <a href="https://www.pinterest.com/squigglemart" class="footer-link">Pinterest</a>
+                <a href="https://www.facebook.com/squigglemart" class="footer-link">Facebook</a>
+            </div>
+            <p class="footer-text">© ${new Date().getFullYear()} Sanity. All rights reserved.</p>
+            <p class="footer-text">
+                You're receiving this because you subscribed to our newsletter. 
+                <a href="https://squigglemart.com/unsubscribe" class="footer-link">Unsubscribe</a>
+            </p>
+        </div>
+    </div>
+</body>
   `
 }
 
