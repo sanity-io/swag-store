@@ -239,7 +239,7 @@ function CartLines({
           ) : (
             <LocalizedLink
               to="/collections/all?category=hats"
-              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+              className="uppercase w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select hats
             </LocalizedLink>
@@ -258,7 +258,7 @@ function CartLines({
           ) : (
             <LocalizedLink
               to="/collections/all?category=clothing"
-              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+              className="uppercase w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select clothing
             </LocalizedLink>
@@ -277,7 +277,7 @@ function CartLines({
           ) : (
             <LocalizedLink
               to="/collections/all?category=accessories"
-              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+              className="uppercase w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select accessories
             </LocalizedLink>
@@ -297,7 +297,7 @@ function CartLines({
           ) : (
             <LocalizedLink
               to="/collections/all?category=goods"
-              className="w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
+              className="uppercase w-full h-full hover:border-black border border-transparent inline-flex items-center justify-center"
             >
               Select goods
             </LocalizedLink>
