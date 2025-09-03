@@ -51,7 +51,7 @@ export const portableRichText = {
       <h1 className="uppercase font-400">{children}</h1>
     ),
     h2: ({children}: {children: React.ReactNode}) => (
-      <h2 className="font-cor uppercase outline-orange text-[36px] leading-[40px] 800:text-[48px] text-center 1000:text-[64px] 1000:leading-[68px]">
+      <h2 className="font-sans outline-orange text-18 800:text-30">
         {children}
       </h2>
     ),
