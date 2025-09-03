@@ -110,7 +110,7 @@ export default function Collection() {
                 category === 'clothing' && 'italic',
               )}
             >
-              Shirts
+              Clothing
             </LocalizedLink>
             <LocalizedLink
               to="/collections/all?category=accessories"

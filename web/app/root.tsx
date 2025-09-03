@@ -207,13 +207,17 @@ export function ErrorBoundary() {
 
   return (
     <div className="route-error">
-      <h1>Oops</h1>
-      <h2>{errorStatus}</h2>
-      {errorMessage && (
-        <fieldset>
-          <pre>{errorMessage}</pre>
-        </fieldset>
-      )}
+      <div className="p-4 min-h-[80dvh] flex flex-col justify-center text-center items-center">
+        <div>
+          <h1>Seems to be an error rendering this page</h1>
+          <h2 className="text-56 font-bold">{errorStatus}</h2>
+          {errorMessage && (
+            <fieldset>
+              <pre dangerouslySetInnerHTML={{__html: errorMessage}} />
+            </fieldset>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

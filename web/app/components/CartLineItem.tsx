@@ -35,9 +35,22 @@ export function CartLineItem({line}: {line: CartLine}) {
           width={200}
         />
       )}
-      {merchandise.title !== 'Default Title' && (
-        <div className="absolute bottom-2 left-3 z-10  px-2 rounded-md 800:hover:bg-brand-red  bg-white text-black">
-          {merchandise.title}
+      {merchandise.title !== 'Default Title' ? (
+        <div className="absolute bottom-2 left-2 z-10  px-2 flex gap-2">
+          <span className="block  800:hover:bg-brand-red  bg-white text-black px-2">
+            {merchandise.title}
+          </span>
+          {line.quantity > 1 && (
+            <span className="block  800:hover:bg-brand-red  bg-white text-black px-1">
+              ({line.quantity})
+            </span>
+          )}
+        </div>
+      ) : (
+        <div className="absolute bottom-2 left-2 z-10  px-2">
+          <span className="block  800:hover:bg-brand-red  bg-white text-black px-2">
+            {line.quantity}
+          </span>
         </div>
       )}
       <div className="absolute bottom-0 right-0 z-10 w-[30px] h-[30px] 800:hover:bg-brand-red p-2 bg-black text-white">

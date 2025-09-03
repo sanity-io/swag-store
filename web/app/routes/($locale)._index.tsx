@@ -9,7 +9,7 @@ import {HOME_PAGE_QUERY, NESTED_HOME_PRODUCTS_QUERY} from '~/groq/queries';
 import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [{title: 'Sanity Online Store'}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -34,14 +34,15 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     NESTED_HOME_PRODUCTS_QUERY,
   );
 
-  console.log('productData', productData.data);
-
   if (!productData.data) {
     throw new Response(
-      'Product data not found or missing a homepage configuration in the sanity studio',
+      '<div class="text-red-500">Product data not found or missing a homepage configuration in the <a class="underline" href="http://localhost:3333/structure/settings">sanity studio settings configuration</a>.</div>',
       {
         status: 404,
         statusText: 'Not Found',
+        headers: {
+          'Content-Type': 'text/html',
+        },
       },
     );
   }
@@ -76,12 +77,6 @@ export default function Home() {
   return (
     <div className="home bg-gray-100">
       <PageComponentList components={modules} />
-      <LocalizedLink
-        to="/collections/all"
-        className="text-14 font-sans text-black hover:text-gray-600 transition-colors"
-      >
-        View All Products
-      </LocalizedLink>
     </div>
   );
 }

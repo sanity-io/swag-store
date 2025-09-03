@@ -8,7 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {Footer} from '~/components/Footer';
 import {Header, HeaderMenu} from '~/components/Header';
-import {CartMain} from '~/components/CartMain';
+import {CartMain, CartCheckout} from '~/components/CartMain';
 import {useLocale} from '~/hooks/useLocale';
 
 interface PageLayoutProps {
@@ -88,7 +88,12 @@ function CartBlock({cart}: {cart: PageLayoutProps['cart']}) {
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
-            return <CartMain cart={cart} layout="aside" />;
+            return (
+              <>
+                <CartMain cart={cart} layout="aside" />
+                <CartCheckout cart={cart} />
+              </>
+            );
           }}
         </Await>
       </Suspense>

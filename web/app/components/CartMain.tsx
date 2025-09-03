@@ -21,100 +21,18 @@ export type CartMainProps = {
  * The main cart component that displays the cart items and summary.
  * It is used by both the /cart route and the cart aside dialog.
  */
-export function CartMain({
-  layout,
-  cart: originalCart,
-  // collectionPage,
-}: CartMainProps) {
-  // Handle Cart open/close on navigation
-  const location = useLocation();
-  const collectionPage = location.pathname.includes('/collections/');
-  const isPage = location.pathname.includes('/pages/');
-
-  const cartPage = collectionPage || isPage;
-
-  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
-
-  const [isCollapsed, setIsCollapsed] = useState(collectionPage || false);
-  const [isCollapsedMobile, setIsCollapsedMobile] = useState(true);
+export function CartCheckout({cart: originalCart}: CartMainProps) {
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
-
-  const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
-  const withDiscount =
-    cart &&
-    Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
-  const className = `cart-main min-h-[80px] relative flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
-  const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
-
-  useEffect(() => {
-    if (location.pathname.includes('/collections/') || isPage) {
-      setIsCollapsed(true);
-    } else {
-      setIsCollapsed(false);
-    }
-    setIsCollapsedMobile(true);
-  }, [location]);
-
-  useEffect(() => {
-    if (addToCartFetchers.length > 0) {
-      setIsCollapsed(false);
-      console.log('addToCartFetchers', addToCartFetchers);
-    }
-  }, [addToCartFetchers]);
-
+  console.log('cart', cart);
   return (
-    <div
-      key="CART"
-      style={{
-        backgroundImage: 'url(/images/grid-bg.png)',
-        backgroundSize: '5px',
-        backgroundRepeat: 'repeat',
-      }}
-      className={clsx(
-        'w-full 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[80px] h-[80px] block bg-brand-yellow',
-        {
-          '800:h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
-          'h-[calc(100dvh-40px)] z-[1000]': !isCollapsedMobile,
-          // '800:absolute bottom-0': cartPage,
-          // '800:sticky top-0': !cartPage,
-        },
-      )}
-    >
+    <div key="CART_BUTTON">
       <div
-        className={clsx(className, {
-          '800:h-dvh 800:min-h-full': !isCollapsed,
-          'h-[calc(100dvh-0px)] min-h-full': !isCollapsedMobile,
-        })}
+        aria-labelledby="cart-summary"
+        className="w-full h-[40px] 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
       >
-        {/* <CartEmpty
-          hidden={linesCount}
-          collapsed={isCollapsed}
-          layout={layout}
-          setIsCollapsed={setIsCollapsed}
-        /> */}
-        <div
-          className={clsx('cart-details')}
-          style={{
-            height: `calc(100% - 40px)`,
-          }}
-          aria-labelledby="cart-lines"
-        >
-          <CartLines
-            cart={originalCart}
-            layout={layout}
-            collapsed={isCollapsed}
-            isCollapsedMobile={isCollapsedMobile}
-            setIsCollapsedMobile={setIsCollapsedMobile}
-            setIsCollapsed={setIsCollapsed}
-          />
-          {/* {cartHasItems && <CartSummary cart={cart} layout={layout} />} */}
-        </div>
-        <div
-          aria-labelledby="cart-summary"
-          className="w-full h-[40px] absolute bottom-0 bg-black flex justify-between items-center"
-        >
+        <div className="800:w-1/3 flex justify-between items-center">
           <div className="bg-black text-white px-4 py-2 inline-flex w-1/2">
             Total({cart?.totalQuantity}):&nbsp;
             <dd>
@@ -137,10 +55,107 @@ export function CartMain({
   );
 }
 
+/**
+ * The main cart component that displays the cart items and summary.
+ * It is used by both the /cart route and the cart aside dialog.
+ */
+export function CartMain({
+  layout,
+  cart: originalCart,
+  // collectionPage,
+}: CartMainProps) {
+  // Handle Cart open/close on navigation
+  const location = useLocation();
+  const collectionPage = location.pathname.includes('/collections/');
+  const isPage = location.pathname.includes('/pages/');
+
+  const cartPage = collectionPage || isPage;
+
+  const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
+
+  const [isCollapsableDesktop, setIsCollapsableDesktop] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(collectionPage || false);
+  const [isCollapsedMobile, setIsCollapsedMobile] = useState(true);
+  // The useOptimisticCart hook applies pending actions to the cart
+  // so the user immediately sees feedback when they modify the cart.
+  const cart = useOptimisticCart(originalCart);
+
+  const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
+  const withDiscount =
+    cart &&
+    Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
+  const className = `cart-main min-h-[40px] relative flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
+  const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
+
+  useEffect(() => {
+    if (location.pathname.includes('/collections/') || isPage) {
+      setIsCollapsed(true);
+      setIsCollapsableDesktop(true);
+    } else {
+      setIsCollapsed(false);
+      setIsCollapsableDesktop(false);
+    }
+    setIsCollapsedMobile(true);
+  }, [location]);
+
+  useEffect(() => {
+    if (addToCartFetchers.length > 0) {
+      setIsCollapsed(false);
+      console.log('addToCartFetchers', addToCartFetchers);
+    }
+  }, [addToCartFetchers]);
+
+  return (
+    <div
+      key="CART"
+      style={{
+        backgroundImage: 'url(/images/grid-bg.png)',
+        backgroundSize: '5px',
+        backgroundRepeat: 'repeat',
+      }}
+      className={clsx(
+        'w-full overflow-hidden 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[40px] h-[40px] 800:h-[80px] 800:min-h-[80px] block bg-brand-yellow',
+        {
+          '800:h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
+          'h-[calc(100dvh-40px)] z-[1000]': !isCollapsedMobile,
+          // '800:absolute bottom-0': cartPage,
+          // '800:sticky top-0': !cartPage,
+        },
+      )}
+    >
+      <div
+        className={clsx(className, {
+          '800:h-dvh 800:min-h-full': !isCollapsed,
+          'h-[calc(100dvh-0px)] min-h-full': !isCollapsedMobile,
+        })}
+      >
+        <div
+          className={clsx('cart-details')}
+          style={{
+            height: `calc(100% - 40px)`,
+          }}
+          aria-labelledby="cart-lines"
+        >
+          <CartLines
+            cart={originalCart}
+            layout={layout}
+            collapsed={isCollapsed}
+            isCollapsableDesktop={isCollapsableDesktop}
+            isCollapsedMobile={isCollapsedMobile}
+            setIsCollapsedMobile={setIsCollapsedMobile}
+            setIsCollapsed={setIsCollapsed}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CartLines({
   cart,
   layout,
   collapsed,
+  isCollapsableDesktop,
   isCollapsedMobile,
   setIsCollapsed,
   setIsCollapsedMobile,
@@ -148,11 +163,11 @@ function CartLines({
   cart: CartApiQueryFragment | null;
   layout: CartLayout;
   collapsed: boolean;
+  isCollapsableDesktop: boolean;
   isCollapsedMobile: boolean;
   setIsCollapsedMobile: (collapsed: boolean) => void;
   setIsCollapsed: (collapsed: boolean) => void;
 }) {
-  console.log('cart', cart?.lines?.nodes);
   const hats =
     cart?.lines?.nodes.filter((line) =>
       line.attributes.some(
@@ -187,11 +202,8 @@ function CartLines({
       <button
         className={clsx(
           'p-2 h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
-          // {
-          //   '800:!hidden': !collapsed,
-          // },
         )}
-        onClick={() => setIsCollapsed(!collapsed)}
+        onClick={() => isCollapsableDesktop && setIsCollapsed(!collapsed)}
       >
         <div className="">
           <span>
@@ -200,23 +212,15 @@ function CartLines({
           </span>
           <span>({cart?.totalQuantity ?? 0})</span>
         </div>
-        +
+        {isCollapsableDesktop ? (collapsed ? '+' : '-') : ''}
       </button>
       <button
         className={clsx(
           'p-2 h-[40px] w-full flex 800:hidden cursor-pointer justify-between items-center bg-brand-yellow',
-          {
-            // hidden: !isCollapsedMobile,
-          },
         )}
         onClick={() => setIsCollapsedMobile(!isCollapsedMobile)}
       >
-        <div className="">
-          Cart
-          {/* <span>mobile ism: {isCollapsedMobile ? 'true' : 'false'}</span> */}
-          {/* <span>({cart?.totalQuantity ?? 0})</span> */}
-        </div>
-        +
+        <div className="">Cart</div>+
       </button>
       <div
         className={clsx('p-4 h-full hidden 800:flex flex-col gap-4', {
@@ -302,11 +306,6 @@ function CartLines({
             </LocalizedLink>
           )}
         </div>
-        {/* <ul className={clsx(' p-4')}>
-          {(cart?.lines?.nodes ?? []).map((line) => (
-            <CartLineItem key={line.id} line={line} layout={layout} />
-          ))}
-        </ul> */}
       </div>
     </>
   );

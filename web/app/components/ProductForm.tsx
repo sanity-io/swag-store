@@ -160,7 +160,7 @@ export function ProductVariantForm({
             key={option.name}
           >
             <h5 className="uppercase sr-only">{option.name}</h5>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full justify-between">
               {option.optionValues.map((value) => {
                 const {
                   title,
@@ -181,7 +181,7 @@ export function ProductVariantForm({
                           ? `/products/${handle}?${variantUriQuery}`
                           : '#'
                       }
-                      className={`product-options-item ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      className={`product-options-item w-full md:hover:!bg-yellow ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
                       key={option.name + title}
                       prefetch="intent"
                       preventScrollReset
@@ -203,7 +203,7 @@ export function ProductVariantForm({
                     <>
                       <button
                         to={`/products/${handle}?${variantUriQuery}`}
-                        className={`product-options-item !bg-black text-white rounded-md px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
+                        className={`product-options-item w-full !bg-black text-white md:hover:!bg-yellow px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
                         key={option.name + title}
@@ -240,7 +240,7 @@ export function ProductVariantForm({
                 onClick={() => {
                   setVariantSelected(false);
                 }}
-                className="text-white bg-black px-2 py-1 rounded-md"
+                className="text-white bg-brand-orange px-4 py-2 "
               >
                 {currentVaraint?.title}
               </button>
