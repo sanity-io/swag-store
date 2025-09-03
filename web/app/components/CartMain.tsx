@@ -32,7 +32,7 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
       className="w-full h-[40px] order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
     >
       <div className="w-full 800:w-1/3 flex justify-between items-center">
-        <div className="bg-black text-white px-2 py-2 inline-flex w-1/2">
+        <div className="bg-black text-white  py-2 inline-flex w-1/2 px-[20px]">
           Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
             {cart?.cost?.subtotalAmount?.amount ? (
@@ -44,7 +44,7 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
         </div>
         <a
           href={originalCart?.checkoutUrl}
-          className="bg-black !text-white text-right font-sans font-bold capitalize text-16 px-2 py-2 w-1/2"
+          className="bg-black !text-white text-right font-sans font-bold capitalize text-16 py-2 w-1/2 px-[20px]"
         >
           checkout
         </a>
@@ -252,7 +252,7 @@ function CartLines({
         </svg>
       </button>
       <div
-        className={clsx('p-4 h-full hidden 800:flex flex-col gap-4', {
+        className={clsx('p-[20px] h-full hidden 800:flex flex-col gap-4', {
           '800:!hidden ': collapsed,
           '!h-[calc(100%-40px)]': !collapsed,
           '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
