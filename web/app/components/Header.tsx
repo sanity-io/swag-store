@@ -71,7 +71,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
             className="p-0 h-full inline-flex justify-between items-center"
             to="/"
           >
-            <span className="800:bg-brand-green 800:min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+            <span className="800:bg-brand-orange 800:min-w-[180px] px-2 inline-flex items-center justify-center h-full">
               Sanity
             </span>
             <span className="bg-black hidden  text-white px-8 800:inline-flex items-center justify-center h-full">

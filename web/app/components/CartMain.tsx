@@ -27,29 +27,28 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
   const cart = useOptimisticCart(originalCart);
   console.log('cart', cart);
   return (
-    <div key="CART_BUTTON">
-      <div
-        aria-labelledby="cart-summary"
-        className="w-full h-[40px] 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
-      >
-        <div className="800:w-1/3 flex justify-between items-center">
-          <div className="bg-black text-white px-4 py-2 inline-flex w-1/2">
-            Total({cart?.totalQuantity}):&nbsp;
-            <dd>
-              {cart?.cost?.subtotalAmount?.amount ? (
-                <Money data={cart?.cost?.subtotalAmount} />
-              ) : (
-                '-'
-              )}
-            </dd>
-          </div>
-          <a
-            href={originalCart?.checkoutUrl}
-            className="bg-black !text-white text-right font-sans font-bold capitalize text-16 px-4 py-2 w-1/2"
-          >
-            checkout
-          </a>
+    <div
+      key="CART_BUTTON"
+      aria-labelledby="cart-summary"
+      className="w-full h-[40px] order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
+    >
+      <div className="w-full 800:w-1/3 flex justify-between items-center">
+        <div className="bg-black text-white px-2 py-2 inline-flex w-1/2">
+          Total({cart?.totalQuantity}):&nbsp;
+          <dd>
+            {cart?.cost?.subtotalAmount?.amount ? (
+              <Money data={cart?.cost?.subtotalAmount} />
+            ) : (
+              '-'
+            )}
+          </dd>
         </div>
+        <a
+          href={originalCart?.checkoutUrl}
+          className="bg-black !text-white text-right font-sans font-bold capitalize text-16 px-2 py-2 w-1/2"
+        >
+          checkout
+        </a>
       </div>
     </div>
   );
@@ -114,10 +113,10 @@ export function CartMain({
         backgroundRepeat: 'repeat',
       }}
       className={clsx(
-        'w-full overflow-hidden 800:w-1/3 800:absolute order-1 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[40px] h-[40px] 800:h-[80px] 800:min-h-[80px] block bg-brand-yellow',
+        'w-full overflow-hidden 800:w-1/3 800:absolute order-0 800:order-2 right-0 duration-300 transition-all ease-in-out bottom-0 min-h-[40px] h-[40px] 800:h-[80px] 800:min-h-[80px] block bg-brand-yellow',
         {
           '800:h-[calc(100dvh-40px)] 800:h-dvh': !isCollapsed,
-          'h-[calc(100dvh-40px)] z-[1000]': !isCollapsedMobile,
+          'h-[calc(100dvh-80px)] z-[1000]': !isCollapsedMobile,
           // '800:absolute bottom-0': cartPage,
           // '800:sticky top-0': !cartPage,
         },
@@ -126,7 +125,7 @@ export function CartMain({
       <div
         className={clsx(className, {
           '800:h-dvh 800:min-h-full': !isCollapsed,
-          'h-[calc(100dvh-0px)] min-h-full': !isCollapsedMobile,
+          'h-[calc(100dvh-40px)] min-h-full': !isCollapsedMobile,
         })}
       >
         <div
