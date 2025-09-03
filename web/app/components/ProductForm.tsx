@@ -155,12 +155,9 @@ export function ProductVariantForm({
         if (option.optionValues.length === 1) return null;
 
         return (
-          <div
-            className="product-options flex flex-col justify-end h-full mb-1"
-            key={option.name}
-          >
+          <div className="product-options " key={option.name}>
             <h5 className="uppercase sr-only">{option.name}</h5>
-            <div className="flex gap-2 w-full justify-between">
+            <div className="flex gap-2 w-full justify-between mb-1">
               {option.optionValues.map((value) => {
                 const {
                   title,
@@ -203,7 +200,7 @@ export function ProductVariantForm({
                     <>
                       <button
                         to={`/products/${handle}?${variantUriQuery}`}
-                        className={`product-options-item w-full !bg-black text-white md:hover:!bg-yellow px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
+                        className={`product-options-item w-full h-[34px] !bg-black text-white md:hover:!bg-yellow px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
                         key={option.name + title}
@@ -227,7 +224,6 @@ export function ProductVariantForm({
                 }
               })}
             </div>
-            <br />
           </div>
         );
       })}

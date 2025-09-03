@@ -106,7 +106,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
     <>
       <header
         className={clsx(
-          'sticky bottom-0 order-2 800:order-1 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex flex-wrap justify-between items-center',
+          'sticky bottom-0 order-2 800:order-1 left-0 w-full 800:w-2/3 z-30 bg-white h-[40px] flex   flex-wrap justify-between items-center',
           pathname.includes('/collections/all') && 'h-[80px]',
         )}
       >
@@ -132,12 +132,12 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
             </LocalizedLink>
           </div>
         )}
-        <div className="w-full justify-between h-[40px] flex items-center">
+        <div className="w-full 800:grid 800:grid-cols-2 justify-between h-[40px] flex items-center">
           <LocalizedNavLink
             className="p-0 h-full inline-flex justify-between items-center"
             to="/"
           >
-            <span className="800:bg-brand-orange 800:min-w-[180px] px-2 inline-flex items-center justify-center h-full">
+            <span className="800:bg-brand-orange 800:min-w-[100px] px-2 hidden 800:inline-flex items-center justify-center h-full">
               <SanityTextLogo />
             </span>
             <div
@@ -150,8 +150,8 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
             >
               <SanitySquiggle />
             </div>
-            <span className="bg-black hidden  text-white px-8 800:inline-flex items-center justify-center h-full">
-              Components&reg;
+            <span className="bg-black  800:w-full  font-sans text-18 text-white px-4 inline-flex items-center h-full">
+              Shop&reg;
             </span>
           </LocalizedNavLink>
           <HeaderMenu
@@ -178,7 +178,7 @@ export function HeaderMenu({
   viewport: Viewport;
   publicStoreDomain: HeaderProps['publicStoreDomain'];
 }) {
-  const className = `gap-6 flex pr-6 header-menu-${viewport}`;
+  const className = `gap-6 flex pr-6 800:justify-end header-menu-${viewport}`;
 
   return (
     <nav className={className} role="navigation">
@@ -196,7 +196,11 @@ export function HeaderMenu({
             ? new URL(item.url).pathname
             : item.url;
         return (
-          <LocalizedNavLink className="header-menu-item" key={item.id} to={url}>
+          <LocalizedNavLink
+            className="header-menu-item uppercase"
+            key={item.id}
+            to={url}
+          >
             {item.title}
           </LocalizedNavLink>
         );

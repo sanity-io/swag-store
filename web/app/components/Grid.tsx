@@ -8,6 +8,7 @@ import {useVariantUrl} from '~/lib/variants';
 import {PortableText} from '@portabletext/react';
 import {useLoaderData} from 'react-router';
 import {ProductVariantForm} from './ProductForm';
+import {portableRichText} from '~/serializers/richText';
 
 interface GridProps {
   items: Array<{
@@ -42,10 +43,10 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
         if (item?._type === 'gridItem') {
           return (
             <div
-              className="grid-item text-white p-2"
+              className="grid-item text-white p-2 py-0 px-4"
               style={{backgroundColor: 'black'}}
             >
-              <PortableText value={item.body} />
+              <PortableText value={item.body} components={portableRichText} />
             </div>
           );
         }

@@ -48,20 +48,20 @@ export const productType = defineType({
       name: 'colorTheme',
       type: 'reference',
       to: [{type: 'colorTheme'}],
-      group: 'editorial',
+      group: 'testing',
     }),
     defineField({
       name: 'colorVariant',
       type: 'reference',
       to: [{type: 'colorVariant'}],
-      group: 'editorial',
+      group: 'testing',
     }),
     defineField({
       name: 'productMap',
       title: 'Product Map',
       type: 'reference',
       to: [{type: 'productMap'}],
-      group: 'editorial',
+      group: 'testing',
     }),
     defineField({
       name: 'images',

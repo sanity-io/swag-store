@@ -33,12 +33,12 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
     >
       <div className="w-full 800:w-1/3 flex justify-between items-center">
         <div className="bg-black text-white px-2 py-2 inline-flex w-1/2">
-          Total({cart?.totalQuantity}):&nbsp;
+          Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
             {cart?.cost?.subtotalAmount?.amount ? (
               <Money data={cart?.cost?.subtotalAmount} />
             ) : (
-              '-'
+              '$0'
             )}
           </dd>
         </div>
@@ -217,7 +217,39 @@ function CartLines({
         )}
         onClick={() => setIsCollapsedMobile(!isCollapsedMobile)}
       >
-        <div className="">Cart</div>+
+        <div className="">Cart</div>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          className={clsx('transition-transform duration-300 transform', {
+            'rotate-45': !isCollapsedMobile,
+          })}
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_565_3294)">
+            <path
+              d="M21.5459 11.9991H2.45406"
+              stroke="black"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M12 21.545V2.45312"
+              stroke="black"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_565_3294">
+              <rect width="24" height="24" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
       </button>
       <div
         className={clsx('p-4 h-full hidden 800:flex flex-col gap-4', {

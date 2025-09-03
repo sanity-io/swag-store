@@ -75,7 +75,7 @@ export const portableRichText = {
       </p>
     ),
     normal: ({children}: {children: React.ReactNode}) => (
-      <p className="text-14 font-mono my-4">{children}</p>
+      <p className="text-14 font-mono my-4 uppercase">{children}</p>
     ),
   },
   marks: Marks,

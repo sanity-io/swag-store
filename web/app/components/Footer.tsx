@@ -137,13 +137,17 @@ function FooterMenu({
             <a
               href={url}
               key={item.id}
-              rel="noopener noreferrer text-black"
+              rel="noopener noreferrer text-black 800:hover:underline"
               target="_blank"
             >
               {item.title}
             </a>
           ) : (
-            <LocalizedLink key={item.id} to={url}>
+            <LocalizedLink
+              key={item.id}
+              to={url}
+              className="800:hover:underline"
+            >
               {item.title}
             </LocalizedLink>
           );
