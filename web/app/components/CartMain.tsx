@@ -25,7 +25,6 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
-  console.log('cart', cart);
   return (
     <div
       key="CART_BUTTON"
@@ -100,7 +99,6 @@ export function CartMain({
   useEffect(() => {
     if (addToCartFetchers.length > 0) {
       setIsCollapsed(false);
-      console.log('addToCartFetchers', addToCartFetchers);
     }
   }, [addToCartFetchers]);
 

@@ -17,8 +17,6 @@ export function CartLineItem({line}: {line: CartLine}) {
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  console.log('line', line);
-
   return (
     <div
       className={clsx('h-full min-w-[200px] bg-gray-100 relative', {

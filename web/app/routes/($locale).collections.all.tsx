@@ -20,8 +20,6 @@ export async function loader(args: LoaderFunctionArgs) {
   const grid = searchParams.get('grid');
   const category = searchParams.get('category');
 
-  console.log('criticalData', criticalData);
-
   if (category) {
     const filteredProducts = criticalData.products.nodes.filter((product) => {
       return product.tags

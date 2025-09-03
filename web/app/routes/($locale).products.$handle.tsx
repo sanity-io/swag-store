@@ -79,8 +79,6 @@ async function loadCriticalData({
     }`,
   );
 
-  console.log('sanity product', sanityProduct);
-
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
@@ -104,8 +102,6 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 
 export default function Product() {
   const {product, sanityProduct} = useLoaderData<typeof loader>();
-
-  console.log('sanity product', sanityProduct);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
