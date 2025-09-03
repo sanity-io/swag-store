@@ -29,43 +29,64 @@ export function Footer({
                   <div className="flex flex-col 1200:flex-row items-center justify-between gap-4">
                     <a
                       href="https://sanity.io"
-                      className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
+                      className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase 800:hover:bg-black 800:hover:text-white"
                     >
                       Sanity.io
                     </a>
                     <ul className="flex items-center gap-3">
                       <li>
-                        <a href="https://github.com/sanity-io">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://github.com/sanity-io"
+                        >
                           <img src="/images/github.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://www.youtube.com/@sanity_io">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://www.youtube.com/@sanity_io"
+                        >
                           <img src="/images/youtube.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://www.linkedin.com/company/sanity-io">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://www.linkedin.com/company/sanity-io"
+                        >
                           <img src="/images/linkedin.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://bsky.app/profile/sanity.io">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://bsky.app/profile/sanity.io"
+                        >
                           <img src="/images/bluesky.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://x.com/sanity_io">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://x.com/sanity_io"
+                        >
                           <img src="/images/x.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://www.sanity.io/feed/rss">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://www.sanity.io/feed/rss"
+                        >
                           <img src="/images/rss.svg" />
                         </a>
                       </li>
                       <li>
-                        <a href="https://snty.link/community">
+                        <a
+                          className="800:hover:opacity-50 duration-300 inline-block"
+                          href="https://snty.link/community"
+                        >
                           <img src="/images/discord.svg" />
                         </a>
                       </li>
@@ -82,7 +103,7 @@ export function Footer({
 
                       <LocalizedLink
                         to="/subscribe"
-                        className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
+                        className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase 800:hover:bg-black 800:hover:text-white"
                       >
                         SUBSCRIBE
                       </LocalizedLink>
@@ -119,7 +140,7 @@ function FooterMenu({
 }) {
   return (
     <nav
-      className="footer-menu uppercase text-black p-4 flex flex-col 800:flex-row pb-2 800:pb-0 justify-between"
+      className="footer-menu uppercase text-black p-[20px] flex flex-col 800:flex-row pb-2 800:pb-0 justify-between"
       role="navigation"
     >
       <div className="flex items-center gap-12">
