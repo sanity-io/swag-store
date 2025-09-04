@@ -199,14 +199,14 @@ function CartLines({
       <button
         className={clsx(
           'p-2 px-[20px] h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
+          {
+            '!hidden': !isCollapsableDesktop,
+          },
         )}
         onClick={() => isCollapsableDesktop && setIsCollapsed(!collapsed)}
       >
         <div className="">
-          <span>
-            Cart
-            {/* {isCollapsedMobile ? 'true' : 'false'} */}
-          </span>
+          <span>Cart</span>
           <span>({cart?.totalQuantity ?? 0})</span>
         </div>
         {isCollapsableDesktop ? (
@@ -289,7 +289,8 @@ function CartLines({
       <div
         className={clsx('p-[20px] h-full hidden 800:flex flex-col gap-4', {
           '800:!hidden ': collapsed,
-          '!h-[calc(100%-40px)]': !collapsed,
+          '!h-[calc(100%-0px)]': !collapsed && !isCollapsableDesktop,
+          '!h-[calc(100%-40px)]': !collapsed && isCollapsableDesktop,
           '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
         })}
       >
