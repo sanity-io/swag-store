@@ -15,10 +15,10 @@ body {
 }
 
 .font-mono {
-  letter-spacing: -0.5px;
+  /* letter-spacing: -0.5px; */
 }
 
-.font-sans {
+.text-30, .text-52 {
   letter-spacing: -2px;
 }
 
