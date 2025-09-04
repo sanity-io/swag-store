@@ -198,7 +198,7 @@ function CartLines({
     <>
       <button
         className={clsx(
-          'p-2 h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
+          'p-2 px-[20px] h-[40px] w-full hidden 800:flex cursor-pointer justify-between items-center bg-brand-yellow',
         )}
         onClick={() => isCollapsableDesktop && setIsCollapsed(!collapsed)}
       >
@@ -209,7 +209,42 @@ function CartLines({
           </span>
           <span>({cart?.totalQuantity ?? 0})</span>
         </div>
-        {isCollapsableDesktop ? (collapsed ? '+' : '-') : ''}
+        {isCollapsableDesktop ? (
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            className={clsx('transition-transform duration-300 transform', {
+              'rotate-45': !collapsed,
+            })}
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_565_3294)">
+              <path
+                d="M21.5459 11.9991H2.45406"
+                stroke="black"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 21.545V2.45312"
+                stroke="black"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_565_3294">
+                <rect width="24" height="24" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        ) : (
+          ''
+        )}
       </button>
       <button
         className={clsx(
