@@ -157,7 +157,7 @@ export function ProductVariantForm({
         return (
           <div className="product-options " key={option.name}>
             <h5 className="uppercase sr-only">{option.name}</h5>
-            <div className="flex gap-2 w-full justify-between mb-1">
+            <div className="flex gap-2 w-full justify-between mb-0">
               {option.optionValues.map((value) => {
                 const {
                   title,
