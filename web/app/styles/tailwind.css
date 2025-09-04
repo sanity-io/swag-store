@@ -12,7 +12,14 @@ body {
   font-family: var(--font-mono);
   font-weight: 400;
   font-size: 14px;
-  letter-spacing: -1px;
+}
+
+.font-mono {
+  letter-spacing: -0.5px;
+}
+
+.font-sans {
+  letter-spacing: -2px;
 }
 
 @font-face {
