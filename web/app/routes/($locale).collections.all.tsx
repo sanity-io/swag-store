@@ -74,11 +74,14 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export default function Collection() {
-  const {filteredProducts, grid, category} = useLoaderData<typeof loader>();
+  const {filteredProducts, grid, products, category} =
+    useLoaderData<typeof loader>();
+  console.log(products);
+  const allProducts = products.nodes;
   return (
     <div className="collection bg-gray-100">
       {!grid && (
-        <div className="fixed top-0 left-0 w-full p-4 z-10">
+        <div className="fixed top-0 left-0 w-full p-4 z-10 800:max-w-[80%]">
           <div className="flex items-start leading-none flex-wrap gap-2">
             <span className="text-sm relative top-2 inline-block mr-8">
               FILTER
@@ -86,47 +89,61 @@ export default function Collection() {
             <LocalizedLink
               to="/collections/all"
               className={clsx(
-                'text-24 800:text-56 mr-6',
+                'text-24 800:text-56 mr-6 font-sans',
                 category === null && 'italic',
               )}
             >
-              All Products (12)
+              All Products ({allProducts?.length ?? 0})
             </LocalizedLink>
             <LocalizedLink
               to="/collections/all?category=hats"
               className={clsx(
-                'text-24 800:text-56 mr-6',
+                'text-24 800:text-56 mr-6 font-sans',
                 category === 'hats' && 'italic',
               )}
             >
-              Hats
+              Hats (
+              {allProducts?.filter((product) => product.tags.includes('Hats'))
+                .length ?? 0}
+              )
             </LocalizedLink>
             <LocalizedLink
               to="/collections/all?category=clothing"
               className={clsx(
-                'text-24 800:text-56 mr-6',
+                'text-24 800:text-56 mr-6 font-sans',
                 category === 'clothing' && 'italic',
               )}
             >
-              Clothing
+              Clothing (
+              {allProducts?.filter((product) =>
+                product.tags.includes('Clothing'),
+              ).length ?? 0}
+              )
             </LocalizedLink>
             <LocalizedLink
               to="/collections/all?category=accessories"
               className={clsx(
-                'text-24 800:text-56 mr-6',
+                'text-24 800:text-56 mr-6 font-sans',
                 category === 'accessories' && 'italic',
               )}
             >
-              Accessories
+              Accessories (
+              {allProducts?.filter((product) =>
+                product.tags.includes('Accessories'),
+              ).length ?? 0}
+              )
             </LocalizedLink>
             <LocalizedLink
               to="/collections/all?category=goods"
               className={clsx(
-                'text-24 800:text-56 mr-6',
+                'text-24 800:text-56 mr-6 font-sans',
                 category === 'goods' && 'italic',
               )}
             >
-              Goods
+              Goods (
+              {allProducts?.filter((product) => product.tags.includes('Goods'))
+                .length ?? 0}
+              )
             </LocalizedLink>
           </div>
         </div>
