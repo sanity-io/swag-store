@@ -14,7 +14,11 @@ interface PostDocument {
     _ref: string;
   };
   klaviyoListId?: string;
+  operation?: string;
 }
+
+// Note: DocumentEvent from @sanity/functions doesn't include operation property
+// We'll need to determine the operation from the event data or use a different approach
 
 interface KlaviyoCampaignResponse {
   data: {
@@ -23,6 +27,14 @@ interface KlaviyoCampaignResponse {
     attributes: {
       name: string;
       status: string;
+    };
+    relationships: {
+      'campaign-messages': {
+        data: Array<{
+          id: string;
+          type: string;
+        }>;
+      };
     };
   };
 }
@@ -43,224 +55,149 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
   console.log('👋 Marketing Campaign Function called at', new Date().toISOString())
   console.log('👋 Event:', event)
 
-
-  
   try {
-    const { _id, _type, title, slug, klaviyoListId, marketingCampaign } = event.data as PostDocument
-   // Get Klaviyo API credentials from environment
-   const klaviyoApiKey = process.env.KLAVIYO_API_KEY
-   const localKlaviyoListId = klaviyoListId || process.env.KLAVIYO_LIST_ID
+    const { _id, _type, title, slug, klaviyoListId, operation } = event.data as PostDocument
+    
+    // Determine operation based on whether marketingCampaign already exists
+    console.log('👋 Determined operation:', operation)
+    
+    // Get Klaviyo API credentials from environment
+    const klaviyoApiKey = process.env.KLAVIYO_API_KEY
+    const localKlaviyoListId = klaviyoListId || process.env.KLAVIYO_LIST_ID
 
-   if (!klaviyoApiKey) {
-     console.error('❌ KLAVIYO_API_KEY not found in environment variables')
-     return
-   }
+    if (!klaviyoApiKey) {
+      console.error('❌ KLAVIYO_API_KEY not found in environment variables')
+      return
+    }
 
-   if (!localKlaviyoListId) {
-     console.error('❌ KLAVIYO_LIST_ID not found in environment variables')
-     return
-   }
+    if (!localKlaviyoListId) {
+      console.error('❌ KLAVIYO_LIST_ID not found in environment variables')
+      return
+    }
+
     if (_type !== 'post') {
       console.log('⏭️ Skipping non-post document:', _type)
       return
     }
-    
+      
     const client = createClient({
       ...context.clientOptions,
       dataset: 'production',
       apiVersion: '2025-06-01',
     })
 
-    // Check if post already has a marketing campaign
-    if (marketingCampaign?._ref) {
-      console.log('ℹ️ Post already has marketing campaign:', marketingCampaign._ref, '- skipping')
-      // if we already have a marketing campaign, grab the templateId from the marekting campaign and update the html of the template with a patch
-      const marketingCampaignId = marketingCampaign._ref
-      const marketingCampaignDocument = await client.getDocument(marketingCampaignId)
-
-      const templateId = marketingCampaignDocument?.data.templateId
-
-      const htmlContent = await generateEmailTemplate(title, slug?.current, event.data.body)
-      const textContent = generateTextContent(title, slug?.current)
-
-      const updatedTemplateData = {
-        data: {
-          type: 'template',
-          attributes: {
-            html: htmlContent,
-            text: textContent
-          }
-        }
-      }
-      const updatedTemplateResponse = await fetch(`https://a.klaviyo.com/api/templates/${templateId}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
-          'Content-Type': 'application/json',
-          'accept': 'application/vnd.api+json',
-          'revision': '2025-07-15'
-        },
-        body: JSON.stringify(updatedTemplateData)
-      })
-      if (!updatedTemplateResponse.ok) {
-        console.error('❌ Failed to update Klaviyo template:', updatedTemplateResponse.status, updatedTemplateResponse.statusText)
-        return
-      }
-      console.log('✅ Updated Klaviyo template:', templateId)
-
+    // Handle different operations based on delta
+    if (operation === 'create') {
+      console.log('🆕 CREATE operation: Creating new marketing campaign and template')
+      await handleCreateOperation(client, _id, title, slug, localKlaviyoListId, klaviyoApiKey)
+    } else if (operation === 'update') {
+      console.log('🔄 UPDATE operation: Updating existing template only')
+      await handleUpdateOperation(client, _id, title, slug, klaviyoApiKey)
+    } else {
+      console.log('⏭️ Skipping operation:', operation)
       return
     }
 
-    console.log('📝 Processing post for marketing campaign:', _id, 'Title:', title)
 
- 
+  } catch (error) {
+    console.error('❌ Error processing post for marketing campaign:', error)
+    throw error
+  }
+})
 
-   
+// Handler for CREATE operation - creates new campaign and template
+async function handleCreateOperation(
+  client: any, 
+  postId: string, 
+  title: string | undefined, 
+  slug: { current: string } | undefined, 
+  klaviyoListId: string, 
+  klaviyoApiKey: string
+) {
+  console.log('🆕 CREATE: Creating new marketing campaign and template for post:', postId)
+  
+  if (!title || title.trim().length === 0) {
+    console.error('❌ Post title is required for template creation')
+    return
+  }
 
-    try {
-      // Create Klaviyo template
-      console.log('🎨 Creating Klaviyo template for post:', title)
-      
-      if (!title || title.trim().length === 0) {
-        console.error('❌ Post title is required for template creation')
-        return
+  try {
+    // Fetch nested data in the body for html rendering
+    const {body: bodyData} = await client.fetch(portableTextBodyQuery(postId))
+
+    console.log('📋 Body data:', bodyData)
+    
+    // Generate email templates
+    const htmlContent = await generateEmailTemplate(title, slug?.current, bodyData)
+    const textContent = generateTextContent(title, slug?.current)
+    
+    // Create Klaviyo template
+    console.log('🎨 Creating Klaviyo template for post:', title)
+    const templateData = {
+      data: {
+        type: 'template',
+        attributes: {
+          name: `${title} - Template`,
+          editor_type: 'CODE',
+          html: htmlContent,
+          text: textContent
+        }
       }
+    }
 
-      // Lets fetch nested data in the body for html rendering:
-      const {body: bodyData} = await client.fetch(`*[_id == "${_id}"][0]{
-        body[]{
-          _type,
-          _key,
-          // Handle image blocks
-          _type == "image" => {
-            asset->{
-              url,
-              metadata
-            },
-            alt
+    const templateResponse = await fetch('https://a.klaviyo.com/api/templates', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+        'Content-Type': 'application/json',
+        'accept': 'application/vnd.api+json',
+        'revision': '2025-07-15'
+      },
+      body: JSON.stringify(templateData)
+    })
+
+    if (!templateResponse.ok) {
+      const errorText = await templateResponse.text()
+      console.error('❌ Failed to create Klaviyo template:', templateResponse.status, errorText)
+      return
+    }
+
+    const template: KlaviyoTemplateResponse = await templateResponse.json()
+    console.log('✅ Created Klaviyo template:', template.data.id, 'Name:', template.data.attributes.name)
+
+    // Create Klaviyo campaign
+    console.log('📢 Creating Klaviyo campaign for post:', title)
+    const campaignData = {
+      data: {
+        type: 'campaign',
+        attributes: {
+          name: `${title} - Campaign`,
+          audiences: {
+            "included": [klaviyoListId]
           },
-          // Handle product blocks
-          _type == "products" => {
-            _type,
-            products[]->{
-              _type,
-              ...,
-              store
-            }
+          "send_strategy": {
+            "method": "immediate"
           },
-          // Handle text blocks
-          _type == "block" => {
-            ...,
-            children[]{
-              ...,
-              // Resolve any marks that might have references
-              _type == "span" => {
-                ...,
-                markDefs[]{
-                  ...,
-                  _type == "link" => {
-                    ...,
-                    internalLink->{
-                      _id,
-                      _type,
-                      title,
-                      slug
-                    }
-                  }
-                }
+          "send_options": {
+            "use_smart_sending": true
+          },
+          "tracking_options": {
+            "add_tracking_params": true,
+            "custom_tracking_params": [
+              {
+                "type": "dynamic",
+                "value": "campaign_id", 
+                "name": "utm_medium"
+              },
+              {
+                "type": "static",
+                "value": "email",
+                "name": "utm_source"
               }
-            }
-          }
-        }
-      }`)
-
-      console.log('📋 Body data:', bodyData)
-      
-      // Generate email templates
-      const htmlContent = await generateEmailTemplate(title, slug?.current, bodyData)
-      const textContent = generateTextContent(title, slug?.current)
-      
-      const templateData = {
-        data: {
-          type: 'template',
-          attributes: {
-            name: `${title} - Template`,
-            editor_type: 'CODE',
-            html: htmlContent,
-            text: textContent
-          }
-        }
-      }
-
-      console.log('📋 Template data:', {
-        name: templateData.data.attributes.name,
-        html_length: templateData.data.attributes.html.length,
-        text_length: templateData.data.attributes.text.length
-      })
-
-      const templateResponse = await fetch('https://a.klaviyo.com/api/templates', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
-          'Content-Type': 'application/json',
-          'accept': 'application/vnd.api+json',
-          'revision': '2025-07-15'
-        },
-        body: JSON.stringify(templateData)
-      })
-
-      if (!templateResponse.ok) {
-        const errorText = await templateResponse.text()
-        console.error('❌ Failed to create Klaviyo template:', templateResponse.status, errorText)
-        
-        // Handle specific error cases
-        if (templateResponse.status === 429) {
-          console.error('❌ Rate limit exceeded. Klaviyo allows 10/s burst, 150/m steady')
-        } else if (templateResponse.status === 400) {
-          console.error('❌ Bad request. Check template data format')
-        } else if (templateResponse.status === 403) {
-          console.error('❌ Forbidden. Check API key permissions (templates:write scope required)')
-        }
-        return
-      }
-
-      const template: KlaviyoTemplateResponse = await templateResponse.json()
-      console.log('✅ Created Klaviyo template:', template.data.id, 'Name:', template.data.attributes.name)
-
-      // Create Klaviyo campaign
-      console.log('📢 Creating Klaviyo campaign for post:', title)
-      const campaignData = {
-        data: {
-          type: 'campaign',
-          attributes: {
-            name: `${title} - Campaign`,
-            audiences: {
-              "included": [localKlaviyoListId]
-            },
-            "send_strategy": {
-              "method": "immediate"
-            },
-            "send_options": {
-              "use_smart_sending": true
-            },
-            "tracking_options": {
-              "add_tracking_params": true,
-              "custom_tracking_params": [
-                {
-                  "type": "dynamic",
-                  "value": "campaign_id", 
-                  "name": "utm_medium"
-                },
-                {
-                  "type": "static",
-                  "value": "email",
-                  "name": "utm_source"
-                }
-              ],
-              "is_tracking_clicks": true,
-              "is_tracking_opens": true
-            },
-
+            ],
+            "is_tracking_clicks": true,
+            "is_tracking_opens": true
+          },
           "campaign-messages": {
             "data": [
               {
@@ -283,141 +220,252 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
               }
             ]
           }
-          }
         }
       }
+    }
 
-      console.log('📋 Campaign data:', {
-        name: campaignData.data.attributes.name,
-        subject: campaignData.data.attributes.subject,
-        from_email: campaignData.data.attributes.from_email,
-        list_id: localKlaviyoListId,
-        template_id: template.data.id
-      })
+    const campaignResponse = await fetch('https://a.klaviyo.com/api/campaigns', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+        'Content-Type': 'application/json',
+        'accept': 'application/vnd.api+json',
+        'revision': '2025-07-15'
+      },
+      body: JSON.stringify(campaignData)
+    })
 
-      const campaignResponse = await fetch('https://a.klaviyo.com/api/campaigns', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
-          'Content-Type': 'application/json',
-          'accept': 'application/vnd.api+json',
-          'revision': '2025-07-15'
-        },
-        body: JSON.stringify(campaignData)
-      })
+    if (!campaignResponse.ok) {
+      const errorText = await campaignResponse.text()
+      console.error('❌ Failed to create Klaviyo campaign:', campaignResponse.status, errorText)
+      return
+    }
 
-      if (!campaignResponse.ok) {
-        const errorText = await campaignResponse.text()
-        console.error('❌ Failed to create Klaviyo campaign:', campaignResponse.status, errorText)
-        
-        // Handle specific error cases
-        if (campaignResponse.status === 429) {
-          console.error('❌ Rate limit exceeded. Klaviyo allows 10/s burst, 150/m steady')
-        } else if (campaignResponse.status === 400) {
-          console.error('❌ Bad request. Check campaign data format and required fields')
-        } else if (campaignResponse.status === 403) {
-          console.error('❌ Forbidden. Check API key permissions (campaigns:write scope required)')
-        } else if (campaignResponse.status === 422) {
-          console.error('❌ Unprocessable entity. Check relationships (list, template) exist and are valid')
-        }
-        return
-      }
+    const campaign: KlaviyoCampaignResponse = await campaignResponse.json()
+    console.log('✅ Created Klaviyo campaign:', campaign.data.id, 'Name:', campaign.data.attributes.name)
 
-      const campaign: KlaviyoCampaignResponse = await campaignResponse.json()
-      console.log('✅ Created Klaviyo campaign:', campaign.data.id, 'Name:', campaign.data.attributes.name)
+    // Assign template to campaign message
+    console.log('📎 Assigning template to campaign message...')
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Assign template to campaign message
-      console.log('📎 Assigning template to campaign message...')
-      // Wait a moment for the campaign to be fully created before assigning template
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      const campaignMessageId = campaign.data.relationships['campaign-messages'].data[0].id
-      
-      const assignTemplateResponse = await fetch(`https://a.klaviyo.com/api/campaign-message-assign-template`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
-          'Content-Type': 'application/json',
-          'accept': 'application/vnd.api+json',
-          'revision': '2025-07-15'
-        },
-        body: JSON.stringify({
-          data: {
-            type: "campaign-message",
-            id: campaignMessageId,
-            "relationships": {
-              "template": {
-                "data": {
-                  "type": "template",
-                  "id": template.data.id
-                }
+    const campaignMessageId = campaign.data.relationships['campaign-messages'].data[0].id
+    
+    const assignTemplateResponse = await fetch(`https://a.klaviyo.com/api/campaign-message-assign-template`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+        'Content-Type': 'application/json',
+        'accept': 'application/vnd.api+json',
+        'revision': '2025-07-15'
+      },
+      body: JSON.stringify({
+        data: {
+          type: "campaign-message",
+          id: campaignMessageId,
+          "relationships": {
+            "template": {
+              "data": {
+                "type": "template",
+                "id": template.data.id
               }
             }
           }
-        })
+        }
       })
+    })
 
-      if (!assignTemplateResponse.ok) {
-        const errorText = await assignTemplateResponse.text()
-        console.error('❌ Failed to assign template to campaign:', assignTemplateResponse.status, errorText)
-        throw new Error(`Failed to assign template: ${errorText}`)
-      }
-
-      console.log('✅ Template assigned successfully to campaign message')
-
-      // Create marketingCampaign document in Sanity
-      console.log('💾 Creating marketingCampaign document in Sanity')
-      const marketingCampaignId = `marketingCampaign-${_id}`
-      
-      try {
-        const newMarketingCampaign = await client.create({
-          _id: marketingCampaignId,
-          _type: 'marketingCampaign',
-          title: `${title} - Marketing Campaign`,
-          klaviyoCampaignId: campaign.data.id,
-          klaviyoTemplateId: template.data.id,
-          status: 'draft',
-          post: { _ref: _id, _type: 'reference' },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          description: `Marketing campaign for post: ${title}`
-        })
-
-        console.log('✅ Created marketingCampaign document:', newMarketingCampaign._id)
-
-        // Update the post with the marketingCampaign reference
-        console.log('🔄 Updating post with marketingCampaign reference')
-        await client.patch(_id, {
-          set: {
-            marketingCampaign: { _ref: newMarketingCampaign._id, _type: 'reference' },
-            status: 'ready-for-review'
-          }
-        }).commit()
-
-        console.log('✅ Post updated successfully with marketingCampaign reference')
-
-        console.log('✅ Marketing campaign creation completed:', {
-          postId: _id,
-          marketingCampaignId: newMarketingCampaign._id,
-          klaviyoCampaignId: campaign.data.id,
-          klaviyoTemplateId: template.data.id
-        })
-
-      } catch (error) {
-        console.error('❌ Error creating marketingCampaign document:', error)
-        throw error
-      }
-
-    } catch (error) {
-      console.error('❌ Error with Klaviyo API:', error)
-      throw error
+    if (!assignTemplateResponse.ok) {
+      const errorText = await assignTemplateResponse.text()
+      console.error('❌ Failed to assign template to campaign:', assignTemplateResponse.status, errorText)
+      throw new Error(`Failed to assign template: ${errorText}`)
     }
 
+    console.log('✅ Template assigned successfully to campaign message')
+
+    // Create marketingCampaign document in Sanity
+    console.log('💾 Creating marketingCampaign document in Sanity')
+    const marketingCampaignId = `marketingCampaign-${postId}`
+    
+    const newMarketingCampaign = await client.create({
+      _id: marketingCampaignId,
+      _type: 'marketingCampaign',
+      title: `${title} - Marketing Campaign`,
+      klaviyoCampaignId: campaign.data.id,
+      klaviyoTemplateId: template.data.id,
+      status: 'draft',
+      post: { _ref: postId, _type: 'reference' },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      description: `Marketing campaign for post: ${title}`
+    })
+
+    console.log('✅ Created marketingCampaign document:', newMarketingCampaign._id)
+
+    // Update the post with the marketingCampaign reference
+    console.log('🔄 Updating post with marketingCampaign reference')
+    await client.patch(postId, {
+      set: {
+        marketingCampaign: { _ref: newMarketingCampaign._id, _type: 'reference' },
+        status: 'ready-for-review'
+      }
+    }).commit()
+
+    console.log('✅ Post updated successfully with marketingCampaign reference')
+
+    console.log('✅ CREATE operation completed:', {
+      postId: postId,
+      marketingCampaignId: newMarketingCampaign._id,
+      klaviyoCampaignId: campaign.data.id,
+      klaviyoTemplateId: template.data.id
+    })
+
   } catch (error) {
-    console.error('❌ Error processing post for marketing campaign:', error)
+    console.error('❌ Error in CREATE operation:', error)
     throw error
   }
-})
+}
+
+// Handler for UPDATE operation - updates template only
+async function handleUpdateOperation(
+  client: any, 
+  postId: string, 
+  title: string | undefined, 
+  slug: { current: string } | undefined, 
+  klaviyoApiKey: string
+) {
+  console.log('🔄 UPDATE: Updating template for existing marketing campaign')
+  
+  try {
+    // Get the marketing campaign document to find the template ID
+    const marketingCampaignQuery = `*[_type == "marketingCampaign" && post._ref == "${postId}"][0]`
+    const marketingCampaignDoc = await client.fetch(marketingCampaignQuery)
+    
+    if (!marketingCampaignDoc) {
+      console.log('ℹ️ No marketing campaign found for post, skipping update')
+      return
+    }
+
+    const templateId = marketingCampaignDoc.klaviyoTemplateId
+    if (!templateId) {
+      console.error('❌ No template ID found in marketing campaign document')
+      return
+    }
+
+    console.log('📋 Found template ID:', templateId, 'for post:', postId)
+
+    // Fetch the latest body data for template update
+    const {body: bodyData} = await client.fetch(portableTextBodyQuery(postId))
+
+    // Generate updated email templates
+    const htmlContent = await generateEmailTemplate(title, slug?.current, bodyData)
+    const textContent = generateTextContent(title, slug?.current)
+
+    // Update the Klaviyo template
+    console.log('🔄 Updating Klaviyo template:', templateId)
+    const updatedTemplateData = {
+      data: {
+        type: 'template',
+        id: templateId,
+        attributes: {
+          html: htmlContent,
+          text: textContent
+        }
+      }
+    }
+
+    const updatedTemplateResponse = await fetch(`https://a.klaviyo.com/api/templates/${templateId}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+        'Content-Type': 'application/json',
+        'accept': 'application/vnd.api+json',
+        'revision': '2025-07-15'
+      },
+      body: JSON.stringify(updatedTemplateData)
+    })
+
+    if (!updatedTemplateResponse.ok) {
+      console.error('❌ Failed to update Klaviyo template:', updatedTemplateResponse.status, updatedTemplateResponse.statusText)
+      return
+    }
+
+    console.log('✅ Updated Klaviyo template:', templateId)
+
+    // Reassign the updated template to the campaign to refresh the cache
+    const klaviyoCampaignId = marketingCampaignDoc.klaviyoCampaignId
+    if (klaviyoCampaignId) {
+      console.log('🔄 Reassigning updated template to campaign:', klaviyoCampaignId)
+      
+      // Get the campaign message ID from the campaign
+      const campaignResponse = await fetch(`https://a.klaviyo.com/api/campaigns/${klaviyoCampaignId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+          'accept': 'application/vnd.api+json',
+          'revision': '2025-07-15'
+        }
+      })
+
+      if (campaignResponse.ok) {
+        const campaignData = await campaignResponse.json()
+        const campaignMessageId = campaignData.data.relationships?.['campaign-messages']?.data?.[0]?.id
+
+        if (campaignMessageId) {
+          // Reassign the template to the campaign message
+          const assignTemplateResponse = await fetch(`https://a.klaviyo.com/api/campaign-message-assign-template`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Klaviyo-API-Key ${klaviyoApiKey}`,
+              'Content-Type': 'application/json',
+              'accept': 'application/vnd.api+json',
+              'revision': '2025-07-15'
+            },
+            body: JSON.stringify({
+              data: {
+                type: "campaign-message",
+                id: campaignMessageId,
+                "relationships": {
+                  "template": {
+                    "data": {
+                      "type": "template",
+                      "id": templateId
+                    }
+                  }
+                }
+              }
+            })
+          })
+
+          if (assignTemplateResponse.ok) {
+            console.log('✅ Successfully reassigned updated template to campaign')
+          } else {
+            const errorText = await assignTemplateResponse.text()
+            console.error('❌ Failed to reassign template to campaign:', assignTemplateResponse.status, errorText)
+          }
+        } else {
+          console.error('❌ No campaign message ID found in campaign data')
+        }
+      } else {
+        console.error('❌ Failed to fetch campaign data for template reassignment')
+      }
+    } else {
+      console.log('ℹ️ No Klaviyo campaign ID found, skipping template reassignment')
+    }
+
+    // Update the marketing campaign document's updatedAt timestamp
+    await client.patch(marketingCampaignDoc._id, {
+      set: {
+        updatedAt: new Date().toISOString()
+      }
+    }).commit()
+
+    console.log('✅ UPDATE operation completed for post:', postId)
+
+  } catch (error) {
+    console.error('❌ Error in UPDATE operation:', error)
+    throw error
+  }
+}
 
 // Helper function to generate email template HTML
 async function generateEmailTemplate(title: string | undefined, slug: string | undefined, body: any[] | undefined): Promise<string> {
@@ -535,3 +583,52 @@ Best regards,
 Your Team
   `.trim()
 }
+
+const portableTextBodyQuery = (postId: string) => `
+*[_id == "${postId}"][0]{
+      body[]{
+        _type,
+        _key,
+        // Handle image blocks
+        _type == "image" => {
+          asset->{
+            url,
+            metadata
+          },
+          alt
+        },
+        // Handle product blocks
+        _type == "products" => {
+          _type,
+          products[]->{
+            _type,
+            ...,
+            store
+          }
+        },
+        // Handle text blocks
+        _type == "block" => {
+          ...,
+          children[]{
+            ...,
+            // Resolve any marks that might have references
+            _type == "span" => {
+              ...,
+              markDefs[]{
+                ...,
+                _type == "link" => {
+                  ...,
+                  internalLink->{
+                    _id,
+                    _type,
+                    title,
+                    slug
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+`

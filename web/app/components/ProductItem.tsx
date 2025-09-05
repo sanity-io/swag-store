@@ -94,15 +94,15 @@ export function GridProductItem({
                 d="M5.75 17.25L17.25 5.75"
                 stroke="white"
                 stroke-width="2.15625"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
               <path
                 d="M7.90625 5.75H17.25V15.0938"
                 stroke="white"
-                stroke-width="2.15625"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2.15625"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </g>
             <defs>

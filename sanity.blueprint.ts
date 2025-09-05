@@ -44,9 +44,9 @@ export default defineBlueprint({
       name: 'marketing-campaign-create',
       src: 'functions/marketing-campaign-create',
       event: {
-        on: ['publish'],
-        filter: '_type == "post" && !defined(marketingCampaign) && status != "sent"',
-        projection: '{_id, _type, title, slug, body, marketingCampaign, klaviyoListId}',
+        on: ['create', 'update'],
+        filter: '_type == "post" && status != "sent"',
+        projection: '{_id, _type, title, slug, body, marketingCampaign, klaviyoListId, "operation": delta::operation()}',
       },
       env: {
         KLAVIYO_API_KEY,

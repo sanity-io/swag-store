@@ -12,11 +12,30 @@ export default async function handleRequest(
   reactRouterContext: EntryContext,
   context: AppLoadContext,
 ) {
+  const projectId = context.env.SANITY_PROJECT_ID;
+  const studioHostName =
+    context.env.SANITY_STUDIO_HOST || 'http://localhost:3333';
+  const storefrontOrigin =
+    context.env.SANITY_STUDIO_STOREFRONT_ORIGIN || 'http://localhost:3000';
+  const isPreviewEnabled = context.sanity.preview?.enabled;
+
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
+    // Allow Sanity assets loaded from the CDN to be loaded in your storefront
+    defaultSrc: ['https://cdn.sanity.io'],
+    // Allow Studio to load your storefront in Presentation's iframe
+    // Also allow self for local development
+    frameAncestors: isPreviewEnabled
+      ? [studioHostName, storefrontOrigin, "'self'"]
+      : [],
+    // Allow client-side requests for Studio to do realtime collaboration
+    connectSrc: [
+      `https://${projectId}.api.sanity.io`,
+      `wss://${projectId}.api.sanity.io`,
+    ],
   });
 
   const body = await renderToReadableStream(
@@ -42,7 +61,7 @@ export default async function handleRequest(
   }
 
   responseHeaders.set('Content-Type', 'text/html');
-  // responseHeaders.set('Content-Security-Policy', header);
+  responseHeaders.set('Content-Security-Policy', header);
 
   return new Response(body, {
     headers: responseHeaders,

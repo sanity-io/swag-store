@@ -29,7 +29,7 @@ type SearchFormProps = Omit<FormProps, 'children'> & {
 export function SearchForm({children, ...props}: SearchFormProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useFocusOnCmdK(inputRef);
+  useFocusOnCmdT(inputRef);
 
   if (typeof children !== 'function') {
     return null;
@@ -43,13 +43,13 @@ export function SearchForm({children, ...props}: SearchFormProps) {
 }
 
 /**
- * Focuses the input when cmd+k is pressed
+ * Focuses the input when cmd+t is pressed
  */
-function useFocusOnCmdK(inputRef: React.RefObject<HTMLInputElement>) {
-  // focus the input when cmd+k is pressed
+function useFocusOnCmdT(inputRef: React.RefObject<HTMLInputElement>) {
+  // focus the input when cmd+t is pressed
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'k' && event.metaKey) {
+      if (event.key === 't' && event.metaKey) {
         event.preventDefault();
         inputRef.current?.focus();
       }

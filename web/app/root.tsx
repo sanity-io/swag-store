@@ -181,7 +181,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
         ) : (
           children
         )}
-        {/* {data?.isPreviewEnabled ? <VisualEditing /> : null} */}
+        {data?.isPreviewEnabled ? (
+          <VisualEditing action="/api/preview" />
+        ) : null}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

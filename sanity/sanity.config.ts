@@ -13,6 +13,7 @@ import {imageHotspotArrayPlugin} from 'sanity-plugin-hotspot-array'
 import {media, mediaAssetSource} from 'sanity-plugin-media'
 import {customDocumentActions} from './plugins/customDocumentActions'
 import Navbar from './components/studio/Navbar'
+import {presentationTool} from 'sanity/presentation'
 
 // Environment variables for project configuration
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
@@ -48,6 +49,16 @@ export default defineConfig({
     colorInput(),
     imageHotspotArrayPlugin(),
     customDocumentActions(),
+    presentationTool({
+      previewUrl: {
+        initial: 'http://localhost:3000',
+        previewMode: {
+          enable: 'api/preview',
+          disable: 'api/preview',
+        },
+      },
+      allowOrigins: ['http://localhost:3000'],
+    }),
     media(),
     assist(),
     ...(isDev ? devOnlyPlugins : []),
