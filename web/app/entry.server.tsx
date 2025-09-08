@@ -19,6 +19,9 @@ export default async function handleRequest(
     context.env.SANITY_STUDIO_STOREFRONT_ORIGIN || 'http://localhost:3000';
   const isPreviewEnabled = context.sanity.preview?.enabled;
 
+  const {SanityProvider} = context.sanity;
+
+  console.log('isPreviewEnabled', isPreviewEnabled);
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
@@ -40,11 +43,13 @@ export default async function handleRequest(
 
   const body = await renderToReadableStream(
     <NonceProvider>
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        nonce={nonce}
-      />
+      <SanityProvider>
+        <ServerRouter
+          context={reactRouterContext}
+          url={request.url}
+          nonce={nonce}
+        />
+      </SanityProvider>
     </NonceProvider>,
     {
       nonce,

@@ -175,7 +175,7 @@ function Image({
             {...commonImageProps}
             sizes={sizes}
             onLoad={() => setLoaded(true)}
-            className="w-auto h-auto object-cover"
+            className="w-full h-auto object-cover"
             style={{opacity: isLoaded ? 1 : 0}}
             ref={imgRef}
           />

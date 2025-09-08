@@ -21,6 +21,8 @@ import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
 
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
+import {usePreviewMode} from 'hydrogen-sanity/preview';
+import {Sanity} from 'hydrogen-sanity';
 
 export type RootLoader = typeof loader;
 
@@ -90,7 +92,6 @@ export async function loader(args: LoaderFunctionArgs) {
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,
     }),
-    isPreviewEnabled: sanity.preview?.enabled,
     consent: {
       checkoutDomain: env.PUBLIC_CHECKOUT_DOMAIN,
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
@@ -157,6 +158,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
   // Get the current language for the HTML lang attribute
   const {currentLocale} = useLocale();
   const currentLanguage = currentLocale.language.toLowerCase();
+  const isPreviewMode = usePreviewMode();
 
   return (
     <html lang={currentLanguage}>
@@ -181,9 +183,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
         ) : (
           children
         )}
-        {data?.isPreviewEnabled ? (
-          <VisualEditing action="/api/preview" />
-        ) : null}
+
+        <Sanity nonce={nonce} />
+        {isPreviewMode ? <VisualEditing action="/api/preview" /> : null}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

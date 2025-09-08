@@ -16,6 +16,8 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {Arrow} from '~/components/Icons';
 import SanityImage from '~/components/SanityImage';
 import {AddToCartButton} from '~/components/AddToCartButton';
+import {PortableText} from '@portabletext/react';
+import {portableRichText} from '~/serializers/richText';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -121,6 +123,8 @@ export default function Product() {
 
   const {title, descriptionHtml} = product;
 
+  const {body} = sanityProduct;
+
   return (
     <div className="product bg-gray grid grid-cols-2 gap-0">
       <script
@@ -177,8 +181,8 @@ export default function Product() {
                 aspect={aspectRatio}
                 srcSet=""
                 maxWidth={800}
-                width={600}
-                containerClasses="w-full !max-w-full object-contain"
+                className="object-cover w-full"
+                containerClasses="w-full !max-w-full object-cover"
               />
             );
           })}
@@ -199,11 +203,7 @@ export default function Product() {
           <div className="pb-[60px]">
             <br />
             <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-            <p className="uppercase mb-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-              ultricies velit metus, nec fringilla odio tincidunt eu. Nulla
-              vitae semper tortor. Suspendisse ultricies velit posuere.
-            </p>
+            <PortableText value={body} components={portableRichText} />
             <ProductFormPDP
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
               productOptions={productOptions}
@@ -229,7 +229,7 @@ export default function Product() {
           }}
         />
       </div>
-      <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px]">
+      <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px] z-30">
         <AddToCartButton
           disabled={!selectedVariant || !selectedVariant.availableForSale}
           onClick={() => {
