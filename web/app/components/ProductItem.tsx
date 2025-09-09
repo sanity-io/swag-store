@@ -52,13 +52,17 @@ export function GridProductItem({
   const image = product.featuredImage;
   return (
     <div
-      className="grid border uppercase border-b items-center border-gray-200 grid-cols-10 gap-0"
+      className="grid border md:hover:opacity-70 relative uppercase border-b items-center border-gray-200 grid-cols-10 gap-0"
       key={product.id}
       prefetch="intent"
       to={variantUrl}
     >
-      <div className="hidden 800:block col-span-2 p-2">001</div>
-      <div className="w-[40px] col-span-1 h-full bg-white">
+      <LocalizedLink
+        to={variantUrl}
+        className=" absolute top-0 left-0 items-center justify-center w-full h-full"
+      ></LocalizedLink>
+      <div className="hidden 800:block col-span-2 p-1.5">001</div>
+      <div className="w-[36px] col-span-1 h-full bg-white">
         {image && (
           <Image
             alt={image.altText || product.title}
@@ -70,13 +74,13 @@ export function GridProductItem({
           />
         )}
       </div>
-      <div className="col-span-6 800:col-span-4 p-2">
+      <div className="col-span-6 800:col-span-3 p-1.5">
         <h4>{product.title}</h4>
       </div>
-      <div className="col-span-2 p-2">
+      <div className="col-span-2 p-1.5">
         <Money data={product.priceRange.minVariantPrice} />
       </div>
-      <div className="col-span-1 flex items-end justify-end h-full">
+      <div className="col-span-1 relative z-10 800:col-span-2 flex  justify-end h-full">
         <LocalizedLink
           to={variantUrl}
           className="bg-black 800:hidden flex items-center justify-center w-full h-full"
@@ -112,11 +116,13 @@ export function GridProductItem({
             </defs>
           </svg>
         </LocalizedLink>
-        <ProductVariantForm
-          productOptions={product.options}
-          selectedVariant={product.selectedOrFirstAvailableVariant}
-          category={product.category?.slug.current}
-        />
+        <div className="hidden 800:block">
+          <ProductVariantForm
+            productOptions={product.options}
+            selectedVariant={product.selectedOrFirstAvailableVariant}
+            category={product.category?.slug.current}
+          />
+        </div>
       </div>
     </div>
   );

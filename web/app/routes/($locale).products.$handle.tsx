@@ -126,7 +126,7 @@ export default function Product() {
   const {body} = sanityProduct;
 
   return (
-    <div className="product bg-gray grid grid-cols-2 gap-0">
+    <div className=" bg-gray grid grid-cols-2 gap-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

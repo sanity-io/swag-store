@@ -150,11 +150,11 @@ export default function Collection() {
       )}
       {grid && (
         <div className="hidden 800:grid grid-cols-10 text-white gap-0 bg-black">
-          <div className="col-span-2 p-2 hidden 800:block">SKU</div>
-          <div className="col-span-1 p-2">Thumbnail</div>
-          <div className="col-span-6 800:col-span-4 p-2">Product</div>
-          <div className="col-span-2 p-2">Price</div>
-          <div className="col-span-1 p-2"></div>
+          <div className="col-span-2 p-1.5 hidden 800:block">SKU</div>
+          <div className="col-span-1 p-1.5">Thumbnail</div>
+          <div className="col-span-6 800:col-span-3 p-1.5">Product</div>
+          <div className="col-span-2 p-1.5">Price</div>
+          <div className="col-span-1 p-1.5"></div>
         </div>
       )}
       <div

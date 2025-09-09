@@ -3,6 +3,8 @@ import {useLoaderData, type MetaFunction} from 'react-router';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
 
+import {Arrow} from '~/components/Icons';
+
 type SelectedPolicies = keyof Pick<
   Shop,
   'privacyPolicy' | 'shippingPolicy' | 'termsOfService' | 'refundPolicy'
@@ -46,15 +48,19 @@ export default function Policy() {
   const {policy} = useLoaderData<typeof loader>();
 
   return (
-    <div className="policy">
-      <br />
-      <br />
+    <div className="bg-black text-white">
       <div>
-        <LocalizedLink to="/policies">← Back to Policies</LocalizedLink>
+        <LocalizedLink
+          to="/"
+          className="fixed text-white top-4 w-[80px] h-[80px] z-20 left-4"
+        >
+          <Arrow />
+        </LocalizedLink>
       </div>
-      <br />
-      <h1>{policy.title}</h1>
-      <div dangerouslySetInnerHTML={{__html: policy.body}} />
+      <div className="shopify-text pt-40 p-4">
+        <h1 className="font-sans my-4 text-18 800:text-30">{policy.title}</h1>
+        <div dangerouslySetInnerHTML={{__html: policy.body}} />
+      </div>
     </div>
   );
 }

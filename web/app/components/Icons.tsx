@@ -10,14 +10,14 @@ export const Arrow = () => (
     <g clipPath="url(#clip0_299_1367)">
       <path
         d="M42.1875 25H7.8125"
-        stroke="black"
+        stroke="currentColor"
         strokeWidth="3.125"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M21.875 10.9375L7.8125 25L21.875 39.0625"
-        stroke="black"
+        stroke="currentColor"
         strokeWidth="3.125"
         strokeLinecap="round"
         strokeLinejoin="round"

@@ -178,7 +178,7 @@ export function ProductVariantForm({
                           ? `/products/${handle}?${variantUriQuery}`
                           : '#'
                       }
-                      className={`product-options-item w-full md:hover:!bg-yellow ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      className={`product-options-item cursor-pointer w-full md:hover:!bg-brand-yellow md:hover:text-black ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
                       key={option.name + title}
                       prefetch="intent"
                       preventScrollReset
@@ -200,7 +200,7 @@ export function ProductVariantForm({
                     <>
                       <button
                         to={`/products/${handle}?${variantUriQuery}`}
-                        className={`product-options-item w-full h-[34px] !bg-black text-white md:hover:!bg-yellow px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
+                        className={`product-options-item cursor-pointer w-full h-[34px] bg-black text-white md:hover:!bg-brand-yellow md:hover:text-black px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
                         key={option.name + title}
