@@ -39,7 +39,7 @@ export function InformationHero({
           }}
         >
           <div className="mt-20 p-4">
-            <h1 className="font-sans !mt-0 font-normal text-56 leading-none ">
+            <h1 className="font-sans !mt-0 font-normal text-56 leading-none md:max-w-[80%]">
               {header}
             </h1>
           </div>

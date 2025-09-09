@@ -96,7 +96,7 @@ export function CountrySelector({
 
       {isOpen && (
         <div className="absolute bottom-full right-0 mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
-          <div className="p-3 border-b border-white">
+          {/* <div className="p-3 border-b border-white">
             <input
               type="text"
               placeholder="Search countries, currencies..."
@@ -104,7 +104,7 @@ export function CountrySelector({
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-3 py-2 text-sm border border-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
-          </div>
+          </div> */}
 
           <div className="max-h-64 overflow-y-auto">
             {filteredLocales.map((locale) => (
