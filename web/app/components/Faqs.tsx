@@ -69,9 +69,11 @@ export const Faqs = ({questions, subtitle, description}: FaqsProps) => {
               <div key={question._key} className="border-b border-black">
                 <button
                   onClick={() => toggleItem(question._key)}
-                  className="w-full inline-flex  text-left items-center justify-between py-4 px-0 focus:outline-none"
+                  className="w-full inline-flex cursor-pointer  text-left items-center justify-between py-4 md:py-[26px] px-0 focus:outline-none"
                 >
-                  <h3 className="text-30 font-sans">{question.question}</h3>
+                  <h3 className="text-30 w-calc(100%-40px) block font-sans">
+                    {question.question}
+                  </h3>
                   <div
                     className={clsx(
                       'transform duration-300',

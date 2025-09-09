@@ -1,6 +1,5 @@
 'use client';
 
-import {PortableText} from '@portabletext/react';
 import {LocalizedLink} from '~/components/LocalizedLink';
 
 const Marks = {
@@ -13,9 +12,14 @@ const Marks = {
 
   link: ({value, children}) => {
     const {href} = value;
-    if (href.startsWith('http')) {
+    if (href.startsWith('http') || href.startsWith('mailto')) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
           {children}
         </a>
       );
