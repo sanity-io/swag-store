@@ -29,7 +29,7 @@ export function AddToCartButton({
           <button
             type="submit"
             className={clsx(
-              'bg-black text-white px-4 py-2 800:hover:bg-brand-yellow 800:hover:text-black transition-colors duration-300',
+              'bg-black text-white font-sans font-bold px-4 py-2 800:hover:bg-brand-yellow 800:hover:text-black transition-colors duration-300',
               className,
             )}
             onClick={onClick}
