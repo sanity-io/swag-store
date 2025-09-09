@@ -18,7 +18,7 @@ export const Careers = ({subtitle, body, cta}) => {
           <div>
             {cta && (
               <a
-                className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase"
+                className="border inline-block rounded-[30px] md:hover:bg-black md:hover:text-white border-black p-2 px-4 uppercase"
                 href={cta.url}
               >
                 {cta.label}
