@@ -1,5 +1,6 @@
 import {Link, type LinkProps} from 'react-router';
 import {useLocale} from '~/hooks/useLocale';
+import {SUPPORTED_LOCALES} from '~/lib/i18n';
 
 interface LocalizedLinkProps extends Omit<LinkProps, 'to'> {
   to: string;
@@ -26,8 +27,22 @@ export function LocalizedLink({to, children, ...props}: LocalizedLinkProps) {
       );
     }
 
-    // If it's an external URL or already has a locale prefix, don't modify it
+    // If it's an external URL, don't modify it
     if (to.startsWith('http') || to.startsWith('//') || to.includes('://')) {
+      return (
+        <Link to={to} {...props}>
+          {children}
+        </Link>
+      );
+    }
+
+    // Check if the path already has a locale prefix
+    const hasExistingLocale = SUPPORTED_LOCALES.some(
+      (locale) => locale.pathPrefix && to.startsWith(locale.pathPrefix),
+    );
+
+    // If it already has a locale prefix, don't add another one
+    if (hasExistingLocale) {
       return (
         <Link to={to} {...props}>
           {children}
@@ -75,8 +90,22 @@ export function LocalizedNavLink({to, children, ...props}: LocalizedLinkProps) {
       );
     }
 
-    // If it's an external URL or already has a locale prefix, don't modify it
+    // If it's an external URL, don't modify it
     if (to.startsWith('http') || to.startsWith('//') || to.includes('://')) {
+      return (
+        <Link to={to} {...props}>
+          {children}
+        </Link>
+      );
+    }
+
+    // Check if the path already has a locale prefix
+    const hasExistingLocale = SUPPORTED_LOCALES.some(
+      (locale) => locale.pathPrefix && to.startsWith(locale.pathPrefix),
+    );
+
+    // If it already has a locale prefix, don't add another one
+    if (hasExistingLocale) {
       return (
         <Link to={to} {...props}>
           {children}

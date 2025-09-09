@@ -49,13 +49,18 @@ export function CountrySelector({
     const currentLocalePath = currentLocale.pathPrefix;
     let newPath = currentPath;
 
-    if (currentLocalePath) {
-      // Remove current locale from path
-      newPath = currentPath.replace(currentLocalePath, '');
+    // Remove current locale from path if it exists
+    if (currentLocalePath && currentPath.startsWith(currentLocalePath)) {
+      newPath = currentPath.substring(currentLocalePath.length);
     }
 
+    // Ensure the path starts with a slash
+    if (!newPath.startsWith('/')) {
+      newPath = '/' + newPath;
+    }
+
+    // Add new locale to path
     if (newLocale.pathPrefix) {
-      // Add new locale to path
       newPath = newLocale.pathPrefix + newPath;
     }
 

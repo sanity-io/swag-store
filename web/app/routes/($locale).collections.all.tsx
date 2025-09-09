@@ -57,7 +57,11 @@ async function loadCriticalData({context, request}: LoaderFunctionArgs) {
 
   const [{products}] = await Promise.all([
     storefront.query(CATALOG_QUERY, {
-      variables: {...paginationVariables},
+      variables: {
+        ...paginationVariables,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      },
     }),
     // Add other queries here, so that they are loaded in parallel
   ]);

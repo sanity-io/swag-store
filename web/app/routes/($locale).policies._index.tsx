@@ -3,7 +3,12 @@ import {useLoaderData, type MetaFunction} from 'react-router';
 import {LocalizedLink} from '~/components/LocalizedLink';
 
 export async function loader({context}: LoaderFunctionArgs) {
-  const data = await context.storefront.query(POLICIES_QUERY);
+  const data = await context.storefront.query(POLICIES_QUERY, {
+    variables: {
+      country: context.storefront.i18n?.country,
+      language: context.storefront.i18n?.language,
+    },
+  });
   const policies = Object.values(data.shop || {});
 
   if (!policies.length) {

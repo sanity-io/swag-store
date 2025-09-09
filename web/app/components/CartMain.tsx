@@ -220,7 +220,7 @@ function CartLines({
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <g clip-path="url(#clip0_565_3294)">
+            <g clipPath="url(#clip0_565_3294)">
               <path
                 d="M21.5459 11.9991H2.45406"
                 stroke="black"
@@ -263,7 +263,7 @@ function CartLines({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g clip-path="url(#clip0_565_3294)">
+          <g clipPath="url(#clip0_565_3294)">
             <path
               d="M21.5459 11.9991H2.45406"
               stroke="black"
