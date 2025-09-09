@@ -8,7 +8,7 @@ export const Careers = ({subtitle, body, cta}) => {
      flex flex-col"
     >
       <div className="grid grid-cols-1 800:grid-cols-3 h-full gap-4 flex-1">
-        <div className="col-span-1 p-4 flex flex-col min-h-[300px] justify-between">
+        <div className="col-span-1 p-4 flex flex-col min-h-[300px] md:aspect-square justify-between">
           <div>
             <span>{subtitle}</span>
             <div>
