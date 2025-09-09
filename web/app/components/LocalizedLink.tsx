@@ -51,7 +51,11 @@ export function LocalizedLink({to, children, ...props}: LocalizedLinkProps) {
     }
 
     // Add locale prefix to internal routes
-    const localizedTo = currentLocale.pathPrefix + to;
+    // Handle homepage route specially - don't add trailing slash
+    const localizedTo =
+      to === '/'
+        ? currentLocale.pathPrefix || '/'
+        : currentLocale.pathPrefix + to;
 
     return (
       <Link to={localizedTo} {...props}>
@@ -114,7 +118,11 @@ export function LocalizedNavLink({to, children, ...props}: LocalizedLinkProps) {
     }
 
     // Add locale prefix to internal routes
-    const localizedTo = currentLocale.pathPrefix + to;
+    // Handle homepage route specially - don't add trailing slash
+    const localizedTo =
+      to === '/'
+        ? currentLocale.pathPrefix || '/'
+        : currentLocale.pathPrefix + to;
 
     return (
       <Link to={localizedTo} {...props}>
