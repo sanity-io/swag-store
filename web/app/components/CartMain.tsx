@@ -1,5 +1,6 @@
 import {useOptimisticCart, Money} from '@shopify/hydrogen';
 import {LocalizedLink} from './LocalizedLink';
+import {LocalizedMoney} from './LocalizedMoney';
 import {useLocation} from 'react-router';
 import {useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
@@ -39,7 +40,7 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
           Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
             {cart?.cost?.subtotalAmount?.amount ? (
-              <Money data={cart?.cost?.subtotalAmount} />
+              <LocalizedMoney data={cart?.cost?.subtotalAmount} />
             ) : (
               '$0'
             )}
