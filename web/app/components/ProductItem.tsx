@@ -52,7 +52,7 @@ export function GridProductItem({
   const image = product.featuredImage;
   return (
     <div
-      className="grid border md:hover:opacity-70 relative uppercase border-b items-center border-gray-200 grid-cols-10 gap-0"
+      className="grid border md:hover:bg-[rgba(0,0,0,0.03)] relative uppercase border-b items-center border-gray-200 grid-cols-10 gap-0"
       key={product.id}
       prefetch="intent"
       to={variantUrl}

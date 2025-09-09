@@ -30,6 +30,12 @@
   }
 }
 
+.grid-bg {
+  background-image: url(/images/grid-bg.png);
+  background-size: 5px;
+  background-repeat: repeat;
+}
+
 
 
 .overlay {

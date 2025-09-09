@@ -116,7 +116,9 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
               to="/collections/all"
               className={clsx(
                 'w-full text-center inline-flex h-full justify-center items-center font-bold',
-                grid !== 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+                grid !== 'true'
+                  ? 'bg-brand-blue !bg-image-none'
+                  : 'bg-brand-blue/50 grid-bg',
               )}
             >
               Catalogue
@@ -125,7 +127,7 @@ export function Header({header, children, publicStoreDomain}: HeaderProps) {
               to="/collections/all?grid=true"
               className={clsx(
                 'w-full text-center inline-flex h-full justify-center items-center font-bold',
-                grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50',
+                grid === 'true' ? 'bg-brand-blue' : 'bg-brand-blue/50 grid-bg',
               )}
             >
               Grid View

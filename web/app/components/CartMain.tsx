@@ -29,10 +29,13 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
     <div
       key="CART_BUTTON"
       aria-labelledby="cart-summary"
-      className="w-full h-[40px] order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
+      className="w-full h-[40px] group order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
     >
-      <div className="w-full 800:w-1/3 flex justify-between items-center">
-        <div className="bg-black text-white  py-2 inline-flex w-1/2 px-[20px]">
+      <a
+        href={originalCart?.checkoutUrl}
+        className="w-full 800:w-1/3 flex justify-between items-center"
+      >
+        <div className="bg-black text-white md:group-hover:text-brand-yellow  py-2 inline-flex w-1/2 px-[20px]">
           Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
             {cart?.cost?.subtotalAmount?.amount ? (
@@ -42,13 +45,10 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
             )}
           </dd>
         </div>
-        <a
-          href={originalCart?.checkoutUrl}
-          className="bg-black !text-white text-right font-sans font-bold capitalize text-16 py-2 w-1/2 px-[20px]"
-        >
+        <span className="bg-black text-white text-right md:group-hover:text-brand-yellow font-sans font-bold capitalize text-16 py-2 w-1/2 px-[20px]">
           checkout
-        </a>
-      </div>
+        </span>
+      </a>
     </div>
   );
 }
