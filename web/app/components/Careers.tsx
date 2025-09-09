@@ -10,7 +10,7 @@ export const Careers = ({subtitle, body, cta}) => {
       <div className="grid grid-cols-1 800:grid-cols-3 h-full gap-4 flex-1">
         <div className="col-span-1 p-4 flex flex-col min-h-[300px] md:aspect-square justify-between">
           <div>
-            <span>{subtitle}</span>
+            <span className="uppercase">{subtitle}</span>
             <div>
               <PortableText value={body} components={portableRichText} />
             </div>
