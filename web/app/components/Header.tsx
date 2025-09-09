@@ -197,7 +197,7 @@ export function HeaderMenu({
             : item.url;
         return (
           <LocalizedNavLink
-            className="header-menu-item uppercase"
+            className="header-menu-item uppercase md:hover:underline"
             key={item.id}
             to={url}
           >
