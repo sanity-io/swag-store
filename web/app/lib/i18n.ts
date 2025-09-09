@@ -18,6 +18,14 @@ export const SUPPORTED_LOCALES: I18nLocale[] = [
     flag: '🇺🇸',
   },
   {
+    language: 'NO',
+    country: 'NO', 
+    pathPrefix: '/no-no',
+    currency: 'NOK',
+    label: 'Norway',
+    flag: '🇳🇴',
+  },
+  {
     language: 'EN',
     country: 'CA',
     pathPrefix: '/en-ca',

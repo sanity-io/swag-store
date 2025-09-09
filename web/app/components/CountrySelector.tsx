@@ -68,7 +68,7 @@ export function CountrySelector({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-black bg-transparent  border-gray-300 rounded-md hover:opacity-70 cursor-pointer outline-none "
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
@@ -90,14 +90,14 @@ export function CountrySelector({
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 w-80 bg-white border border-gray-300 rounded-md shadow-lg z-50">
-          <div className="p-3 border-b border-gray-200">
+        <div className="absolute bottom-full right-0 mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
+          <div className="p-3 border-b border-white">
             <input
               type="text"
               placeholder="Search countries, currencies..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full px-3 py-2 text-sm border border-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
           </div>
 
@@ -106,16 +106,16 @@ export function CountrySelector({
               <button
                 key={`${locale.language}-${locale.country}`}
                 onClick={() => handleLocaleChange(locale)}
-                className={`w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
+                className={`w-full flex items-center gap-3 text-white hover:text-black px-4 py-3 text-left hover:bg-brand-yellow transition-colors ${
                   locale.pathPrefix === currentLocale.pathPrefix
-                    ? 'bg-indigo-50 text-indigo-700'
+                    ? 'bg-brand-yellow !text-black'
                     : 'text-gray-700'
                 }`}
               >
                 <span className="text-xl">{locale.flag}</span>
                 <div className="flex-1">
-                  <div className="font-medium">{locale.label}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="font-medium ">{locale.label}</div>
+                  <div className="text-sm ">
                     {locale.language} • {locale.currency}
                   </div>
                 </div>
