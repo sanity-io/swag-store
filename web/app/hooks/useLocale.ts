@@ -1,10 +1,11 @@
-import {useRouteLoaderData} from 'react-router';
-import type {RootLoader} from '~/root';
-import {SUPPORTED_LOCALES} from '~/lib/i18n';
+import {useLocation} from 'react-router';
+import {SUPPORTED_LOCALES, getLocaleFromRequest} from '~/lib/i18n';
 
 export function useLocale() {
-  const data = useRouteLoaderData<RootLoader>('root');
-  const currentLocale = data?.storefront?.i18n;
+  const location = useLocation();
+  
+  // Get the current locale from the URL path
+  const currentLocale = getLocaleFromRequest(new Request(`https://example.com${location.pathname}`));
   
   // Find the full locale object from our supported locales
   const fullLocale = SUPPORTED_LOCALES.find(
