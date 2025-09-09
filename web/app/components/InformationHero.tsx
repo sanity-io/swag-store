@@ -12,7 +12,7 @@ export function InformationHero({
 }) {
   return (
     <div className="bg-brand-green min-h-[calc(100vh-40px)]">
-      <div className="grid grid-cols-1 800:grid-cols-3 min-h-[calc(100vh)] gap-4">
+      <div className="grid grid-cols-1 800:grid-cols-3 min-h-[calc(100vh)] md:gap-4">
         <div
           className="col-span-1"
           style={{
