@@ -231,3 +231,35 @@ export const FOOTER_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 ` as const;
+
+// Cart query with locale context for root loader
+export const CART_QUERY_ROOT = `#graphql
+  query CartQueryRoot($cartId: ID!, $country: CountryCode, $language: LanguageCode, $numCartLines: Int = 100)
+    @inContext(country: $country, language: $language) {
+    cart(id: $cartId) {
+      ...CartApiQuery
+    }
+  }
+  ${CART_QUERY_FRAGMENT}
+` as const;
+
+// Cart query with locale context for cart route
+export const CART_QUERY_ROUTE = `#graphql
+  query CartQueryRoute($cartId: ID!, $country: CountryCode, $language: LanguageCode, $numCartLines: Int = 100)
+    @inContext(country: $country, language: $language) {
+    cart(id: $cartId) {
+      ...CartApiQuery
+    }
+  }
+  ${CART_QUERY_FRAGMENT}
+` as const;
+
+// Cart query for context (actions) - no @inContext directive
+export const CART_QUERY_CONTEXT = `#graphql
+  query CartQueryContext($cartId: ID!, $numCartLines: Int = 100) {
+    cart(id: $cartId) {
+      ...CartApiQuery
+    }
+  }
+  ${CART_QUERY_FRAGMENT}
+` as const;

@@ -43,6 +43,7 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
         if (item?._type === 'gridItem') {
           return (
             <div
+              key={item._key}
               className="grid-item text-white p-2 py-0 px-4"
               style={{backgroundColor: 'black'}}
             >

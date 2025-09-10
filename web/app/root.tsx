@@ -1,4 +1,9 @@
-import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
+import {
+  Analytics,
+  getShopAnalytics,
+  useNonce,
+  createHydrogenContext,
+} from '@shopify/hydrogen';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Outlet,
@@ -13,7 +18,8 @@ import {
   useLocation,
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import {FOOTER_QUERY, HEADER_QUERY, CART_QUERY_FRAGMENT} from '~/lib/fragments';
+import {getLocaleFromRequest} from '~/lib/i18n';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
@@ -39,6 +45,16 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
+
+  // revalidate when the locale changes (different path prefix)
+  const currentPath = currentUrl.pathname;
+  const nextPath = nextUrl.pathname;
+  const currentLocale = currentPath.split('/')[1];
+  const nextLocale = nextPath.split('/')[1];
+
+  if (currentLocale !== nextLocale) {
+    return true;
+  }
 
   // Defaulting to no revalidation for root loader data to improve performance.
   // When using this feature, you risk your UI getting out of sync with your server.
@@ -79,14 +95,34 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env, sanity} = args.context;
+  const {storefront, env, sanity, cache, waitUntil, session} = args.context;
+
+  // Get the current locale from the request URL
+  const currentLocale = getLocaleFromRequest(args.request);
+
+  // Create a new hydrogen context with the current locale
+  const hydrogenContext = createHydrogenContext({
+    env,
+    request: args.request,
+    cache: cache as Cache,
+    waitUntil,
+    session,
+    i18n: currentLocale,
+    cart: {
+      queryFragment: CART_QUERY_FRAGMENT,
+    },
+  });
+
+  // Get cart data
+  const cartData = await hydrogenContext.cart.get();
 
   return {
     ...deferredData,
     ...criticalData,
+    cart: Promise.resolve(cartData),
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     storefront: {
-      i18n: storefront.i18n,
+      i18n: currentLocale,
     },
     shop: getShopAnalytics({
       storefront,
@@ -97,8 +133,8 @@ export async function loader(args: LoaderFunctionArgs) {
       storefrontAccessToken: env.PUBLIC_STOREFRONT_API_TOKEN,
       withPrivacyBanner: false,
       // localize the privacy banner
-      country: args.context.storefront.i18n.country,
-      language: args.context.storefront.i18n.language,
+      country: currentLocale.country,
+      language: currentLocale.language,
     },
   };
 }
@@ -149,7 +185,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
       return null;
     });
   return {
-    cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
   };

@@ -102,7 +102,6 @@ export async function action({request, context}: ActionFunctionArgs) {
 
 export async function loader({context}: LoaderFunctionArgs) {
   const {cart} = context;
-  // Force cart to refresh with current locale context
   return await cart.get();
 }
 

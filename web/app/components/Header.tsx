@@ -1,14 +1,6 @@
-import {Suspense} from 'react';
-import {Await, useAsyncValue} from 'react-router';
 import {LocalizedLink, LocalizedNavLink} from './LocalizedLink';
-import {CartMain} from './CartMain';
-import {
-  type CartViewPayload,
-  useAnalytics,
-  useOptimisticCart,
-} from '@shopify/hydrogen';
+import {type CartViewPayload, useAnalytics} from '@shopify/hydrogen';
 import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
-import {useAside} from '~/components/Aside';
 import clsx from 'clsx';
 
 interface HeaderProps {

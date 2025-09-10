@@ -1,5 +1,4 @@
 import {Money} from '@shopify/hydrogen';
-import {useLocale} from '~/hooks/useLocale';
 
 interface LocalizedMoneyProps {
   data: {
@@ -11,24 +10,17 @@ interface LocalizedMoneyProps {
 /**
  * A localized Money component that ensures the correct currency is displayed
  * based on the current locale context.
+ *
+ * The cart data should now be properly localized through the @inContext directive
+ * in the cart query, so this component just renders the Money component directly.
  */
 export function LocalizedMoney({data}: LocalizedMoneyProps) {
-  const {currentLocale} = useLocale();
-
   // Ensure we have valid data
   if (!data || !data.amount) {
     return <Money data={data} />;
   }
 
-  // If we have a current locale, use its currency code
-  if (currentLocale && currentLocale.currency) {
-    const localizedData = {
-      ...data,
-      currencyCode: currentLocale.currency,
-    };
-    return <Money data={localizedData} />;
-  }
-
-  // Fallback to the original data
+  // The cart data should now be properly localized through the @inContext directive
+  // in the cart query, so we can just use the original Money component
   return <Money data={data} />;
 }

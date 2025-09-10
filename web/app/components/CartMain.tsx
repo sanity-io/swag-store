@@ -5,7 +5,6 @@ import {useLocation} from 'react-router';
 import {useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {CartLineItem} from '~/components/CartLineItem';
-import {CartSummary} from './CartSummary';
 import clsx from 'clsx';
 import {CartForm} from '@shopify/hydrogen';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
@@ -14,7 +13,7 @@ export type CartLayout = 'page' | 'aside';
 
 export type CartMainProps = {
   cart: CartApiQueryFragment | null;
-  layout: CartLayout;
+  layout?: CartLayout;
   // collectionPage: boolean;
 };
 
