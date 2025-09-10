@@ -18,7 +18,12 @@ import {
   useLocation,
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY, CART_QUERY_FRAGMENT} from '~/lib/fragments';
+import {
+  FOOTER_QUERY,
+  HEADER_QUERY,
+  CART_QUERY_FRAGMENT,
+  CART_QUERY_ROOT,
+} from '~/lib/fragments';
 import {getLocaleFromRequest} from '~/lib/i18n';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
@@ -26,9 +31,8 @@ import tailwindCss from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
 
-import {VisualEditing} from 'hydrogen-sanity/visual-editing';
-import {usePreviewMode} from 'hydrogen-sanity/preview';
 import {Sanity} from 'hydrogen-sanity';
+import {VisualEditing} from 'hydrogen-sanity/visual-editing';
 
 export type RootLoader = typeof loader;
 
@@ -113,8 +117,42 @@ export async function loader(args: LoaderFunctionArgs) {
     },
   });
 
-  // Get cart data
-  const cartData = await hydrogenContext.cart.get();
+  // Get cart data with currency context using storefront client (like products do)
+  let cartData = null;
+  try {
+    const cartId = await hydrogenContext.cart.getCartId();
+    if (cartId) {
+      console.log('Fetching cart with currency context:', {
+        cartId,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      });
+
+      // First, update the cart's buyer identity to match the current market
+      try {
+        await hydrogenContext.cart.updateBuyerIdentity({
+          countryCode: storefront.i18n.country,
+        });
+        console.log('Updated cart buyer identity to:', storefront.i18n.country);
+      } catch (updateError) {
+        console.log('Could not update cart buyer identity:', updateError);
+      }
+
+      const result = await storefront.query(CART_QUERY_ROOT, {
+        variables: {
+          cartId,
+          country: storefront.i18n.country,
+          language: storefront.i18n.language,
+        },
+      });
+      cartData = result.cart;
+      console.log('Cart data fetched:', cartData?.cost?.subtotalAmount);
+    }
+  } catch (error) {
+    console.error('Error fetching cart with currency context:', error);
+    // Fallback to regular cart.get() if currency context fails
+    cartData = await hydrogenContext.cart.get();
+  }
 
   return {
     ...deferredData,
@@ -197,7 +235,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
   // Get the current language for the HTML lang attribute
   const {currentLocale} = useLocale();
   const currentLanguage = currentLocale.language.toLowerCase();
-  const isPreviewMode = usePreviewMode();
 
   return (
     <html lang={currentLanguage}>
@@ -224,7 +261,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         )}
 
         <Sanity nonce={nonce} />
-        {isPreviewMode ? <VisualEditing action="/api/preview" /> : null}
+        <VisualEditing action="/api/preview" />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>

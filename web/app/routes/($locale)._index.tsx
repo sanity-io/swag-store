@@ -48,7 +48,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
   }
 
   const productIds = productData.data.products
-    ?.map(({product}) => product.map((p) => p.productId))
+    ?.map(({product}: any) => product.map((p: any) => p.productId))
     .flat();
   const uniqueProductIds = [...new Set(productIds)];
 

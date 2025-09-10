@@ -2,9 +2,8 @@ import {createHydrogenContext} from '@shopify/hydrogen';
 import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
 import {getLocaleFromRequest} from '~/lib/i18n';
+import {createSanityContext} from 'hydrogen-sanity';
 import {PreviewSession} from 'hydrogen-sanity/preview/session';
-
-import {createClient, createSanityContext} from 'hydrogen-sanity';
 
 /**
  * The context implementation is separate from server.ts
@@ -29,14 +28,14 @@ export async function createAppLoadContext(
     PreviewSession.init(request, [env.SESSION_SECRET]),
   ]);
 
-  const sanity = createSanityContext({
+  const sanity = await createSanityContext({
     request,
     cache,
     waitUntil,
     client: {
       projectId: env.SANITY_PROJECT_ID,
       dataset: env.SANITY_DATASET,
-      apiVersion: env.SANITY_API_VERSION || '2025-06-09',
+      apiVersion: env.SANITY_API_VERSION || '2025-08-27',
       useCdn: true,
     },
     preview: {

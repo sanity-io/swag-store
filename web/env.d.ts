@@ -24,6 +24,7 @@ declare global {
     SANITY_DATASET: string;
     SANITY_API_VERSION: string;
     SANITY_API_TOKEN: string;
+    SANITY_STUDIO_HOST: string;
     MARKETO_CLIENT_ID: string;
     MARKETO_CLIENT_SECRET: string;
     MARKETO_ENDPOINT: string;

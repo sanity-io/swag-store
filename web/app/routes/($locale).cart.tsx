@@ -8,6 +8,7 @@ import {
   type HeadersFunction,
 } from '@shopify/remix-oxygen';
 import {CartMain} from '~/components/CartMain';
+import {CART_QUERY_ROUTE} from '~/lib/fragments';
 
 export const meta: MetaFunction = () => {
   return [{title: `Hydrogen | Cart`}];
@@ -100,9 +101,47 @@ export async function action({request, context}: ActionFunctionArgs) {
   );
 }
 
-export async function loader({context}: LoaderFunctionArgs) {
-  const {cart} = context;
-  return await cart.get();
+export async function loader({request, context}: LoaderFunctionArgs) {
+  const {cart, storefront} = context;
+
+  // Get cart data with currency context using storefront client (like products do)
+  let cartData = null;
+  try {
+    const cartId = await cart.getCartId();
+    if (cartId) {
+      console.log('Fetching cart with currency context:', {
+        cartId,
+        country: storefront.i18n.country,
+        language: storefront.i18n.language,
+      });
+
+      // First, update the cart's buyer identity to match the current market
+      try {
+        await cart.updateBuyerIdentity({
+          countryCode: storefront.i18n.country,
+        });
+        console.log('Updated cart buyer identity to:', storefront.i18n.country);
+      } catch (updateError) {
+        console.log('Could not update cart buyer identity:', updateError);
+      }
+
+      const result = await storefront.query(CART_QUERY_ROUTE, {
+        variables: {
+          cartId,
+          country: storefront.i18n.country,
+          language: storefront.i18n.language,
+        },
+      });
+      cartData = result.cart;
+      console.log('Cart data fetched:', cartData?.cost?.subtotalAmount);
+    }
+  } catch (error) {
+    console.error('Error fetching cart with currency context:', error);
+    // Fallback to regular cart.get() if currency context fails
+    cartData = await cart.get();
+  }
+
+  return cartData;
 }
 
 export default function Cart() {
