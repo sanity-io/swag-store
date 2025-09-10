@@ -6,6 +6,7 @@ import pages from './pageStructure'
 import posts from './postStructure'
 import products from './productStructure'
 import settings from './settingStructure'
+import notifications from './notificationStructure'
 
 /**
  * Structure overrides
@@ -40,6 +41,7 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
     'product',
     'productVariant',
     'settings',
+    'notification',
   ].includes(id)
 }
 
@@ -55,6 +57,8 @@ export const structure: StructureResolver = (S, context) =>
       products(S, context),
       S.divider(),
       colorThemes(S, context),
+      S.divider(),
+      notifications(S, context),
       S.divider(),
       settings(S, context),
       S.divider(),

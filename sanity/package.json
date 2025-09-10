@@ -23,6 +23,7 @@
     "@sanity/color-input": "^4.0.0",
     "@sanity/embeddings-index-ui": "^3.0.0",
     "@sanity/icons": "^2.11.0",
+    "@sanity/sdk-react": "^2.2.0-cors-check.1",
     "@sanity/ui": "^2.0.0",
     "@sanity/vision": "^4.8.1",
     "lodash.get": "^4.4.2",

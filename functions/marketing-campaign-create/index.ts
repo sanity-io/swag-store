@@ -1,6 +1,7 @@
 import { documentEventHandler, type DocumentEvent } from '@sanity/functions'
 import { createClient } from '@sanity/client'
 import { toHTML } from '@portabletext/to-html'
+import { createMarketingCampaignNotification } from '../shared/notification-utils'
 
 interface PostDocument {
   _id: string;
@@ -101,6 +102,26 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
 
   } catch (error) {
     console.error('❌ Error processing post for marketing campaign:', error)
+    
+    // Create error notification for main function errors
+    try {
+      const client = createClient({
+        ...context.clientOptions,
+        dataset: 'production',
+        apiVersion: '2025-06-01',
+      })
+      
+      await createMarketingCampaignNotification(
+        client,
+        'error',
+        'Unknown Post',
+        undefined,
+        error instanceof Error ? error.message : 'Unknown error'
+      )
+    } catch (notificationError) {
+      console.error('❌ Error creating error notification:', notificationError)
+    }
+    
     throw error
   }
 })
@@ -319,8 +340,26 @@ async function handleCreateOperation(
       klaviyoTemplateId: template.data.id
     })
 
+    // Create success notification
+    await createMarketingCampaignNotification(
+      client,
+      'create',
+      title || 'Untitled Post',
+      newMarketingCampaign._id
+    )
+
   } catch (error) {
     console.error('❌ Error in CREATE operation:', error)
+    
+    // Create error notification
+    await createMarketingCampaignNotification(
+      client,
+      'error',
+      title || 'Untitled Post',
+      undefined,
+      error instanceof Error ? error.message : 'Unknown error'
+    )
+    
     throw error
   }
 }
@@ -461,8 +500,26 @@ async function handleUpdateOperation(
 
     console.log('✅ UPDATE operation completed for post:', postId)
 
+    // Create success notification
+    await createMarketingCampaignNotification(
+      client,
+      'update',
+      title || 'Untitled Post',
+      marketingCampaignDoc._id
+    )
+
   } catch (error) {
     console.error('❌ Error in UPDATE operation:', error)
+    
+    // Create error notification
+    await createMarketingCampaignNotification(
+      client,
+      'error',
+      title || 'Untitled Post',
+      undefined,
+      error instanceof Error ? error.message : 'Unknown error'
+    )
+    
     throw error
   }
 }

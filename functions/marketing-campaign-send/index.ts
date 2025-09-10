@@ -1,5 +1,6 @@
 import { documentEventHandler, type DocumentEvent } from '@sanity/functions'
 import { createClient } from '@sanity/client'
+import { createMarketingCampaignNotification } from '../shared/notification-utils'
 
 interface MarketingCampaignDocument {
   _id: string;
@@ -136,13 +137,51 @@ export const handler = documentEventHandler(async ({ context, event}: { context:
         sendJobId: sendJobResponse.data.id
       })
 
+      // Create success notification
+      await createMarketingCampaignNotification(
+        client,
+        'send',
+        postDocument.title || 'Untitled Post',
+        _id
+      )
+
     } catch (error) {
       console.error('❌ Error sending Klaviyo campaign:', error)
+      
+      // Create error notification
+      await createMarketingCampaignNotification(
+        client,
+        'error',
+        postDocument.title || 'Untitled Post',
+        _id,
+        error instanceof Error ? error.message : 'Unknown error'
+      )
+      
       throw error
     }
 
   } catch (error) {
     console.error('❌ Error processing campaign send:', error)
+    
+    // Create error notification for main function errors
+    try {
+      const client = createClient({
+        ...context.clientOptions,
+        dataset: 'production',
+        apiVersion: '2025-06-01',
+      })
+      
+      await createMarketingCampaignNotification(
+        client,
+        'error',
+        'Unknown Post',
+        _id,
+        error instanceof Error ? error.message : 'Unknown error'
+      )
+    } catch (notificationError) {
+      console.error('❌ Error creating error notification:', notificationError)
+    }
+    
     throw error
   }
 })

@@ -1,11 +1,22 @@
 import {defineField, defineType} from 'sanity'
 import {BasketIcon, ImageIcon} from '@sanity/icons'
+import {PostNotificationsInput} from '../../components/notifications/PostNotifications'
 
 export const postType = defineField({
   name: 'post',
   title: 'Emails',
   type: 'document',
   fields: [
+    defineField({
+      name: 'notifications',
+      title: 'Related Notifications',
+      type: 'string',
+      components: {
+        input: PostNotificationsInput,
+      },
+      readOnly: true,
+      description: 'Shows notifications related to this post from marketing campaign functions',
+    }),
     defineField({
       name: 'title',
       title: 'Title',

@@ -1,0 +1,19 @@
+{
+  "name": "notification-webhook",
+  "version": "1.0.0",
+  "description": "Webhook endpoint for creating notifications in Sanity",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch index.ts"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.10.0",
+    "@sanity/webhook": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
