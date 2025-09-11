@@ -27,12 +27,10 @@ export async function loader(args: LoaderFunctionArgs) {
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
   // Our home page is a reference to a settings singleton document
-  const {data} = await context.sanity.loadQuery(HOME_PAGE_QUERY);
+  const {data} = await context.sanity.query(HOME_PAGE_QUERY);
 
   // We fetch specific product GIDs for the homepage
-  const productData = await context.sanity.loadQuery(
-    NESTED_HOME_PRODUCTS_QUERY,
-  );
+  const productData = await context.sanity.query(NESTED_HOME_PRODUCTS_QUERY);
 
   if (!productData.data) {
     throw new Response(

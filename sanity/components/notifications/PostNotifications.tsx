@@ -48,7 +48,6 @@ export function PostNotifications(props: PostNotificationsProps) {
     }
   }, [documentId, marketingCampaign?._ref])
 
-
   const fetchNotifications = async () => {
     if (!documentId || !marketingCampaign?._ref || !client) return
 
