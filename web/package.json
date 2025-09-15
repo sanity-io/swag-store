@@ -9,8 +9,8 @@
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
-    "typecheck": "tsc --noEmit",
-    "codegen": "shopify hydrogen codegen"
+    "typecheck": "tsc --noEmit",    
+    "codegen": "shopify hydrogen codegen && sanity typegen generate"
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {

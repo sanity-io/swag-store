@@ -40,7 +40,7 @@ export async function createAppLoadContext(
     },
     preview: {
       token: env.SANITY_API_TOKEN,
-      studioUrl: env.SANITY_STUDIO_HOST || 'http://localhost:3333',
+      studioUrl: 'http://localhost:3000',
       session: previewSession,
     } 
   });

@@ -51,10 +51,13 @@ export default defineConfig({
     customDocumentActions(),
     presentationTool({
       previewUrl: {
+        initial: 'http://localhost:3000',
         previewMode: {
-          enable: '/api/preview',
+          enable: 'api/preview',
+          disable: 'api/preview',
         },
       },
+      allowOrigins: ['http://localhost:3000'],
     }),
     media(),
     assist(),

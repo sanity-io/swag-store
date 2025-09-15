@@ -8,6 +8,7 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "build": "sanity build",
+    "extract": "sanity schema extract",
     "deploy": "sanity deploy",
     "deploy-schema": "sanity schema deploy",
     "deploy-graphql": "sanity graphql deploy"

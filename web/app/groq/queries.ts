@@ -1,6 +1,6 @@
-import groq from 'groq';
+import { defineQuery } from 'groq';
 
-export const NESTED_PRODUCT_QUERY = groq`
+export const NESTED_PRODUCT_QUERY = defineQuery(`
   'products': coalesce(modules[] {
     (_type == 'grid') => {
       'product': coalesce(items[] {
@@ -10,13 +10,13 @@ export const NESTED_PRODUCT_QUERY = groq`
       }, [])[defined(productId)]
     }
   })
-`;
+`);  
 
-export const NESTED_HOME_PRODUCTS_QUERY = groq`*[_type == "settings"][0].homePage-> {
+export const NESTED_HOME_PRODUCTS_QUERY = defineQuery(`*[_type == "settings"][0].homePage-> {
   ${NESTED_PRODUCT_QUERY}
-}`;
+}`);
 
-const PRODUCT_REFERENCE_QUERY = groq`
+const PRODUCT_REFERENCE_QUERY = defineQuery(`
   (_type == 'productReference') => {     
     productWithVariant {
       ...,
@@ -31,9 +31,9 @@ const PRODUCT_REFERENCE_QUERY = groq`
       'backgroundColor': colorTheme->background.hex,
     }
   }
-`;
+`);
 
-const COLLABORATORS_QUERY = groq`
+const COLLABORATORS_QUERY = defineQuery(`
   (_type == 'collaborators') => {
     subtitle,
     items[] {
@@ -49,9 +49,9 @@ const COLLABORATORS_QUERY = groq`
       url,
     }
   }
-`;
+`);
 
-const LOGOS_QUERY = groq`
+const LOGOS_QUERY = defineQuery(`
   (_type == 'logoGrid') => {
     title,
     items[] {
@@ -65,25 +65,25 @@ const LOGOS_QUERY = groq`
       title,
     }
   }
-`;
+`);
 
-const CAREERS_QUERY = groq`
+const CAREERS_QUERY = defineQuery(`
   (_type == 'careers') => {
     subtitle,
     body,
     cta,
   }
-`;
+`);
 
-const INFORMATION_HERO_QUERY = groq`
+const INFORMATION_HERO_QUERY = defineQuery(`
   (_type == 'informationHero') => {
     subtitle,
     header,
     content,
   }
-`;
+`);
 
-const TECH_INFORMATION_QUERY = groq`
+const TECH_INFORMATION_QUERY = defineQuery(`
 
   (_type == 'techInformation') => {
        subtitle,
@@ -98,9 +98,9 @@ const TECH_INFORMATION_QUERY = groq`
       },
     },
   }
-`;
+`);
 
-const FAQS_QUERY = groq`
+const FAQS_QUERY = defineQuery(`
   (_type == 'faqs') => {
     subtitle,
     description,
@@ -110,9 +110,9 @@ const FAQS_QUERY = groq`
       answer,
     }
   }
-`;
+`);
 
-export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
+export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage-> {
     modules[] {
       _type,
       _key,
@@ -128,10 +128,10 @@ export const HOME_PAGE_QUERY = groq`*[_type == "settings"][0].homePage-> {
           }
         }
       }
-    }
-}`;
+    } 
+}`);
 
-export const PAGE_QUERY = groq`*[_type in ["page"] && slug.current == $handle][0] {
+export const PAGE_QUERY = defineQuery(`*[_type in ["page"] && slug.current == $handle][0] {
   title,
   _type,
   'slug': slug.current,
@@ -161,4 +161,4 @@ export const PAGE_QUERY = groq`*[_type in ["page"] && slug.current == $handle][0
     ${FAQS_QUERY},
     ${CAREERS_QUERY},
   }
-}`;
+}`);

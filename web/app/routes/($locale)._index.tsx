@@ -8,6 +8,8 @@ import {HOME_PAGE_QUERY, NESTED_HOME_PRODUCTS_QUERY} from '~/groq/queries';
 
 import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 
+import {Query} from 'hydrogen-sanity';
+
 export const meta: MetaFunction = () => {
   return [{title: 'Sanity Online Store'}];
 };
@@ -26,15 +28,18 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
-  // Our home page is a reference to a settings singleton document
-  const {data} = await context.sanity.query(HOME_PAGE_QUERY);
+  // Run both Sanity queries in parallel for better performance
+  const [data, productData] = await Promise.all([
+    context.sanity.query(HOME_PAGE_QUERY),
+    context.sanity.query(NESTED_HOME_PRODUCTS_QUERY),
+  ]);
 
-  // We fetch specific product GIDs for the homepage
-  const productData = await context.sanity.query(NESTED_HOME_PRODUCTS_QUERY);
-
-  if (!productData.data) {
+  const products = context.sanity.preview?.enabled
+    ? productData.data?.products
+    : productData.products;
+  if (!products) {
     throw new Response(
-      '<div class="text-red-500">Product data not found or missing a homepage configuration in the <a class="underline" href="http://localhost:3333/structure/settings">sanity studio settings configuration</a>.</div>',
+      '<div class="text-red-500">Product data not found or missing a homepage configuration in the <a class="underline" href="http://localhost:3000/structure/settings">sanity studio settings configuration</a>.</div>',
       {
         status: 404,
         statusText: 'Not Found',
@@ -45,7 +50,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     );
   }
 
-  const productIds = productData.data.products
+  const productIds = products
     ?.map(({product}: any) => product.map((p: any) => p.productId))
     .flat();
   const uniqueProductIds = [...new Set(productIds)];
@@ -61,6 +66,8 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     });
   }
 
+  console.log('DEFERRED DATA?', deferredData);
+
   return {
     sanityData: data,
     productData: deferredData,
@@ -69,11 +76,17 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  const modules = data.sanityData?.modules;
+  // const modules = data.sanityData?.modules;
 
   return (
     <div className="home bg-gray-100">
-      <PageComponentList components={modules} />
+      <Query query={HOME_PAGE_QUERY} options={{initial: data.sanityData}}>
+        {(data) => (
+          <div>
+            <PageComponentList components={data?.modules} />
+          </div>
+        )}
+      </Query>
     </div>
   );
 }

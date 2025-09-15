@@ -8,15 +8,21 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({context}: LoaderFunctionArgs) {
-  const marketo = createMarketoClient({
-    MARKETO_CLIENT_ID: context.env.MARKETO_CLIENT_ID,
-    MARKETO_CLIENT_SECRET: context.env.MARKETO_CLIENT_SECRET,
-    MARKETO_ENDPOINT: context.env.MARKETO_ENDPOINT,
-    MARKETO_IDENTITY: context.env.MARKETO_IDENTITY,
-  });
+  try {
+    const marketo = createMarketoClient({
+      MARKETO_CLIENT_ID: context.env.MARKETO_CLIENT_ID,
+      MARKETO_CLIENT_SECRET: context.env.MARKETO_CLIENT_SECRET,
+      MARKETO_ENDPOINT: context.env.MARKETO_ENDPOINT,
+      MARKETO_IDENTITY: context.env.MARKETO_IDENTITY,
+    });
 
-  const fields = await marketo.getFormFields('1205');
-  return {fields};
+    const fields = await marketo.getFormFields('1205');
+    return {fields};
+  } catch (error) {
+    console.error('Error in subscribe loader:', error);
+    // Return empty fields array on error so the page still renders
+    return {fields: []};
+  }
 }
 
 export default function Subscribe({loaderData}: {loaderData: {fields: any}}) {

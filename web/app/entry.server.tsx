@@ -14,7 +14,7 @@ export default async function handleRequest(
 ) {
   const projectId = context.env.SANITY_PROJECT_ID;
   const studioHostName =
-    context.env.SANITY_STUDIO_HOST || 'http://localhost:3333';
+    context.env.SANITY_STUDIO_HOST || 'http://localhost:3000';
   const storefrontOrigin =
     context.env.SANITY_STUDIO_STOREFRONT_ORIGIN || 'http://localhost:3000';
   const isPreviewEnabled = context.sanity.preview?.enabled;
