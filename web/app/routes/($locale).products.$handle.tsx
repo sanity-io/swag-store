@@ -237,6 +237,7 @@ export default function Product() {
           }}
         />
       </div>
+      {console.log('sanity product', sanityProduct)}
       <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px] z-30">
         <AddToCartButton
           disabled={!selectedVariant || !selectedVariant.availableForSale}
@@ -254,7 +255,8 @@ export default function Product() {
                     attributes: [
                       {
                         key: 'category',
-                        value: sanityProduct?.category?.slug.current || '',
+                        value:
+                          sanityProduct?.data?.category?.slug.current || '',
                       },
                     ],
                   },

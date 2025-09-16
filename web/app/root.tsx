@@ -45,21 +45,21 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   nextUrl,
   formAction,
 }) => {
-  // Only revalidate for specific cart actions, not all form submissions
-  if (formMethod && formMethod !== 'GET') {
-    return true;
-  }
-
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
 
-  // revalidate when the locale changes (different path prefix)
+  // revalidate when the locale changes (different path prefix) - this is crucial for currency updates
   const currentPath = currentUrl.pathname;
   const nextPath = nextUrl.pathname;
   const currentLocale = currentPath.split('/')[1];
   const nextLocale = nextPath.split('/')[1];
 
   if (currentLocale !== nextLocale) {
+    return true;
+  }
+
+  // Only revalidate for specific cart actions, not all form submissions
+  if (formAction && formAction.includes('/cart')) {
     return true;
   }
 
@@ -217,9 +217,44 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
       console.error(error);
       return null;
     });
+
+  // Get cart data with currency context using storefront client
+  const cartData = (async () => {
+    try {
+      const cartId = await cart.getCartId();
+      if (cartId) {
+        // First, update the cart's buyer identity to match the current market
+        try {
+          await cart.updateBuyerIdentity({
+            countryCode: storefront.i18n?.country,
+          });
+        } catch (updateError) {
+          console.log('Could not update cart buyer identity:', updateError);
+        }
+
+        const result = await storefront.query(CART_QUERY_ROOT, {
+          variables: {
+            cartId,
+            country: storefront.i18n?.country,
+            language: storefront.i18n?.language,
+          },
+        });
+        return result.cart;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching cart with currency context:', error);
+      // Fallback to regular cart.get() if currency context fails
+      return cart.get({
+        country: storefront.i18n?.country,
+        language: storefront.i18n?.language,
+      });
+    }
+  })();
+
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
-    cart: cart.get(),
+    cart: cartData,
     footer,
   };
 }
