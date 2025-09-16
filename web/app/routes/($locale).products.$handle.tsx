@@ -237,35 +237,41 @@ export default function Product() {
           }}
         />
       </div>
-      {console.log('sanity product', sanityProduct)}
+
       <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px] z-30">
-        <AddToCartButton
-          disabled={!selectedVariant || !selectedVariant.availableForSale}
-          onClick={() => {
-            // open('cart');
-          }}
-          className="w-full bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
-          lines={
-            selectedVariant
-              ? [
-                  {
-                    merchandiseId: selectedVariant.id,
-                    quantity: 1,
-                    selectedVariant,
-                    attributes: [
-                      {
-                        key: 'category',
-                        value:
-                          sanityProduct?.data?.category?.slug.current || '',
-                      },
-                    ],
-                  },
-                ]
-              : []
-          }
+        <Query
+          query={SANITY_PRODUCT_QUERY}
+          options={{initial: {data: sanityProduct}}}
         >
-          {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-        </AddToCartButton>
+          {({data}) => (
+            <AddToCartButton
+              disabled={!selectedVariant || !selectedVariant.availableForSale}
+              onClick={() => {
+                // open('cart');
+              }}
+              className="w-full bg-brand-green !text-black font-sans text-16 font-bold h-[40px]"
+              lines={
+                selectedVariant
+                  ? [
+                      {
+                        merchandiseId: selectedVariant.id,
+                        quantity: 1,
+                        selectedVariant,
+                        attributes: [
+                          {
+                            key: 'category',
+                            value: data?.category?.slug.current || '',
+                          },
+                        ],
+                      },
+                    ]
+                  : []
+              }
+            >
+              {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
+            </AddToCartButton>
+          )}
+        </Query>
       </div>
     </div>
   );

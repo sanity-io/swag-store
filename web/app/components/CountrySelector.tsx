@@ -1,5 +1,5 @@
 import {useState, useRef, useEffect} from 'react';
-import {useNavigate, useLocation, Form} from 'react-router';
+import {useLocation, Form} from 'react-router';
 import {SUPPORTED_LOCALES, type I18nLocale} from '~/lib/i18n';
 
 interface CountrySelectorProps {
@@ -14,7 +14,6 @@ export function CountrySelector({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
   const location = useLocation();
 
   // Close dropdown when clicking outside
@@ -64,8 +63,8 @@ export function CountrySelector({
       newPath = newLocale.pathPrefix + newPath;
     }
 
-    // Navigate to new locale
-    navigate(newPath);
+    // Trigger full page reload to ensure server-side data updates (especially cart)
+    window.location.href = newPath;
   };
 
   return (
