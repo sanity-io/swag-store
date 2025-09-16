@@ -197,12 +197,17 @@ export default function Product() {
             </h1>
           </div>
           <div className="pb-[60px]">
-            <br />
-            <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-            <PortableText
-              value={sanityProduct?.body}
-              components={portableRichText}
-            />
+            <Query
+              query={SANITY_PRODUCT_QUERY}
+              options={{initial: {data: sanityProduct}}}
+            >
+              {(data) => (
+                <PortableText
+                  value={data?.body}
+                  components={portableRichText}
+                />
+              )}
+            </Query>
             <ProductFormPDP
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
               productOptions={productOptions}
