@@ -232,14 +232,18 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
           console.log('Could not update cart buyer identity:', updateError);
         }
 
-        const result = await storefront.query(CART_QUERY_ROOT, {
-          variables: {
-            cartId,
-            country: storefront.i18n?.country,
-            language: storefront.i18n?.language,
-          },
+        // const result = await storefront.query(CART_QUERY_ROOT, {
+        //   variables: {
+        //     cartId,
+        //     country: storefront.i18n?.country,
+        //     language: storefront.i18n?.language,
+        //   },
+        // });
+        // return result.cart;
+        return cart.get({
+          country: storefront.i18n?.country,
+          language: storefront.i18n?.language,
         });
-        return result.cart;
       }
       return null;
     } catch (error) {
