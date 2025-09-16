@@ -1,6 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, type MetaFunction} from 'react-router';
-import {LocalizedLink} from '~/components/LocalizedLink';
+import {useLoaderData, type MetaFunction} from 'react-router';
 
 import PageComponentList from '~/components/PageComponentList';
 
@@ -66,8 +65,6 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
     });
   }
 
-  console.log('DEFERRED DATA?', deferredData);
-
   return {
     sanityData: data,
     productData: deferredData,
@@ -76,7 +73,6 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
 
 export default function Home() {
   const data = useLoaderData<typeof loader>();
-  // const modules = data.sanityData?.modules;
 
   return (
     <div className="home bg-gray-100">

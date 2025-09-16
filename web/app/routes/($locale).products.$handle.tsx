@@ -18,6 +18,7 @@ import SanityImage from '~/components/SanityImage';
 import {AddToCartButton} from '~/components/AddToCartButton';
 import {PortableText} from '@portabletext/react';
 import {portableRichText} from '~/serializers/richText';
+import {Query} from 'hydrogen-sanity';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -55,7 +56,7 @@ async function loadCriticalData({
     throw new Error('Expected product handle to be defined');
   }
 
-  const [{product}] = await Promise.all([
+  const [{product}, {data: sanityProduct}] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -65,26 +66,25 @@ async function loadCriticalData({
       },
     }),
     // Add other queries here, so that they are loaded in parallel
+    context.sanity.loadQuery(
+      `*[_type == "product" && slug == "${handle}"][0] {
+        ...,
+        images[] {
+          ...,
+          asset->{
+            ...,
+            url,
+          },
+          alt,
+        },
+        category->
+      }`,
+    ),
   ]);
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
   }
-
-  const {data: sanityProduct} = await context.sanity.loadQuery(
-    `*[_type == "product" && slug == "${handle}"][0] {
-      ...,
-      images[] {
-        ...,
-        asset->{
-          ...,
-          url,
-        },
-        alt,
-      },
-      category->
-    }`,
-  );
 
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
@@ -131,7 +131,7 @@ export default function Product() {
   const {body} = sanityProduct;
 
   return (
-    <div className=" bg-gray grid grid-cols-2 gap-0">
+    <div className="bg-gray grid grid-cols-2 gap-0">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

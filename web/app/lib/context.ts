@@ -28,6 +28,7 @@ export async function createAppLoadContext(
     PreviewSession.init(request, [env.SESSION_SECRET]),
   ]);
 
+
   const sanity = await createSanityContext({
     request,
     cache,

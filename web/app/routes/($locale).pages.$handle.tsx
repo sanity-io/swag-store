@@ -1,22 +1,20 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 import PageComponentList from '~/components/PageComponentList';
 import {PAGE_QUERY} from '~/groq/queries';
+
+import {Query} from 'hydrogen-sanity';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  return {...criticalData};
 }
 
 /**
@@ -32,18 +30,11 @@ async function loadCriticalData({
     throw new Error('Missing page handle');
   }
 
-  const {data} = await context.sanity.loadQuery(PAGE_QUERY, {
-    handle: params.handle,
-  });
-
-  // const [{page}] = await Promise.all([
-  //   context.storefront.query(PAGE_QUERY, {
-  //     variables: {
-  //       handle: params.handle,
-  //     },
-  //   }),
-  //   // Add other queries here, so that they are loaded in parallel
-  // ]);
+  const [data] = await Promise.all([
+    context.sanity.query(PAGE_QUERY, {
+      handle: params.handle,
+    }),
+  ]);
 
   if (!data) {
     throw new Response('Not Found', {status: 404});
@@ -56,22 +47,15 @@ async function loadCriticalData({
   };
 }
 
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- */
-function loadDeferredData({context}: LoaderFunctionArgs) {
-  return {};
-}
-
 export default function Page() {
-  const {page} = useLoaderData<typeof loader>();
-  const modules = page?.modules;
+  const data = useLoaderData<typeof loader>();
 
+  console.log('DATA', data.page);
   return (
     <div className="page">
-      <PageComponentList components={modules} />
+      <Query query={PAGE_QUERY} options={{initial: data.page}}>
+        {(data) => <PageComponentList components={data?.modules} />}
+      </Query>
     </div>
   );
 }
