@@ -29,13 +29,9 @@ export function PageLayout({
   isLoggedIn,
   publicStoreDomain,
 }: PageLayoutProps) {
-  console.log('cart', cart);
   const location = useLocation();
   const collectionPage = location.pathname.includes('/collections/');
   const isPage = location.pathname.includes('/pages/');
-
-  const optimisticCart = useOptimisticCart(cart);
-  console.log('optimisticCart', optimisticCart);
 
   // Get the current locale using our custom hook
   const {currentLocale} = useLocale();
