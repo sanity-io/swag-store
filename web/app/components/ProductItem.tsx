@@ -120,7 +120,7 @@ export function GridProductItem({
           <ProductVariantForm
             productOptions={product.options}
             selectedVariant={product.selectedOrFirstAvailableVariant}
-            category={product.category?.slug.current}
+            category={product.tags[0]}
           />
         </div>
       </div>

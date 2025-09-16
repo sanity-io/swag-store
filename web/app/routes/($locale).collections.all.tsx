@@ -1,8 +1,8 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {useLoaderData, type MetaFunction} from 'react-router';
-import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import {getPaginationVariables} from '@shopify/hydrogen';
+
 import {GridProductItem, ProductItem} from '~/components/ProductItem';
 import clsx from 'clsx';
 
