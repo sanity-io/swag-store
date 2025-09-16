@@ -72,7 +72,7 @@ async function loadCriticalData({
     }),
   ]);
 
-  const sanityProduct = sanityProductResult.data;
+  const sanityProduct = sanityProductResult;
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -119,7 +119,7 @@ export default function Product() {
     selectedOrFirstAvailableVariant: selectedVariant,
   });
 
-  const {title, descriptionHtml} = product;
+  const {title} = product;
 
   return (
     <div className="bg-gray grid grid-cols-2 gap-0">
@@ -201,12 +201,16 @@ export default function Product() {
               query={SANITY_PRODUCT_QUERY}
               options={{initial: {data: sanityProduct}}}
             >
-              {(data) => (
-                <PortableText
-                  value={data?.body}
-                  components={portableRichText}
-                />
-              )}
+              {({data}) => {
+                return (
+                  <>
+                    <PortableText
+                      value={data?.body}
+                      components={portableRichText}
+                    />
+                  </>
+                );
+              }}
             </Query>
             <ProductFormPDP
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
