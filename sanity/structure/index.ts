@@ -32,8 +32,6 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
   return ![
     'collection',
     'colorTheme',
-    'colorVariant',
-    'productMap',
     'home',
     'media.tag',
     'page',

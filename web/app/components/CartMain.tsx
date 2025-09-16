@@ -58,7 +58,6 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
  * It is used by both the /cart route and the cart aside dialog.
  */
 export function CartMain({
-  layout,
   cart: originalCart,
   // collectionPage,
 }: CartMainProps) {
@@ -66,8 +65,6 @@ export function CartMain({
   const location = useLocation();
   const collectionPage = location.pathname.includes('/collections/');
   const isPage = location.pathname.includes('/pages/');
-
-  const cartPage = collectionPage || isPage;
 
   const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
 
@@ -78,12 +75,10 @@ export function CartMain({
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
 
-  const linesCount = Boolean(cart?.lines?.nodes?.length || 0);
   const withDiscount =
     cart &&
     Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
   const className = `cart-main min-h-[40px] relative flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
-  const cartHasItems = cart?.totalQuantity ? cart.totalQuantity > 0 : false;
 
   useEffect(() => {
     if (location.pathname.includes('/collections/') || isPage) {
@@ -134,8 +129,7 @@ export function CartMain({
           aria-labelledby="cart-lines"
         >
           <CartLines
-            cart={originalCart}
-            layout={layout}
+            cart={cart}
             collapsed={isCollapsed}
             isCollapsableDesktop={isCollapsableDesktop}
             isCollapsedMobile={isCollapsedMobile}
@@ -150,7 +144,6 @@ export function CartMain({
 
 function CartLines({
   cart,
-  layout,
   collapsed,
   isCollapsableDesktop,
   isCollapsedMobile,
@@ -158,7 +151,6 @@ function CartLines({
   setIsCollapsedMobile,
 }: {
   cart: CartApiQueryFragment | null;
-  layout: CartLayout;
   collapsed: boolean;
   isCollapsableDesktop: boolean;
   isCollapsedMobile: boolean;
@@ -167,28 +159,28 @@ function CartLines({
 }) {
   const hats =
     cart?.lines?.nodes.filter((line) =>
-      line.attributes.some(
+      line.attributes?.some(
         (attribute) =>
           attribute.key === 'category' && attribute.value === 'hats',
       ),
     ) || [];
   const clothing =
     cart?.lines?.nodes.filter((line) =>
-      line.attributes.some(
+      line.attributes?.some(
         (attribute) =>
           attribute.key === 'category' && attribute.value === 'clothing',
       ),
     ) || [];
   const accessories =
     cart?.lines?.nodes.filter((line) =>
-      line.attributes.some(
+      line.attributes?.some(
         (attribute) =>
           attribute.key === 'category' && attribute.value === 'accessories',
       ),
     ) || [];
   const goods =
     cart?.lines?.nodes.filter((line) =>
-      line.attributes.some(
+      line.attributes?.some(
         (attribute) =>
           attribute.key === 'category' && attribute.value === 'goods',
       ),

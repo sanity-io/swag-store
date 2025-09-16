@@ -80,7 +80,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 export default function Collection() {
   const {filteredProducts, grid, products, category} =
     useLoaderData<typeof loader>();
-  console.log(products);
   const allProducts = products.nodes;
   return (
     <div className="collection bg-gray-100">

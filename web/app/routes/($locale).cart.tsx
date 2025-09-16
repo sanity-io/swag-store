@@ -88,9 +88,12 @@ export async function action({request, context}: ActionFunctionArgs) {
     headers.set('Location', redirectTo);
   }
 
+  // Use the cart result directly from the action
+  let updatedCartData = cartResult;
+
   return data(
     {
-      cart: cartResult,
+      cart: updatedCartData,
       errors,
       warnings,
       analytics: {
@@ -141,7 +144,7 @@ export async function loader({request, context}: LoaderFunctionArgs) {
     cartData = await cart.get();
   }
 
-  return cartData;
+  return cartData || null;
 }
 
 export default function Cart() {

@@ -43,9 +43,12 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   formMethod,
   currentUrl,
   nextUrl,
+  formAction,
 }) => {
-  // revalidate when a mutation is performed e.g add to cart, login...
-  if (formMethod && formMethod !== 'GET') return true;
+  // Only revalidate for specific cart actions, not all form submissions
+  if (formMethod && formMethod !== 'GET') {
+    return true;
+  }
 
   // revalidate when manually revalidating via useRevalidator
   if (currentUrl.toString() === nextUrl.toString()) return true;
@@ -118,46 +121,38 @@ export async function loader(args: LoaderFunctionArgs) {
   });
 
   // Get cart data with currency context using storefront client (like products do)
-  let cartData = null;
-  try {
-    const cartId = await hydrogenContext.cart.getCartId();
-    if (cartId) {
-      console.log('Fetching cart with currency context:', {
-        cartId,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      });
+  // let cartData = null;
+  // try {
+  //   const cartId = await hydrogenContext.cart.getCartId();
+  //   if (cartId) {
+  //     // First, update the cart's buyer identity to match the current market
+  //     try {
+  //       await hydrogenContext.cart.updateBuyerIdentity({
+  //         countryCode: storefront.i18n.country,
+  //       });
+  //     } catch (updateError) {
+  //       console.log('Could not update cart buyer identity:', updateError);
+  //     }
 
-      // First, update the cart's buyer identity to match the current market
-      try {
-        await hydrogenContext.cart.updateBuyerIdentity({
-          countryCode: storefront.i18n.country,
-        });
-        console.log('Updated cart buyer identity to:', storefront.i18n.country);
-      } catch (updateError) {
-        console.log('Could not update cart buyer identity:', updateError);
-      }
-
-      const result = await storefront.query(CART_QUERY_ROOT, {
-        variables: {
-          cartId,
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
-        },
-      });
-      cartData = result.cart;
-      console.log('Cart data fetched:', cartData?.cost?.subtotalAmount);
-    }
-  } catch (error) {
-    console.error('Error fetching cart with currency context:', error);
-    // Fallback to regular cart.get() if currency context fails
-    cartData = await hydrogenContext.cart.get();
-  }
+  //     const result = await storefront.query(CART_QUERY_ROOT, {
+  //       variables: {
+  //         cartId,
+  //         country: storefront.i18n.country,
+  //         language: storefront.i18n.language,
+  //       },
+  //     });
+  //     cartData = result.cart;
+  //   }
+  // } catch (error) {
+  //   console.error('Error fetching cart with currency context:', error);
+  //   // Fallback to regular cart.get() if currency context fails
+  //   cartData = await hydrogenContext.cart.get();
+  // }
 
   return {
     ...deferredData,
     ...criticalData,
-    cart: Promise.resolve(cartData),
+    // cart: cartData,
     publicStoreDomain: env.PUBLIC_STORE_DOMAIN,
     storefront: {
       i18n: currentLocale,
@@ -224,6 +219,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
     });
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
+    cart: cart.get(),
     footer,
   };
 }

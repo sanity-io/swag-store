@@ -18,28 +18,28 @@ if (typeof ALGOLIA_APP_ID !== 'string' || typeof ALGOLIA_WRITE_KEY !== 'string')
 
 export default defineBlueprint({
   "resources": [
-    defineDocumentFunction({
-      name: 'algolia-sync',
-      src: 'functions/algolia-sync',
-      event: {
-        on: ['create', 'update', 'delete'],
-        filter: "_type == 'product'",
-        projection: '{_id, title, hideFromSearch, "operation": delta::operation()}',
-      },
-      env: {
-        ALGOLIA_APP_ID,
-        ALGOLIA_WRITE_KEY,
-      }
-    }),
-    defineDocumentFunction({
-      name: 'product-map',
-      src: 'functions/product-map',
-      event: {
-        on: ['publish'],
-        filter: '_type == "product"',
-        projection: '{_id, store,  _type,colorVariant, productMap}',
-      }
-    }),
+    // defineDocumentFunction({
+    //   name: 'algolia-sync',
+    //   src: 'functions/algolia-sync',
+    //   event: {
+    //     on: ['create', 'update', 'delete'],
+    //     filter: "_type == 'product'",
+    //     projection: '{_id, title, hideFromSearch, "operation": delta::operation()}',
+    //   },
+    //   env: {
+    //     ALGOLIA_APP_ID,
+    //     ALGOLIA_WRITE_KEY,
+    //   }
+    // }),
+    // defineDocumentFunction({
+    //   name: 'product-map',
+    //   src: 'functions/product-map',
+    //   event: {
+    //     on: ['publish'],
+    //     filter: '_type == "product"',
+    //     projection: '{_id, store,  _type,colorVariant, productMap}',
+    //   }
+    // }),
     defineDocumentFunction({
       name: 'marketing-campaign-create',
       src: 'functions/marketing-campaign-create',

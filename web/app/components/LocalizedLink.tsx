@@ -13,13 +13,13 @@ export function LocalizedLink({to, children, ...props}: LocalizedLinkProps) {
 
     // Handle undefined or null 'to' prop
     if (!to) {
-      console.warn('LocalizedLink: "to" prop is undefined or null');
+      // console.warn('LocalizedLink: "to" prop is undefined or null');
       return <span>{children}</span>;
     }
 
     // Ensure currentLocale is valid
     if (!currentLocale || !currentLocale.pathPrefix) {
-      console.warn('LocalizedLink: No valid locale found, using default');
+      // console.warn('LocalizedLink: No valid locale found, using default');
       return (
         <Link to={to} {...props}>
           {children}
@@ -80,13 +80,13 @@ export function LocalizedNavLink({to, children, ...props}: LocalizedLinkProps) {
 
     // Handle undefined or null 'to' prop
     if (!to) {
-      console.warn('LocalizedNavLink: "to" prop is undefined or null');
+      // console.warn('LocalizedNavLink: "to" prop is undefined or null');
       return <span>{children}</span>;
     }
 
     // Ensure currentLocale is valid
     if (!currentLocale || !currentLocale.pathPrefix) {
-      console.warn('LocalizedNavLink: No valid locale found, using default');
+      // console.warn('LocalizedNavLink: No valid locale found, using default');
       return (
         <Link to={to} {...props}>
           {children}
