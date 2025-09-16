@@ -162,3 +162,16 @@ export const PAGE_QUERY = defineQuery(`*[_type in ["page"] && slug.current == $h
     ${CAREERS_QUERY},
   }
 }`);
+
+export const SANITY_PRODUCT_QUERY = defineQuery(`*[_type == "product" && slug == $handle][0] {
+  ...,
+  images[] {
+    ...,
+    asset->{
+      ...,
+      url,
+    },
+    alt,
+  },
+  category->
+}`);

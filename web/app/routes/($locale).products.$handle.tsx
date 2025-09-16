@@ -19,6 +19,7 @@ import {AddToCartButton} from '~/components/AddToCartButton';
 import {PortableText} from '@portabletext/react';
 import {portableRichText} from '~/serializers/richText';
 import {Query} from 'hydrogen-sanity';
+import {SANITY_PRODUCT_QUERY} from '~/groq/queries';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -56,7 +57,7 @@ async function loadCriticalData({
     throw new Error('Expected product handle to be defined');
   }
 
-  const [{product}, {data: sanityProduct}] = await Promise.all([
+  const [{product}, sanityProductResult] = await Promise.all([
     storefront.query(PRODUCT_QUERY, {
       variables: {
         handle,
@@ -66,21 +67,12 @@ async function loadCriticalData({
       },
     }),
     // Add other queries here, so that they are loaded in parallel
-    context.sanity.loadQuery(
-      `*[_type == "product" && slug == "${handle}"][0] {
-        ...,
-        images[] {
-          ...,
-          asset->{
-            ...,
-            url,
-          },
-          alt,
-        },
-        category->
-      }`,
-    ),
+    context.sanity.query(SANITY_PRODUCT_QUERY, {
+      handle,
+    }),
   ]);
+
+  const sanityProduct = sanityProductResult.data;
 
   if (!product?.id) {
     throw new Response(null, {status: 404});
@@ -108,7 +100,8 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 }
 
 export default function Product() {
-  const {product, sanityProduct} = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
+  const {product, sanityProduct} = data;
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -127,8 +120,6 @@ export default function Product() {
   });
 
   const {title, descriptionHtml} = product;
-
-  const {body} = sanityProduct;
 
   return (
     <div className="bg-gray grid grid-cols-2 gap-0">
@@ -208,7 +199,10 @@ export default function Product() {
           <div className="pb-[60px]">
             <br />
             <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-            <PortableText value={body} components={portableRichText} />
+            <PortableText
+              value={sanityProduct?.body}
+              components={portableRichText}
+            />
             <ProductFormPDP
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
               productOptions={productOptions}
