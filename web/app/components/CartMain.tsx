@@ -289,7 +289,7 @@ function CartLines({
         })}
       >
         {commentsEnabled && (
-          <div className="bg-gray-100 p-4 rounded mb-4">
+          <div className="bg-black text-white border border-white p-4 rounded mb-4">
             <h3 className="font-bold mb-2">Cart Debug Info:</h3>
             <div className="text-sm">
               <p>
@@ -308,11 +308,11 @@ function CartLines({
                 <strong>Accessories:</strong> {accessories?.length ?? 0}
               </p>
             </div>
-            <details className="mt-2">
+            <details className="mt-2 bg-black">
               <summary className="cursor-pointer font-semibold">
                 Raw Cart Data
               </summary>
-              <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
+              <pre className="mt-2 text-xs bg-black p-2 rounded overflow-auto max-h-[200px]">
                 {JSON.stringify(cart, null, 2)}
               </pre>
             </details>
@@ -325,7 +325,7 @@ function CartLines({
             >
               <button
                 type="submit"
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors"
+                className="w-full mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors"
                 disabled={!cart?.lines?.nodes?.length}
               >
                 Clear Cart ({cart?.totalQuantity ?? 0} items)

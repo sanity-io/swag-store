@@ -208,7 +208,7 @@ export default function Product() {
                   <>
                     {commentsEnabled && (
                       <div className=" top-0 left-0 w-full p-2 z-10">
-                        <div className="bg-gray-100 p-4 rounded mb-4">
+                        <div className="bg-black text-white border border-white p-4 rounded mb-4">
                           <h3 className="font-bold mb-2">PDP Debug Info:</h3>
                           <div className="text-sm">
                             <p>
@@ -226,7 +226,7 @@ export default function Product() {
                             <summary className="cursor-pointer font-semibold">
                               Raw Data
                             </summary>
-                            <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
+                            <pre className="mt-2 text-xs bg-black p-2 rounded overflow-auto max-h-40">
                               Sanity Product:
                               <br />
                               {JSON.stringify(product, null, 2)}
