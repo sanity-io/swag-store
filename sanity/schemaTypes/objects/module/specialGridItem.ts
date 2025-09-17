@@ -1,27 +1,29 @@
 import {defineField} from 'sanity'
 
-import blocksToText from '../../../utils/blocksToText'
-
-export const gridItemType = defineField({
-  name: 'gridItem',
-  title: 'Grid Item',
+export const specialGridItemType = defineField({
+  name: 'specialGridItem',
+  title: 'Special Grid Item',
   type: 'object',
   fields: [
     defineField({
-      name: 'image',
-      type: 'image',
-      options: {hotspot: true},
-      // validation: (Rule) => Rule.required(),
-    }),
+        name: 'colorTheme',
+        type: 'reference',
+        to: [{type: 'colorTheme'}],
+      }),
     defineField({
-      name: 'body',
-      type: 'portableTextSimple',
+      name: 'trigger',
+      title: 'Trigger',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Random', value: 'random'},
+          {title: 'Comments', value: 'comments'},
+          {title: 'Clear the Cart', value: 'clearCart'},
+          {title: 'Checkout', value: 'checkout'},
+        ],
+        layout: 'dropdown',
+      },
       validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'colorTheme',
-      type: 'reference',
-      to: [{type: 'colorTheme'}],
     }),
     defineField({
       name: 'cta',
@@ -32,12 +34,6 @@ export const gridItemType = defineField({
           name: 'text',
           title: 'Text',
           type: 'string',
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: 'url',
-          title: 'URL',
-          type: 'url',
           validation: (Rule) => Rule.required(),
         }),
         defineField({
@@ -60,15 +56,14 @@ export const gridItemType = defineField({
   ],
   preview: {
     select: {
-      body: 'body',
-      image: 'image',
-      title: 'title',
+      trigger: 'trigger',
+      ctaText: 'cta.text',
+      background: 'background',
     },
-    prepare({body, image, title}) {
+    prepare({trigger, ctaText, background}) {
       return {
-        media: image,
-        subtitle: body && blocksToText(body),
-        title,
+        title: ctaText || 'Special Grid Item',
+        subtitle: `Trigger: ${trigger} | Background: ${background}`,
       }
     },
   },

@@ -30,6 +30,7 @@ import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
+import {DebugProvider} from './contexts/DebugContext';
 
 import {Sanity} from 'hydrogen-sanity';
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
@@ -283,17 +284,19 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <Links />
       </head>
       <body>
-        {data ? (
-          <Analytics.Provider
-            cart={data.cart}
-            shop={data.shop}
-            consent={data.consent}
-          >
-            <PageLayout {...data}>{children}</PageLayout>
-          </Analytics.Provider>
-        ) : (
-          children
-        )}
+        <DebugProvider>
+          {data ? (
+            <Analytics.Provider
+              cart={data.cart}
+              shop={data.shop}
+              consent={data.consent}
+            >
+              <PageLayout {...data}>{children}</PageLayout>
+            </Analytics.Provider>
+          ) : (
+            children
+          )}
+        </DebugProvider>
 
         <Sanity nonce={nonce} />
         <VisualEditing action="/api/preview" />

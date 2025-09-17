@@ -8,6 +8,7 @@ import {CartLineItem} from '~/components/CartLineItem';
 import clsx from 'clsx';
 import {CartForm} from '@shopify/hydrogen';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
+import {useDebug} from '~/contexts/DebugContext';
 
 export type CartLayout = 'page' | 'aside';
 
@@ -157,6 +158,7 @@ function CartLines({
   setIsCollapsedMobile: (collapsed: boolean) => void;
   setIsCollapsed: (collapsed: boolean) => void;
 }) {
+  const {commentsEnabled} = useDebug();
   const hats =
     cart?.lines?.nodes.filter((line) =>
       line.attributes?.some(
@@ -286,49 +288,51 @@ function CartLines({
           '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
         })}
       >
-        <div className="bg-gray-100 p-4 rounded mb-4">
-          <h3 className="font-bold mb-2">Cart Debug Info:</h3>
-          <div className="text-sm">
-            <p>
-              <strong>Total Items:</strong> {cart?.totalQuantity ?? 0}
-            </p>
-            <p>
-              <strong>Total Lines:</strong> {cart?.lines?.nodes?.length ?? 0}
-            </p>
-            <p>
-              <strong>Hats:</strong> {hats?.length ?? 0}
-            </p>
-            <p>
-              <strong>Clothing:</strong> {clothing?.length ?? 0}
-            </p>
-            <p>
-              <strong>Accessories:</strong> {accessories?.length ?? 0}
-            </p>
-          </div>
-          <details className="mt-2">
-            <summary className="cursor-pointer font-semibold">
-              Raw Cart Data
-            </summary>
-            <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
-              {JSON.stringify(cart, null, 2)}
-            </pre>
-          </details>
-          <CartForm
-            route="/cart"
-            action={CartForm.ACTIONS.LinesRemove}
-            inputs={{
-              lineIds: cart?.lines?.nodes?.map((line) => line.id) || [],
-            }}
-          >
-            <button
-              type="submit"
-              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors"
-              disabled={!cart?.lines?.nodes?.length}
+        {commentsEnabled && (
+          <div className="bg-gray-100 p-4 rounded mb-4">
+            <h3 className="font-bold mb-2">Cart Debug Info:</h3>
+            <div className="text-sm">
+              <p>
+                <strong>Total Items:</strong> {cart?.totalQuantity ?? 0}
+              </p>
+              <p>
+                <strong>Total Lines:</strong> {cart?.lines?.nodes?.length ?? 0}
+              </p>
+              <p>
+                <strong>Hats:</strong> {hats?.length ?? 0}
+              </p>
+              <p>
+                <strong>Clothing:</strong> {clothing?.length ?? 0}
+              </p>
+              <p>
+                <strong>Accessories:</strong> {accessories?.length ?? 0}
+              </p>
+            </div>
+            <details className="mt-2">
+              <summary className="cursor-pointer font-semibold">
+                Raw Cart Data
+              </summary>
+              <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
+                {JSON.stringify(cart, null, 2)}
+              </pre>
+            </details>
+            <CartForm
+              route="/cart"
+              action={CartForm.ACTIONS.LinesRemove}
+              inputs={{
+                lineIds: cart?.lines?.nodes?.map((line) => line.id) || [],
+              }}
             >
-              Clear Cart ({cart?.totalQuantity ?? 0} items)
-            </button>
-          </CartForm>
-        </div>
+              <button
+                type="submit"
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors"
+                disabled={!cart?.lines?.nodes?.length}
+              >
+                Clear Cart ({cart?.totalQuantity ?? 0} items)
+              </button>
+            </CartForm>
+          </div>
+        )}
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">
           <div className="absolute top-0 left-0 px-1 z-10 text-white bg-black uppercase">
             hats ({hats?.length ?? 0})

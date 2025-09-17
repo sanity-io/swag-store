@@ -125,6 +125,10 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage->
           ${PRODUCT_REFERENCE_QUERY},
           (_type == 'gridItem') => {
             ...
+          },
+          (_type == 'specialGridItem') => {
+            ...,
+            'backgroundColor': colorTheme->background.hex,
           }
         }
       }

@@ -11,6 +11,7 @@ import {CartMain, CartCheckout} from '~/components/CartMain';
 import {useLocale} from '~/hooks/useLocale';
 import {useOptimisticCart} from '@shopify/hydrogen';
 import {Suspense} from 'react';
+import {useDebug} from '~/contexts/DebugContext';
 
 interface PageLayoutProps {
   cart: CartApiQueryFragment | null;
@@ -36,6 +37,9 @@ export function PageLayout({
   // Get the current locale using our custom hook
   const {currentLocale} = useLocale();
 
+  // Get debug context
+  const {commentsEnabled, toggleComments} = useDebug();
+
   // Full screen if collection page or content page
   const cartPage = collectionPage || isPage;
 
@@ -45,6 +49,17 @@ export function PageLayout({
         {(cart) => (
           <div className="font-mono">
             {/* <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} /> */}
+
+            {/* Debug Toggle Button - Only shows when comments are enabled */}
+            {commentsEnabled && (
+              <button
+                onClick={toggleComments}
+                className="fixed top-4 right-4 z-50 bg-red-500 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-600 transition-colors"
+                title="Disable Debug Comments"
+              >
+                🐛 Disable Debug
+              </button>
+            )}
 
             <div className="flex flex-wrap">
               <main

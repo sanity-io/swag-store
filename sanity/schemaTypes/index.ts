@@ -47,6 +47,7 @@ import {techInformationType} from './objects/module/techInformation'
 import {collaboratorsType} from './objects/module/collaborators'
 import {faqsType} from './objects/module/faqs'
 import {careersType} from './objects/module/careersType'
+import {specialGridItemType} from './objects/module/specialGridItem'
 
 // Objects used as annotations must be imported first
 const annotations = [linkEmailType, linkExternalType, linkInternalType, linkProductType]
@@ -73,6 +74,7 @@ const objects = [
   footerType,
   gridItemType,
   gridType,
+  specialGridItemType,
   heroType,
   imageCallToActionType,
   imageFeaturesType,
