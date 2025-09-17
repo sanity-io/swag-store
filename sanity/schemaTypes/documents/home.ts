@@ -103,7 +103,6 @@ export const homeType = defineField({
               return {
                 title: displayTitle,
                 subtitle: `${status} - Created: ${createdAgeText} | Updated: ${updatedAgeText}`,
-                media: isOld ? '🔴' : '🟢',
               };
             },
           },

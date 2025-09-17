@@ -33,12 +33,12 @@ export function TextField({field, defaultError, defaultValue}: Props) {
   }, [defaultValue]);
 
   return (
-    <div className="grid">
+    <div className="flex flex-col w-full">
       <label className="text-label-md pb-4" htmlFor={field.id}>
         {field.label}
       </label>
       <input
-        className="border-gray-deep border p-2 font-sans text-[64px] hover:border-white focus:border-white focus:outline-1 focus:outline-white"
+        className="border-gray-deep border p-2 font-sans text-[16px] md:text-[64px] hover:border-white focus:border-white focus:outline-1 focus:outline-white"
         type={getInputType(field)}
         name={field.id}
         id={field.id}

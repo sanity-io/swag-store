@@ -78,7 +78,7 @@ export function MarketoForm(props: Props) {
         </div>
       ) : (
         <form
-          className={clsx(props.className, 'grid gap-y-8')}
+          className={clsx(props.className, 'flex flex-col gap-y-8')}
           onSubmit={action}
           key={state.id}
           noValidate
@@ -144,7 +144,7 @@ export function MarketoForm(props: Props) {
             </Suspense>
           ))}
           <button
-            className="text-interactive-md bg-brand-yellow hover:text-brand rounded-full px-64 py-16 text-black hover:bg-white md:w-fit"
+            className="text-interactive-md bg-brand-yellow uppercase hover:text-brand rounded-full px-8 py-4 md:px-64 md:py-8 md:text-[42px] text-black hover:bg-white "
             disabled={pending}
           >
             {pending ? 'Submitting...' : 'Submit'}

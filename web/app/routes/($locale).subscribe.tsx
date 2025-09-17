@@ -37,7 +37,7 @@ export default function Subscribe({loaderData}: {loaderData: {fields: any}}) {
       </div>
       <div className="w-full p-8">
         <MarketoForm
-          className="mt-24 md:col-start-4 md:col-end-8 lg:col-end-7"
+          className="mt-24 w-full"
           fields={fields || []}
           formId={'1205'}
         />
