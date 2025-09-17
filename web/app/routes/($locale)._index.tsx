@@ -2,6 +2,7 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
 
 import PageComponentList from '~/components/PageComponentList';
+import {ProductAgeAnalysis} from '~/components/ProductAgeAnalysis';
 
 import {HOME_PAGE_QUERY, NESTED_HOME_PRODUCTS_QUERY} from '~/groq/queries';
 
@@ -80,6 +81,7 @@ export default function Home() {
         {(data) => (
           <div>
             <PageComponentList components={data?.modules} />
+            <ProductAgeAnalysis productAgeAnalysis={data?.productAgeAnalysis} />
           </div>
         )}
       </Query>

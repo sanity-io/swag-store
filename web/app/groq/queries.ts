@@ -112,6 +112,25 @@ const FAQS_QUERY = defineQuery(`
   }
 `);
 
+export const PRODUCT_AGE_ANALYSIS_QUERY = defineQuery(`
+  productAgeAnalysis[] {
+    _key,
+    product-> {
+      _id,
+      title,
+      store {
+        title,
+        gid
+      }
+    },
+    lastUpdated,
+    createdAt,
+    ageInDays,
+    updatedAgeInDays,
+    isOld
+  }
+`);
+
 export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage-> {
     modules[] {
       _type,
@@ -132,7 +151,8 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage->
           }
         }
       }
-    } 
+    },
+    ${PRODUCT_AGE_ANALYSIS_QUERY}
 }`);
 
 export const PAGE_QUERY = defineQuery(`*[_type in ["page"] && slug.current == $handle][0] {

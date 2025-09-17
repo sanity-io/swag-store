@@ -41,6 +41,15 @@ export default defineBlueprint({
     //   }
     // }),
     defineDocumentFunction({
+      name: 'stale-products',
+      src: 'functions/stale-products',
+      event: {
+        on: ['create', 'update'],
+        filter: '_type == "home"',
+        projection: '{_id, _type, "operation": delta::operation()}',
+      },
+    }),
+    defineDocumentFunction({
       name: 'marketing-campaign-create',
       src: 'functions/marketing-campaign-create',
       event: {
