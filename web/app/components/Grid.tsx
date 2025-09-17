@@ -169,7 +169,7 @@ function GridItem({
               <summary className="cursor-pointer font-semibold">
                 Raw Data
               </summary>
-              <pre className="mt-2 text-xs bg-white p-2 rounded overflow-auto max-h-40">
+              <pre className="mt-2 text-xs bg-black p-2 rounded overflow-auto max-h-40">
                 Sanity Product:
                 <br />
                 {JSON.stringify(product, null, 2)}

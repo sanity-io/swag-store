@@ -33,7 +33,7 @@ export function TechInformation({
         >
           <div className="col-span-1 col-start-2 p-4 flex flex-col gap-4">
             {infoBlocks.map((block: any) => (
-              <div key={block._key} className="bg-gray min-h-[140px] p-4">
+              <div key={block._key} className="bg-gray min-h-[140px] p-4 pb-1">
                 <div className="max-w-[30px]">
                   <SanityImage
                     image={block.image}
