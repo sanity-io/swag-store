@@ -11,7 +11,8 @@
     "extract": "sanity schema extract",
     "deploy": "sanity deploy",
     "deploy-schema": "sanity schema deploy",
-    "deploy-graphql": "sanity graphql deploy"
+    "deploy-graphql": "sanity graphql deploy",
+    "backup-and-clone": "./backup-and-clone-studio.sh"
   },
   "keywords": [
     "sanity"

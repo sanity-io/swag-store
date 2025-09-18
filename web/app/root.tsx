@@ -121,35 +121,6 @@ export async function loader(args: LoaderFunctionArgs) {
     },
   });
 
-  // Get cart data with currency context using storefront client (like products do)
-  // let cartData = null;
-  // try {
-  //   const cartId = await hydrogenContext.cart.getCartId();
-  //   if (cartId) {
-  //     // First, update the cart's buyer identity to match the current market
-  //     try {
-  //       await hydrogenContext.cart.updateBuyerIdentity({
-  //         countryCode: storefront.i18n.country,
-  //       });
-  //     } catch (updateError) {
-  //       console.log('Could not update cart buyer identity:', updateError);
-  //     }
-
-  //     const result = await storefront.query(CART_QUERY_ROOT, {
-  //       variables: {
-  //         cartId,
-  //         country: storefront.i18n.country,
-  //         language: storefront.i18n.language,
-  //       },
-  //     });
-  //     cartData = result.cart;
-  //   }
-  // } catch (error) {
-  //   console.error('Error fetching cart with currency context:', error);
-  //   // Fallback to regular cart.get() if currency context fails
-  //   cartData = await hydrogenContext.cart.get();
-  // }
-
   return {
     ...deferredData,
     ...criticalData,
@@ -233,14 +204,6 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
           console.log('Could not update cart buyer identity:', updateError);
         }
 
-        // const result = await storefront.query(CART_QUERY_ROOT, {
-        //   variables: {
-        //     cartId,
-        //     country: storefront.i18n?.country,
-        //     language: storefront.i18n?.language,
-        //   },
-        // });
-        // return result.cart;
         return cart.get({
           country: storefront.i18n?.country,
           language: storefront.i18n?.language,

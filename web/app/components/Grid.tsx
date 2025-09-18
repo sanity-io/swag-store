@@ -20,7 +20,9 @@ interface GridProps {
     productWithVariant?: ProductWithVariantFragment;
     backgroundColor?: string;
     cta?: {
-      text: string;
+      showCta?: boolean;
+      text?: string;
+      url?: string;
       color?: string;
     };
     trigger?: string;
@@ -94,6 +96,28 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
             >
               {item.body && (
                 <PortableText value={item.body} components={portableRichText} />
+              )}
+              {item.cta?.showCta && item.cta?.text && item.cta?.url && (
+                <div className="mt-4">
+                  <a
+                    href={item.cta.url}
+                    className={clsx(
+                      'inline-block px-8 py-2 uppercase rounded-[40px] cursor-pointer',
+                      {
+                        'bg-brand-orange text-black h-[56px] md:hover:bg-brand-orange/80 md:text-white':
+                          item.cta?.color === 'orange',
+                        'bg-black text-white border border-white h-[56px] md:hover:bg-white md:hover:text-black':
+                          item.cta?.color === 'black',
+                        'bg-white text-black border border-black h-[56px] md:hover:bg-black md:hover:text-white':
+                          item.cta?.color === 'white',
+                        'bg-green-500 text-white h-[56px] md:hover:bg-green-600':
+                          item.cta?.color === 'green',
+                      },
+                    )}
+                  >
+                    {item.cta.text}
+                  </a>
+                </div>
               )}
             </div>
           );

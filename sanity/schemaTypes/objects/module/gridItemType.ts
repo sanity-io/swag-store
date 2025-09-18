@@ -29,21 +29,43 @@ export const gridItemType = defineField({
       type: 'object',
       fields: [
         defineField({
+          name: 'showCta',
+          title: 'Show CTA',
+          type: 'boolean',
+          initialValue: false,
+          description: 'Enable to show a call-to-action button',
+        }),
+        defineField({
           name: 'text',
           title: 'Text',
           type: 'string',
-          validation: (Rule) => Rule.required(),
+          hidden: ({parent}) => !parent?.showCta,
+          validation: (Rule) => Rule.custom((value, context) => {
+            const {parent} = context as any;
+            if (parent?.showCta && !value) {
+              return 'CTA text is required when CTA is enabled';
+            }
+            return true;
+          }),
         }),
         defineField({
           name: 'url',
           title: 'URL',
           type: 'url',
-          validation: (Rule) => Rule.required(),
+          hidden: ({parent}) => !parent?.showCta,
+          validation: (Rule) => Rule.custom((value, context) => {
+            const {parent} = context as any;
+            if (parent?.showCta && !value) {
+              return 'CTA URL is required when CTA is enabled';
+            }
+            return true;
+          }),
         }),
         defineField({
           name: 'color',
           title: 'Color',
           type: 'string',
+          hidden: ({parent}) => !parent?.showCta,
           options: {
             list: [
               {title: 'Orange', value: 'orange'},

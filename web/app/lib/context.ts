@@ -3,7 +3,11 @@ import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
 import {getLocaleFromRequest} from '~/lib/i18n';
 import {createSanityContext} from 'hydrogen-sanity';
+
 import {PreviewSession} from 'hydrogen-sanity/preview/session';
+import {isPreviewEnabled} from 'hydrogen-sanity/preview';
+
+import {filter} from './sanity/stega';
 
 /**
  * The context implementation is separate from server.ts
@@ -38,10 +42,14 @@ export async function createAppLoadContext(
       dataset: env.SANITY_DATASET,
       apiVersion: env.SANITY_API_VERSION || '2025-08-27',
       useCdn: true,
+      stega: {
+        enabled: isPreviewEnabled(env.SANITY_PROJECT_ID, previewSession),
+        filter,
+        studioUrl: 'http://localhost:3000',
+      }
     },
     preview: {
       token: env.SANITY_API_TOKEN,
-      studioUrl: 'http://localhost:3000',
       session: previewSession,
     } 
   });

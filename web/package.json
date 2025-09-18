@@ -27,7 +27,7 @@
     "graphql-tag": "^2.12.6",
     "groq": "^3.97.1",
     "gsap": "^3.13.0",
-    "hydrogen-sanity": "5.0.0-next.4",
+    "hydrogen-sanity": "5.0.1",
     "isbot": "^5.1.22",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
