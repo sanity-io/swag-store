@@ -12,7 +12,8 @@
     "deploy": "sanity deploy",
     "deploy-schema": "sanity schema deploy",
     "deploy-graphql": "sanity graphql deploy",
-    "backup-and-clone": "./backup-and-clone-studio.sh"
+    "backup-and-clone": "../backup-and-clone-studio.sh",
+    "setup-dev": "../sanity-dev-setup.sh"
   },
   "keywords": [
     "sanity"

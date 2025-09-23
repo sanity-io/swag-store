@@ -160,7 +160,7 @@ function GridItem({
             aspectRatio="1/1"
             src={product.store?.previewImageUrl}
             loading={loading}
-            sizes="(min-width: 45em) 400px, 100vw"
+            sizes="(min-width: 45em) 800px, 100vw"
           />
         )}
       </LocalizedLink>

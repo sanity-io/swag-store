@@ -39,7 +39,17 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
         <div className="bg-black text-white md:group-hover:text-brand-yellow  py-2 inline-flex w-1/2 px-[20px]">
           Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
-            {cart?.cost?.subtotalAmount?.amount ? (
+            {cart?.cost?.totalAmount?.amount &&
+            cart?.discountCodes?.some((code) => code.applicable) ? (
+              <div className="flex">
+                <span className="line-through opacity-75">
+                  <LocalizedMoney data={cart?.cost?.subtotalAmount} />
+                </span>
+                <span className="ml-2">
+                  <LocalizedMoney data={cart?.cost?.totalAmount} />
+                </span>
+              </div>
+            ) : cart?.cost?.subtotalAmount?.amount ? (
               <LocalizedMoney data={cart?.cost?.subtotalAmount} />
             ) : (
               '$0'
@@ -188,6 +198,15 @@ function CartLines({
       ),
     ) || [];
 
+  const isDiscountApplied = cart?.discountCodes?.some(
+    (code) => code.applicable,
+  );
+  let discountCode = '';
+  if (isDiscountApplied) {
+    discountCode =
+      cart?.discountCodes?.find((code) => code.applicable)?.code || '';
+  }
+
   return (
     <>
       <button
@@ -331,6 +350,19 @@ function CartLines({
                 Clear Cart ({cart?.totalQuantity ?? 0} items)
               </button>
             </CartForm>
+          </div>
+        )}
+        {isDiscountApplied && (
+          <div className="bg-black text-12 text-white border border-white p-4 rounded mb-4">
+            <div className="flex justify-between items-center">
+              <span>Discount Applied:</span>
+              <p className="font-sans font-bold">{discountCode}</p>
+            </div>
+            <div>
+              <span className="text-[12px] uppercase">
+                Discount may be tied to email at checkout.
+              </span>
+            </div>
           </div>
         )}
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">

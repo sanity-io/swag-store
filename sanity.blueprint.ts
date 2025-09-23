@@ -45,7 +45,7 @@ export default defineBlueprint({
       src: 'functions/stale-products',
       event: {
         on: ['create', 'update'],
-        filter: '_type == "home"',
+        filter: '_type == "home" && delta::changedAny(modules)',
         projection: '{_id, _type, "operation": delta::operation()}',
       },
     }),
