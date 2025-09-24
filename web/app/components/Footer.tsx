@@ -4,6 +4,7 @@ import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
 import {CountrySelector} from './CountrySelector';
 import {LocalizedLink} from './LocalizedLink';
 import type {I18nLocale} from '~/lib/i18n';
+import {Newsletter} from './Newsletter';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
@@ -96,8 +97,9 @@ export function Footer({
                     <img src="/images/footer-logo.svg" />
                   </div>
                   <div className="p-4">
-                    <div className="flex flex-col 1400:flex-row justify-center text-center items-center gap-2 max-w-[300px] mx-auto">
-                      <span className="text-24 font-sans text-black w-full min-w-[350px]">
+                    <div className="flex flex-col 1400:flex-row justify-center text-center items-center gap-2 max-w-[340px] mx-auto">
+                      <Newsletter />
+                      {/* <span className="text-24 font-sans text-black w-full min-w-[350px]">
                         Join our community newsletter
                       </span>
 
@@ -106,7 +108,7 @@ export function Footer({
                         className="border inline-block rounded-[30px] border-black p-2 px-4 uppercase 800:hover:bg-black 800:hover:text-white"
                       >
                         SUBSCRIBE
-                      </LocalizedLink>
+                      </LocalizedLink> */}
                     </div>
                   </div>
                 </div>

@@ -9,6 +9,7 @@ import {AddToCartButton} from './AddToCartButton';
 // import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
 import {LocalizedLink} from './LocalizedLink';
+import {BackInStockForm} from './BackInStockForm';
 
 export function ProductForm({
   productOptions,
@@ -106,31 +107,35 @@ export function ProductForm({
         );
       })}
 
-      <AddToCartButton
-        disabled={!selectedVariant || !selectedVariant.availableForSale}
-        onClick={() => {
-          // open('cart');
-        }}
-        lines={
-          selectedVariant
-            ? [
-                {
-                  merchandiseId: selectedVariant.id,
-                  quantity: 1,
-                  selectedVariant,
-                  attributes: [
-                    {
-                      key: 'category',
-                      value: category || '',
-                    },
-                  ],
-                },
-              ]
-            : []
-        }
-      >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'Sold out'}
-      </AddToCartButton>
+      {selectedVariant?.availableForSale ? (
+        <AddToCartButton
+          disabled={!selectedVariant || !selectedVariant.availableForSale}
+          onClick={() => {
+            // open('cart');
+          }}
+          lines={
+            selectedVariant
+              ? [
+                  {
+                    merchandiseId: selectedVariant.id,
+                    quantity: 1,
+                    selectedVariant,
+                    attributes: [
+                      {
+                        key: 'category',
+                        value: category || '',
+                      },
+                    ],
+                  },
+                ]
+              : []
+          }
+        >
+          add to cart
+        </AddToCartButton>
+      ) : (
+        <BackInStockForm variant={selectedVariant} />
+      )}
     </div>
   );
 }
@@ -163,47 +168,44 @@ export function ProductVariantForm({
             <div className="flex gap-x-1 w-full justify-between mb-0">
               {option.optionValues.map((value) => {
                 const {
-                  title,
+                  name,
                   handle,
                   variantUriQuery,
                   selected,
-                  availableForSale,
+                  available,
                   exists,
                   isDifferentProduct,
                   swatch,
-                } = value.firstSelectableVariant;
+                } = value;
 
                 if (isDifferentProduct) {
                   return (
                     <LocalizedLink
-                      key={option.name + title}
+                      key={option.name + name}
                       to={
-                        availableForSale
+                        available
                           ? `/products/${handle}?${variantUriQuery}`
                           : '#'
                       }
-                      className={`product-options-item cursor-pointer w-full md:hover:!bg-brand-yellow md:hover:text-black ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      className={`product-options-item cursor-pointer w-full md:hover:!bg-brand-yellow md:hover:text-black ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}
                       prefetch="intent"
                       preventScrollReset
                       replace
-                      onClick={() =>
-                        availableForSale && setVariantSelected(true)
-                      }
+                      onClick={() => available && setVariantSelected(true)}
                       style={{
                         border: selected
                           ? '1px solid black'
                           : '1px solid transparent',
                       }}
                     >
-                      <ProductOptionSwatch swatch={swatch} name={title} />
+                      <ProductOptionSwatch swatch={swatch} name={name} />
                     </LocalizedLink>
                   );
                 } else {
                   return (
-                    <React.Fragment key={option.name + title}>
+                    <React.Fragment key={option.name + name}>
                       <button
-                        to={`/products/${handle}?${variantUriQuery}`}
-                        className={`product-options-item cursor-pointer w-full h-[34px] bg-black text-white md:hover:!bg-brand-yellow md:hover:text-black px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
+                        className={`product-options-item cursor-pointer w-full h-[34px] bg-black text-white md:hover:!bg-brand-yellow md:hover:text-black px-2 py-1 ${!available ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
                         style={{
@@ -211,15 +213,15 @@ export function ProductVariantForm({
                             ? '1px solid black'
                             : '1px solid transparent',
                         }}
-                        // disabled={!exists || !availableForSale}
+                        // disabled={!exists || !available}
                         onClick={() => {
-                          if (!selected && availableForSale) {
+                          if (!selected && available) {
                             setVariantSelected(true);
-                            setSelectedVariant(value?.firstSelectableVariant);
+                            setSelectedVariant(selectedVariant);
                           }
                         }}
                       >
-                        <ProductOptionSwatch swatch={swatch} name={title} />
+                        <ProductOptionSwatch swatch={swatch} name={name} />
                       </button>
                     </React.Fragment>
                   );
@@ -281,11 +283,18 @@ export function ProductFormPDP({
   productOptions,
   selectedVariant,
   category,
+  enableBackInStock,
 }: {
   productOptions: MappedProductOptions[];
   category: string;
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+  enableBackInStock?: boolean;
 }) {
+  const [showBackInStockForm, setShowBackInStockForm] = useState(
+    productOptions.some((option) =>
+      option.optionValues.some((value) => !value.available),
+    ),
+  );
   const navigate = useNavigate();
   // const {open} = useAside();
   return (
@@ -360,6 +369,9 @@ export function ProductFormPDP({
                             preventScrollReset: true,
                           });
                         }
+                        if (!available) {
+                          setShowBackInStockForm(true);
+                        }
                       }}
                     >
                       <ProductOptionSwatch swatch={swatch} name={name} />
@@ -372,6 +384,7 @@ export function ProductFormPDP({
           </div>
         );
       })}
+      {showBackInStockForm && <BackInStockForm variant={selectedVariant} />}
     </div>
   );
 }

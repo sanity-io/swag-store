@@ -34,9 +34,9 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
     >
       <a
         href={originalCart?.checkoutUrl}
-        className="w-full 800:w-1/3 flex justify-between items-center"
+        className="w-full 800:w-1/3 flex 800:grid 800:grid-cols-3 justify-between items-center"
       >
-        <div className="bg-black text-white md:group-hover:text-brand-yellow  py-2 inline-flex w-1/2 px-[20px]">
+        <div className="bg-black 800:col-span-2 800:w-full text-white md:group-hover:text-brand-yellow  py-2 inline-flex w-1/2 px-[20px]">
           Total ({cart?.totalQuantity ?? 0}):&nbsp;
           <dd>
             {cart?.cost?.totalAmount?.amount &&
@@ -56,7 +56,7 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
             )}
           </dd>
         </div>
-        <span className="bg-black text-white text-right md:group-hover:text-brand-yellow font-sans font-bold capitalize text-16 py-2 w-1/2 px-[20px]">
+        <span className="bg-black text-white text-right 800:w-full md:group-hover:text-brand-yellow font-sans font-bold capitalize text-16 py-2 w-1/2 px-[20px]">
           checkout
         </span>
       </a>
@@ -299,6 +299,7 @@ function CartLines({
           </defs>
         </svg>
       </button>
+
       <div
         className={clsx('p-[20px] h-full hidden 800:flex flex-col gap-4', {
           '800:!hidden ': collapsed,
@@ -307,6 +308,16 @@ function CartLines({
           '!flex !h-[calc(100%-40px)]': !isCollapsedMobile,
         })}
       >
+        {isDiscountApplied && (
+          <div className="h-[24px] relative w-full">
+            <div className="bg-black absolute -top-[20px] -left-[20px] w-[calc(100%+40px)] text-12 text-white rounded px-4 py-2">
+              <div className="flex justify-between items-center">
+                <span>Discount Applied:</span>
+                <p className="font-sans font-bold">{discountCode}</p>
+              </div>
+            </div>
+          </div>
+        )}
         {commentsEnabled && (
           <div className="bg-black text-white border border-white p-4 rounded mb-4">
             <h3 className="font-bold mb-2">Cart Debug Info:</h3>
@@ -350,19 +361,6 @@ function CartLines({
                 Clear Cart ({cart?.totalQuantity ?? 0} items)
               </button>
             </CartForm>
-          </div>
-        )}
-        {isDiscountApplied && (
-          <div className="bg-black text-12 text-white border border-white p-4 rounded mb-4">
-            <div className="flex justify-between items-center">
-              <span>Discount Applied:</span>
-              <p className="font-sans font-bold">{discountCode}</p>
-            </div>
-            <div>
-              <span className="text-[12px] uppercase">
-                Discount may be tied to email at checkout.
-              </span>
-            </div>
           </div>
         )}
         <div className="h-1/4 inline-flex bg-brand-yellow w-full justify-start items-center relative overflow-hidden">

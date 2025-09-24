@@ -45,6 +45,14 @@ export const productType = defineType({
       group: 'editorial',
     }),
     defineField({
+      name: 'backInStock',
+      title: 'Back in Stock (enables the back in stock form)',
+      description: 'If enabled, the back in stock form will be displayed on the product page',
+      type: 'boolean',
+      group: 'editorial',
+      initialValue: false,
+    }),
+    defineField({
       name: 'colorTheme',
       type: 'reference',
       to: [{type: 'colorTheme'}],

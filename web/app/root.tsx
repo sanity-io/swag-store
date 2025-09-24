@@ -17,7 +17,7 @@ import {
   useRouteLoaderData,
   useLocation,
 } from 'react-router';
-import favicon from '~/assets/favicon.svg';
+
 import {
   FOOTER_QUERY,
   HEADER_QUERY,
@@ -92,7 +92,7 @@ export function links() {
       rel: 'preconnect',
       href: 'https://shop.app',
     },
-    {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {rel: 'icon', type: 'image/png', href: `/images/favicon.png`},
   ];
 }
 

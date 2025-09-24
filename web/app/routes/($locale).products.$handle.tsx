@@ -251,6 +251,7 @@ export default function Product() {
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
               productOptions={productOptions}
               selectedVariant={selectedVariant}
+              enableBackInStock={sanityProduct?.backInStock}
             />
             <br />
           </div>
