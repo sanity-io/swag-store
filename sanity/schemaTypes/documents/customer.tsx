@@ -1,4 +1,5 @@
 import {defineField, defineType} from 'sanity'
+import {WaitlistItemDisplay} from '../../components/inputs/WaitlistItemDisplay'
 
 export const customerType = defineType({
   name: 'customer',
@@ -22,6 +23,9 @@ export const customerType = defineType({
       name: 'backInStock',
       title: 'Back in Stock Notifications',
       type: 'array',
+      components: {
+        input: WaitlistItemDisplay,
+      },
       of: [
         {
           type: 'object',
@@ -45,14 +49,15 @@ export const customerType = defineType({
           ],
           preview: {
             select: {
-              title: 'productVariant.store.title',
-              subtitle: 'dateAdded',
+              variantTitle: 'productVariant.store.title',
+              productId: 'productVariant.store.productId',
+              dateAdded: 'dateAdded',
             },
             prepare(selection) {
-              const {title, subtitle} = selection
+              const {variantTitle, productId, dateAdded} = selection
               return {
-                title: title || 'Product Variant',
-                subtitle: subtitle ? new Date(subtitle).toLocaleDateString() : 'No date',
+                title: variantTitle || 'Product Variant',
+                subtitle: `${productId ? `Product ID: ${productId}` : ''} • ${dateAdded ? new Date(dateAdded).toLocaleDateString() : 'No date'}`,
               }
             },
           },

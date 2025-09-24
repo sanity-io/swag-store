@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router';
 import {type MappedProductOptions} from '@shopify/hydrogen';
 import type {
@@ -168,44 +168,47 @@ export function ProductVariantForm({
             <div className="flex gap-x-1 w-full justify-between mb-0">
               {option.optionValues.map((value) => {
                 const {
-                  name,
+                  title,
                   handle,
                   variantUriQuery,
                   selected,
-                  available,
+                  availableForSale,
                   exists,
                   isDifferentProduct,
                   swatch,
-                } = value;
+                } = value.firstSelectableVariant;
 
                 if (isDifferentProduct) {
                   return (
                     <LocalizedLink
-                      key={option.name + name}
+                      key={option.name + title}
                       to={
-                        available
+                        availableForSale
                           ? `/products/${handle}?${variantUriQuery}`
                           : '#'
                       }
-                      className={`product-options-item cursor-pointer w-full md:hover:!bg-brand-yellow md:hover:text-black ${!available ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      className={`product-options-item cursor-pointer w-full md:hover:!bg-brand-yellow md:hover:text-black ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''}`}
                       prefetch="intent"
                       preventScrollReset
                       replace
-                      onClick={() => available && setVariantSelected(true)}
+                      onClick={() =>
+                        availableForSale && setVariantSelected(true)
+                      }
                       style={{
                         border: selected
                           ? '1px solid black'
                           : '1px solid transparent',
                       }}
                     >
-                      <ProductOptionSwatch swatch={swatch} name={name} />
+                      <ProductOptionSwatch swatch={swatch} name={title} />
                     </LocalizedLink>
                   );
                 } else {
                   return (
-                    <React.Fragment key={option.name + name}>
+                    <React.Fragment key={option.name + title}>
                       <button
-                        className={`product-options-item cursor-pointer w-full h-[34px] bg-black text-white md:hover:!bg-brand-yellow md:hover:text-black px-2 py-1 ${!available ? 'opacity-30 cursor-not-allowed' : ''} ${
+                        to={`/products/${handle}?${variantUriQuery}`}
+                        className={`product-options-item cursor-pointer w-full h-[34px] bg-black text-white md:hover:!bg-brand-yellow md:hover:text-black px-2 py-1 ${!availableForSale ? 'opacity-30 cursor-not-allowed' : ''} ${
                           exists && !selected ? ' link' : ''
                         } ${variantSelected ? 'hidden' : ''}`}
                         style={{
@@ -213,15 +216,15 @@ export function ProductVariantForm({
                             ? '1px solid black'
                             : '1px solid transparent',
                         }}
-                        // disabled={!exists || !available}
+                        // disabled={!exists || !availableForSale}
                         onClick={() => {
-                          if (!selected && available) {
+                          if (!selected && availableForSale) {
                             setVariantSelected(true);
-                            setSelectedVariant(selectedVariant);
+                            setSelectedVariant(value?.firstSelectableVariant);
                           }
                         }}
                       >
-                        <ProductOptionSwatch swatch={swatch} name={name} />
+                        <ProductOptionSwatch swatch={swatch} name={title} />
                       </button>
                     </React.Fragment>
                   );
@@ -278,7 +281,6 @@ export function ProductVariantForm({
     </div>
   );
 }
-
 export function ProductFormPDP({
   productOptions,
   selectedVariant,
@@ -290,13 +292,18 @@ export function ProductFormPDP({
   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
   enableBackInStock?: boolean;
 }) {
-  const [showBackInStockForm, setShowBackInStockForm] = useState(
-    productOptions.some((option) =>
-      option.optionValues.some((value) => !value.available),
-    ),
-  );
+  const [showBackInStockForm, setShowBackInStockForm] = useState(false);
   const navigate = useNavigate();
   // const {open} = useAside();
+
+  // Update form visibility when selectedVariant changes
+  useEffect(() => {
+    if (selectedVariant) {
+      setShowBackInStockForm(!selectedVariant.availableForSale);
+    } else {
+      setShowBackInStockForm(false);
+    }
+  }, [selectedVariant]);
   return (
     <div className="product-form border-t border-black mt-8">
       {productOptions.map((option) => {

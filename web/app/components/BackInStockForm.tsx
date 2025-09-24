@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import type {ProductFragment} from 'storefrontapi.generated';
 
 type BackInStockFormProps = {
@@ -15,6 +15,15 @@ export function BackInStockForm({
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+
+  // Reset form state when variant changes
+  useEffect(() => {
+    setEmail('');
+    setPending(false);
+    setSuccess(false);
+    setError('');
+    setAlreadySubscribed(false);
+  }, [variant?.id]);
 
   console.log('variant', variant);
   const handleSubmit = useCallback(
