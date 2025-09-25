@@ -1,4 +1,4 @@
-import {DocumentIcon} from '@sanity/icons'
+import {EnvelopeIcon, LaunchIcon} from '@sanity/icons'
 import {ListItemBuilder} from 'sanity/structure';
 import defineStructure from '../utils/defineStructure'
 import {PostPreviewPane} from '../components/PostPreviewPane'
@@ -6,7 +6,7 @@ import {PostPreviewPane} from '../components/PostPreviewPane'
 export default defineStructure<ListItemBuilder>((S) =>
   S.listItem()
     .title('Emails')
-    .icon(DocumentIcon)
+    .icon(EnvelopeIcon)
     .schemaType('post')
     .child(
       S.documentTypeList('post')
@@ -26,4 +26,20 @@ export default defineStructure<ListItemBuilder>((S) =>
             ])
         )
     )
+)
+
+export const marketingCampaigns = defineStructure<ListItemBuilder>((S) =>
+  S.listItem()
+.title('Marketing Campaigns')
+.icon(LaunchIcon)
+.schemaType('post')
+.child(
+  S.documentTypeList('marketingCampaign')
+    .title('All Marketing Campaigns')
+    .child((documentId) =>
+      S.document()
+        .documentId(documentId)
+        .schemaType('marketingCampaign')
+    )
+)
 )

@@ -3,7 +3,7 @@ import collections from './collectionStructure'
 import colorThemes from './colorThemeStructure'
 import home from './homeStructure'
 import pages from './pageStructure'
-import posts from './postStructure'
+import posts, { marketingCampaigns } from './postStructure'
 import products from './productStructure'
 import settings from './settingStructure'
 import notifications from './notificationStructure'
@@ -37,8 +37,11 @@ const hiddenDocTypes = (listItem: ListItemBuilder) => {
     'page',
     'post',
     'product',
+    'colorVariant',
+    'productMap',
     'productVariant',
     'settings',
+    'marketingCampaign',
     'notification',
   ].includes(id)
 }
@@ -49,7 +52,9 @@ export const structure: StructureResolver = (S, context) =>
     .items([
       home(S, context),
       pages(S, context),
+      S.divider(),
       posts(S, context),
+      marketingCampaigns(S, context),
       S.divider(),
       collections(S, context),
       products(S, context),
