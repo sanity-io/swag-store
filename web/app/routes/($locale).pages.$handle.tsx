@@ -7,7 +7,7 @@ import {PAGE_QUERY} from '~/groq/queries';
 import {Query} from 'hydrogen-sanity';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
+  return [{title: `Sanity Market | ${data?.page.title ?? ''}`}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {

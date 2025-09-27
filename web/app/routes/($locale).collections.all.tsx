@@ -7,7 +7,7 @@ import {GridProductItem, ProductItem} from '~/components/ProductItem';
 import clsx from 'clsx';
 
 export const meta: MetaFunction<typeof loader> = () => {
-  return [{title: `Hydrogen | Products`}];
+  return [{title: `Sanity Market | Products`}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {

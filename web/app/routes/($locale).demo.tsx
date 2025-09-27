@@ -4,7 +4,7 @@ import {useLoaderData, type MetaFunction} from 'react-router';
 import {useState, useEffect} from 'react';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Demo'}];
+  return [{title: 'Sanity Market | Demo'}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
