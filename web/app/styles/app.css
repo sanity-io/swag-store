@@ -29,6 +29,18 @@
     overflow: hidden;
   }
 }
+ 
+html, body {
+  height: 100%;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  overflow: auto;
+}
 
 .grid-bg {
   background-image: url(/images/grid-bg.png);
