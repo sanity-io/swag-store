@@ -10,8 +10,33 @@ import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 
 import {Query} from 'hydrogen-sanity';
 
-export const meta: MetaFunction = () => {
-  return [{title: 'Sanity Online Store'}];
+export const meta: MetaFunction = (data) => {
+  console.log('data', data);
+  return [
+    {title: 'Sanity Market'},
+
+    {
+      name: 'description',
+      content: 'Content Operations for your Body. ',
+    },
+    {
+      property: 'og:image',
+      content:
+        'https://cdn.sanity.io/images/l3u4li5b/production/2942779cef7268f6cad8e55e44dd233eeb0a26b6-1200x630.png',
+    },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:image:alt',
+      content: 'Content Operations for your Body. ',
+    },
+  ];
 };
 
 export async function loader(args: LoaderFunctionArgs) {

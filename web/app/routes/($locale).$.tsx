@@ -9,5 +9,5 @@ export async function loader({request}: LoaderFunctionArgs) {
 }
 
 export default function CatchAllPage() {
-  return <div>HEY</div>;
+  return <div></div>;
 }
