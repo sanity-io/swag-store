@@ -50,7 +50,6 @@ async function loadCriticalData({
 export default function Page() {
   const data = useLoaderData<typeof loader>();
 
-  console.log('DATA', data.page);
   return (
     <div className="page">
       <Query query={PAGE_QUERY} options={{initial: data.page}}>

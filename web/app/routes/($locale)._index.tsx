@@ -11,7 +11,6 @@ import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 import {Query} from 'hydrogen-sanity';
 
 export const meta: MetaFunction = (data) => {
-  console.log('data', data);
   return [
     {title: 'Sanity Market'},
 
