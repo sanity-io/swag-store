@@ -28,9 +28,9 @@ export function CartLineItem({line}: {line: CartLine}) {
           alt={title}
           className="h-full object-cover"
           data={image}
-          height={200}
+          height={400}
           loading="lazy"
-          width={200}
+          width={400}
         />
       )}
       {merchandise.title !== 'Default Title' ? (

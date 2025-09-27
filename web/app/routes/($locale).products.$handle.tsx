@@ -247,6 +247,9 @@ export default function Product() {
                 );
               }}
             </Query>
+            <p className="uppercase">
+              Please allow up to 1-2 weeks for delivery.
+            </p>
             <ProductFormPDP
               category={sanityProduct?.category?.slug.current} // FIXME: this is a hack to get the category of the product
               productOptions={productOptions}

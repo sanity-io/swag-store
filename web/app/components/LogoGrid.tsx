@@ -1,6 +1,8 @@
 import SanityImage from '~/components/SanityImage';
 
 export const LogoGrid = ({title, items}: {title: string; items: any[]}) => {
+  const isOddCount = items.length % 2 !== 0;
+
   return (
     <div className="bg-black ">
       <div className="flex flex-col justify-between p-4">
@@ -17,33 +19,43 @@ export const LogoGrid = ({title, items}: {title: string; items: any[]}) => {
         }}
       >
         {items.map(
-          ({
-            title,
-            _key,
-            image,
-            url,
-          }: {
-            title: string;
-            _key: string;
-            image: any;
-            url: string;
-          }) => (
-            <div
-              key={_key}
-              className="col-span-1 bg-black aspect-video flex items-center justify-center"
-            >
-              <div className="w-[70%] h-auto mx-auto">
-                <SanityImage
-                  image={image}
-                  containerClasses="inline-flex items-center justify-center"
-                  className="w-full h-auto object-contain"
-                  alt={title}
-                  width={100}
-                  height={100}
-                />
+          (
+            {
+              title,
+              _key,
+              image,
+              url,
+            }: {
+              title: string;
+              _key: string;
+              image: any;
+              url: string;
+            },
+            index,
+          ) => {
+            const isLastItem = index === items.length - 1;
+            const shouldHideOnMobile = isOddCount && isLastItem;
+
+            return (
+              <div
+                key={_key}
+                className={`col-span-1 bg-black aspect-[1.4] flex items-center justify-center ${
+                  shouldHideOnMobile ? 'hidden 800:flex' : ''
+                }`}
+              >
+                <div className="w-[70%] h-auto mx-auto">
+                  <SanityImage
+                    image={image}
+                    containerClasses="inline-flex items-center justify-center"
+                    className="w-full h-auto max-w-[140px] object-contain"
+                    alt={title}
+                    width={100}
+                    height={100}
+                  />
+                </div>
               </div>
-            </div>
-          ),
+            );
+          },
         )}
       </div>
     </div>
