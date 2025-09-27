@@ -24,7 +24,7 @@ export function Footer({
       <Await resolve={footerPromise}>
         {(footer) => (
           <footer className="py-1 relative z-20 800:py-0 bg-brand-liteblue h-[calc(100dvh-40px)]">
-            <div className="h-[calc(100%-60px)]">
+            <div className="h-[calc(100%-200px)] 800:h-[calc(100%-60px)]">
               <div className="h-full flex justify-center items-center p-4 ">
                 <div className="grid grid-cols-1 1200:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
                   <div className="flex flex-col 1200:flex-row items-center justify-between gap-4">
@@ -145,7 +145,7 @@ function FooterMenu({
       className="footer-menu uppercase text-black p-[20px] flex flex-col 800:flex-row pb-2 800:pb-0 justify-between"
       role="navigation"
     >
-      <div className="flex items-center gap-12">
+      <div className="flex flex-col 800:flex-row  p-10 items-center gap-0 800:gap-12">
         {FALLBACK_FOOTER_MENU.items.map((item) => {
           if (!item.url) return null;
           // if the url is internal, we strip the domain
@@ -176,7 +176,7 @@ function FooterMenu({
           );
         })}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex justify-center 800:justify-end items-center gap-4">
         <CountrySelector currentLocale={currentLocale} />
         <span>Sanity &copy; {new Date().getFullYear()}</span>
       </div>

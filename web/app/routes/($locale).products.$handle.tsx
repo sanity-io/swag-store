@@ -152,7 +152,7 @@ export default function Product() {
       >
         <Arrow />
       </LocalizedLink>
-      <div className="col-span-2 800:col-span-1 relative">
+      <div className="col-span-2 800:col-span-1 relative overflow-hidden">
         <div
           className="absolute top-0 left-0 w-full h-[125%]"
           style={{
