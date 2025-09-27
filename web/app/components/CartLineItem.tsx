@@ -26,7 +26,7 @@ export function CartLineItem({line}: {line: CartLine}) {
       {image && (
         <Image
           alt={title}
-          className="h-full object-cover"
+          className="h-full max-w-[200px] object-contain"
           data={image}
           height={400}
           loading="lazy"
