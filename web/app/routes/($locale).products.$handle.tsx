@@ -108,7 +108,9 @@ export default function Product() {
 
   // Scroll to top once when component mounts
   useEffect(() => {
-    window.scrollTo(0, 0);
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 200);
   }, []);
 
   // Optimistically selects a variant with given available variant information
