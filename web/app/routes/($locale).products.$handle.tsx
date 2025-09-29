@@ -146,12 +146,12 @@ export default function Product() {
           }),
         }}
       />
-      <LocalizedLink
-        to="/collections/all"
+      <button
+        onClick={() => window.history.back()}
         className="fixed top-4 w-[80px] h-[80px] z-20 left-4"
       >
         <Arrow />
-      </LocalizedLink>
+      </button>
       <div className="col-span-2 800:col-span-1 relative overflow-hidden">
         <div
           className="absolute top-0 left-0 w-full h-[125%]"
