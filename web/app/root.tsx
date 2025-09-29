@@ -129,6 +129,7 @@ export async function loader(args: LoaderFunctionArgs) {
     storefront: {
       i18n: currentLocale,
     },
+    storefrontClient: storefront, // Add the actual storefront client
     shop: getShopAnalytics({
       storefront,
       publicStorefrontId: env.PUBLIC_STOREFRONT_ID,

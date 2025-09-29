@@ -673,6 +673,22 @@ export type CartQueryContextQuery = {
   >;
 };
 
+export type AllLocalizationsQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
+}>;
+
+export type AllLocalizationsQuery = {
+  localization: {
+    availableCountries: Array<
+      Pick<StorefrontAPI.Country, 'isoCode' | 'name'> & {
+        availableLanguages: Array<
+          Pick<StorefrontAPI.Language, 'isoCode' | 'endonymName'>
+        >;
+      }
+    >;
+  };
+};
+
 export type MoneyProductItemFragment = Pick<
   StorefrontAPI.MoneyV2,
   'amount' | 'currencyCode'
@@ -1594,6 +1610,10 @@ interface GeneratedQueryTypes {
   '#graphql\n  query CartQueryContext($cartId: ID!, $numCartLines: Int = 100) {\n    cart(id: $cartId) {\n      ...CartApiQuery\n    }\n  }\n  #graphql\n  fragment Money on MoneyV2 {\n    currencyCode\n    amount\n  }\n  fragment CartLine on CartLine {\n    id\n    quantity\n    attributes {\n      key\n      value\n    }\n    cost {\n      totalAmount {\n        ...Money\n      }\n      amountPerQuantity {\n        ...Money\n      }\n      compareAtAmountPerQuantity {\n        ...Money\n      }\n    }\n    merchandise {\n      ... on ProductVariant {\n        id\n        availableForSale\n        compareAtPrice {\n          ...Money\n        }\n        price {\n          ...Money\n        }\n        requiresShipping\n        title\n        image {\n          id\n          url\n          altText\n          width\n          height\n\n        }\n        product {\n          handle\n          title\n          id\n          vendor\n        }\n        selectedOptions {\n          name\n          value\n        }\n      }\n    }\n  }\n  fragment CartLineComponent on ComponentizableCartLine {\n    id\n    quantity\n    attributes {\n      key\n      value\n    }\n    cost {\n      totalAmount {\n        ...Money\n      }\n      amountPerQuantity {\n        ...Money\n      }\n      compareAtAmountPerQuantity {\n        ...Money\n      }\n    }\n    merchandise {\n      ... on ProductVariant {\n        id\n        availableForSale\n        compareAtPrice {\n          ...Money\n        }\n        price {\n          ...Money\n        }\n        requiresShipping\n        title\n        image {\n          id\n          url\n          altText\n          width\n          height\n        }\n        product {\n          handle\n          title\n          id\n          vendor\n        }\n        selectedOptions {\n          name\n          value\n        }\n      }\n    }\n  }\n  fragment CartApiQuery on Cart {\n    updatedAt\n    id\n    appliedGiftCards {\n      lastCharacters\n      amountUsed {\n        ...Money\n      }\n    }\n    checkoutUrl\n    totalQuantity\n    buyerIdentity {\n      countryCode\n      customer {\n        id\n        email\n        firstName\n        lastName\n        displayName\n      }\n      email\n      phone\n    }\n    lines(first: $numCartLines) {\n      nodes {\n        ...CartLine\n      }\n      nodes {\n        ...CartLineComponent\n      }\n    }\n    cost {\n      subtotalAmount {\n        ...Money\n      }\n      totalAmount {\n        ...Money\n      }\n      totalDutyAmount {\n        ...Money\n      }\n      totalTaxAmount {\n        ...Money\n      }\n    }\n    note\n    attributes {\n      key\n      value\n    }\n    discountCodes {\n      code\n      applicable\n    }\n  }\n\n': {
     return: CartQueryContextQuery;
     variables: CartQueryContextQueryVariables;
+  };
+  '#graphql\n  query AllLocalizations @inContext(language: EN) {\n    localization {\n      availableCountries {\n        isoCode\n        name\n        availableLanguages {\n          isoCode\n          endonymName\n        }\n      }\n    }\n  }\n': {
+    return: AllLocalizationsQuery;
+    variables: AllLocalizationsQueryVariables;
   };
   '#graphql\n  #graphql\n  fragment MoneyProductItem on MoneyV2 {\n    amount\n    currencyCode\n  }\n  fragment ProductItem on Product {\n    id\n    handle\n    title\n    featuredImage {\n      id\n      altText\n      url\n      width\n      height\n    }\n    priceRange {\n      minVariantPrice {\n        ...MoneyProductItem\n      }\n      maxVariantPrice {\n        ...MoneyProductItem\n      }\n    }\n  }\n\n  query Collection(\n    $handle: String!\n    $country: CountryCode\n    $language: LanguageCode\n    $first: Int\n    $last: Int\n    $startCursor: String\n    $endCursor: String\n  ) @inContext(country: $country, language: $language) {\n    collection(handle: $handle) {\n      id\n      handle\n      title\n      description\n      products(\n        first: $first,\n        last: $last,\n        before: $startCursor,\n        after: $endCursor\n      ) {\n        nodes {\n          ...ProductItem\n        }\n        pageInfo {\n          hasPreviousPage\n          hasNextPage\n          endCursor\n          startCursor\n        }\n      }\n    }\n  }\n': {
     return: CollectionQuery;

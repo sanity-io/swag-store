@@ -1,5 +1,5 @@
 import {useLocation} from 'react-router';
-import {SUPPORTED_LOCALES, getLocaleFromRequest} from '~/lib/i18n';
+import {getSupportedLocalesSync, getLocaleFromRequest} from '~/lib/i18n';
 
 export function useLocale() {
   const location = useLocation();
@@ -7,20 +7,23 @@ export function useLocale() {
   // Get the current locale from the URL path
   const currentLocale = getLocaleFromRequest(new Request(`https://example.com${location.pathname}`));
   
+  // Get supported locales
+  const supportedLocales = getSupportedLocalesSync();
+  
   // Find the full locale object from our supported locales
-  const fullLocale = SUPPORTED_LOCALES.find(
+  const fullLocale = supportedLocales.find(
     (locale) =>
       locale.language === currentLocale?.language &&
       locale.country === currentLocale?.country
-  ) || SUPPORTED_LOCALES[0];
+  ) || supportedLocales[0];
 
   // Ensure we always return a valid locale object
   if (!fullLocale) {
     console.warn('useLocale: No valid locale found, using default');
     return {
-      currentLocale: SUPPORTED_LOCALES[0],
+      currentLocale: supportedLocales[0],
       isDefaultLocale: true,
-      switchLocale: (newLocale: typeof SUPPORTED_LOCALES[0]) => newLocale,
+      switchLocale: (newLocale: typeof supportedLocales[0]) => newLocale,
     };
   }
 

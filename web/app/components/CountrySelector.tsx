@@ -1,6 +1,7 @@
 import {useState, useRef, useEffect} from 'react';
 import {useLocation, Form} from 'react-router';
-import {SUPPORTED_LOCALES, type I18nLocale} from '~/lib/i18n';
+import {type I18nLocale} from '~/lib/i18n';
+import {useSupportedLocales} from '~/hooks/useSupportedLocales';
 
 interface CountrySelectorProps {
   currentLocale: I18nLocale;
@@ -15,6 +16,7 @@ export function CountrySelector({
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const {locales: supportedLocales, isLoading, error} = useSupportedLocales();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -32,7 +34,7 @@ export function CountrySelector({
   }, []);
 
   // Filter locales based on search term
-  const filteredLocales = SUPPORTED_LOCALES.filter(
+  const filteredLocales = supportedLocales.filter(
     (locale) =>
       locale.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       locale.currency.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -94,7 +96,7 @@ export function CountrySelector({
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-0 800:right-0 mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
+        <div className="absolute bottom-full left-0 md:!right-0 md:left-auto mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
           {/* <div className="p-3 border-b border-white">
             <input
               type="text"
@@ -106,38 +108,49 @@ export function CountrySelector({
           </div> */}
 
           <div className="max-h-64 overflow-y-auto">
-            {filteredLocales.map((locale) => (
-              <button
-                key={`${locale.language}-${locale.country}`}
-                onClick={() => handleLocaleChange(locale)}
-                className={`w-full flex items-center gap-3 text-white hover:text-black px-4 py-3 text-left hover:bg-brand-yellow transition-colors ${
-                  locale.pathPrefix === currentLocale.pathPrefix
-                    ? 'bg-brand-yellow !text-black'
-                    : 'text-gray-700'
-                }`}
-              >
-                <span className="text-xl">{locale.flag}</span>
-                <div className="flex-1">
-                  <div className="font-medium ">{locale.label}</div>
-                  <div className="text-sm ">
-                    {locale.language} • {locale.currency}
+            {isLoading ? (
+              <div className="p-4 text-center text-white">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mx-auto mb-2"></div>
+                Loading countries...
+              </div>
+            ) : error ? (
+              <div className="p-4 text-center text-red-400">
+                Error loading countries: {error}
+              </div>
+            ) : (
+              filteredLocales.map((locale) => (
+                <button
+                  key={`${locale.language}-${locale.country}`}
+                  onClick={() => handleLocaleChange(locale)}
+                  className={`w-full flex items-center gap-3 text-white hover:text-black px-4 py-3 text-left hover:bg-brand-yellow transition-colors ${
+                    locale.pathPrefix === currentLocale.pathPrefix
+                      ? 'bg-brand-yellow !text-black'
+                      : 'text-gray-700'
+                  }`}
+                >
+                  <span className="text-xl">{locale.flag}</span>
+                  <div className="flex-1">
+                    <div className="font-medium ">{locale.label}</div>
+                    <div className="text-sm ">
+                      {locale.language} • {locale.currency}
+                    </div>
                   </div>
-                </div>
-                {locale.pathPrefix === currentLocale.pathPrefix && (
-                  <svg
-                    className="w-5 h-5 text-indigo-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                )}
-              </button>
-            ))}
+                  {locale.pathPrefix === currentLocale.pathPrefix && (
+                    <svg
+                      className="w-5 h-5 text-indigo-600"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  )}
+                </button>
+              ))
+            )}
           </div>
         </div>
       )}

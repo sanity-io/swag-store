@@ -1,6 +1,6 @@
 import {Link, type LinkProps} from 'react-router';
 import {useLocale} from '~/hooks/useLocale';
-import {SUPPORTED_LOCALES} from '~/lib/i18n';
+import {getSupportedLocalesSync} from '~/lib/i18n';
 
 interface LocalizedLinkProps extends Omit<LinkProps, 'to'> {
   to: string;
@@ -37,7 +37,8 @@ export function LocalizedLink({to, children, ...props}: LocalizedLinkProps) {
     }
 
     // Check if the path already has a locale prefix
-    const hasExistingLocale = SUPPORTED_LOCALES.some(
+    const supportedLocales = getSupportedLocalesSync();
+    const hasExistingLocale = supportedLocales.some(
       (locale) => locale.pathPrefix && to.startsWith(locale.pathPrefix),
     );
 
@@ -104,7 +105,8 @@ export function LocalizedNavLink({to, children, ...props}: LocalizedLinkProps) {
     }
 
     // Check if the path already has a locale prefix
-    const hasExistingLocale = SUPPORTED_LOCALES.some(
+    const supportedLocales = getSupportedLocalesSync();
+    const hasExistingLocale = supportedLocales.some(
       (locale) => locale.pathPrefix && to.startsWith(locale.pathPrefix),
     );
 

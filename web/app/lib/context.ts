@@ -1,7 +1,7 @@
 import {createHydrogenContext} from '@shopify/hydrogen';
 import {AppSession} from '~/lib/session';
 import {CART_QUERY_FRAGMENT} from '~/lib/fragments';
-import {getLocaleFromRequest} from '~/lib/i18n';
+import {getLocaleFromRequest, getSupportedLocales} from '~/lib/i18n';
 import {createSanityContext} from 'hydrogen-sanity';
 
 import {PreviewSession} from 'hydrogen-sanity/preview/session';
@@ -64,6 +64,12 @@ export async function createAppLoadContext(
     cart: {
       queryFragment: CART_QUERY_FRAGMENT,
     },
+  });
+
+  // Initialize supported locales in the background
+  // This will cache the locales for future requests
+  getSupportedLocales(hydrogenContext.storefront).catch((error) => {
+    console.error('Failed to initialize supported locales:', error);
   });
 
   return {
