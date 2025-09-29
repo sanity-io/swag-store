@@ -23,8 +23,8 @@ export function Footer({
     <Suspense>
       <Await resolve={footerPromise}>
         {(footer) => (
-          <footer className="py-1 relative z-20 800:py-0 bg-brand-liteblue h-[calc(100dvh-40px)]">
-            <div className="h-[calc(100%-200px)] 800:h-[calc(100%-60px)]">
+          <footer className="py-1 relative z-20 800:py-0 bg-brand-liteblue h-[calc(100dvh-40px)] 800:h-screen 800:flex 800:flex-col 800:justify-between">
+            <div className="h-[calc(100%-200px)] 800:h-full">
               <div className="h-full flex justify-center items-center p-4 ">
                 <div className="grid grid-cols-1 1200:grid-cols-3  items-center justify-between w-full gap-y-10 gap-4 max-w-[1200px] mx-auto">
                   <div className="flex flex-col 1200:flex-row items-center justify-between gap-4">

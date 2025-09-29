@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {useLoaderData, type MetaFunction} from 'react-router';
+import {useEffect} from 'react';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {
   getSelectedProductOptions,
@@ -104,6 +105,11 @@ export default function Product() {
   const data = useLoaderData<typeof loader>();
   const {commentsEnabled} = useDebug();
   const {product, sanityProduct} = data;
+
+  // Scroll to top once when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(

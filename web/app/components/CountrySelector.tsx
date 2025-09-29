@@ -94,7 +94,7 @@ export function CountrySelector({
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full right-0 mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
+        <div className="absolute bottom-full left-0 800:right-0 mb-2 w-80 bg-black border border-black rounded-md shadow-lg z-50">
           {/* <div className="p-3 border-b border-white">
             <input
               type="text"
