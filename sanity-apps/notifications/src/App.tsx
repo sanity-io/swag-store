@@ -17,7 +17,11 @@ function App() {
     <div className="app-container">
       <SanityApp
         config={sanityConfigs}
-        fallback={<div>Loading notifications...</div>}
+        fallback={
+          <div className="bg-black h-screen w-screen">
+            Loading notifications...
+          </div>
+        }
       >
         <NotificationProvider>
           <NotificationCenter />
