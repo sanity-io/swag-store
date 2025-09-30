@@ -271,7 +271,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         </DebugProvider>
 
         <Sanity nonce={nonce} />
-        <VisualEditing action="/api/preview" />
+        {/* <VisualEditing action="/api/preview" /> */}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
