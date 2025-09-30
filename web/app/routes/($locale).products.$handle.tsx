@@ -132,7 +132,7 @@ export default function Product() {
     // Try immediately and after delays
     scrollToTop();
     setTimeout(scrollToTop, 100);
-    setTimeout(scrollToTop, 500);
+    // setTimeout(scrollToTop, 500);
   }, [location.pathname]); // Re-run when pathname changes
 
   // Optimistically selects a variant with given available variant information

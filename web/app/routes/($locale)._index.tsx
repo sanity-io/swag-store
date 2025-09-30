@@ -126,7 +126,7 @@ export default function Home() {
     // Try immediately and after delays
     scrollToTop();
     setTimeout(scrollToTop, 100);
-    setTimeout(scrollToTop, 500);
+    // setTimeout(scrollToTop, 500);
   }, [location.pathname]); // Re-run when pathname changes
 
   return (
