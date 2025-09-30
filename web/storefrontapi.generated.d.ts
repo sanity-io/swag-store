@@ -1611,7 +1611,7 @@ interface GeneratedQueryTypes {
     return: CartQueryContextQuery;
     variables: CartQueryContextQueryVariables;
   };
-  '#graphql\n  query AllLocalizations @inContext(language: EN) {\n    localization {\n      availableCountries {\n        isoCode\n        name\n        availableLanguages {\n          isoCode\n          endonymName\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query AllLocalizations {\n    localization {\n      availableCountries {\n        isoCode\n        name\n        availableLanguages {\n          isoCode\n          endonymName\n        }\n      }\n    }\n  }\n': {
     return: AllLocalizationsQuery;
     variables: AllLocalizationsQueryVariables;
   };

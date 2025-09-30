@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
 import {useEffect} from 'react';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {
@@ -105,13 +105,35 @@ export default function Product() {
   const data = useLoaderData<typeof loader>();
   const {commentsEnabled} = useDebug();
   const {product, sanityProduct} = data;
+  const location = useLocation();
 
-  // Scroll to top once when component mounts
+  // Scroll to top when component mounts or route changes
   useEffect(() => {
-    setTimeout(() => {
+    const scrollToTop = () => {
+      // Try multiple methods
       window.scrollTo(0, 0);
-    }, 200);
-  }, []);
+      window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Try scrolling the main element if it exists
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+
+      // Try scrolling the root element
+      const rootElement = document.querySelector('#root');
+      if (rootElement) {
+        rootElement.scrollTop = 0;
+      }
+    };
+
+    // Try immediately and after delays
+    scrollToTop();
+    setTimeout(scrollToTop, 100);
+    setTimeout(scrollToTop, 500);
+  }, [location.pathname]); // Re-run when pathname changes
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(

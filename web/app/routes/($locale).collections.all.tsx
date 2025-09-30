@@ -1,7 +1,8 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {LocalizedLink} from '~/components/LocalizedLink';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
 import {getPaginationVariables} from '@shopify/hydrogen';
+import {useEffect} from 'react';
 
 import {GridProductItem, ProductItem} from '~/components/ProductItem';
 import clsx from 'clsx';
@@ -81,6 +82,35 @@ export default function Collection() {
   const {filteredProducts, grid, products, category} =
     useLoaderData<typeof loader>();
   const allProducts = products.nodes;
+  const location = useLocation();
+
+  // Scroll to top when component mounts or route changes
+  useEffect(() => {
+    const scrollToTop = () => {
+      // Try multiple methods
+      window.scrollTo(0, 0);
+      window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Try scrolling the main element if it exists
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+
+      // Try scrolling the root element
+      const rootElement = document.querySelector('#root');
+      if (rootElement) {
+        rootElement.scrollTop = 0;
+      }
+    };
+
+    // Try immediately and after delays
+    scrollToTop();
+    setTimeout(scrollToTop, 100);
+    setTimeout(scrollToTop, 500);
+  }, [location.pathname]); // Re-run when pathname changes
   return (
     <div className="collection bg-gray-100">
       {!grid && (

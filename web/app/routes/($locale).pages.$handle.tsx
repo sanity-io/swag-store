@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
+import {useEffect} from 'react';
 
 import PageComponentList from '~/components/PageComponentList';
 import {PAGE_QUERY} from '~/groq/queries';
@@ -49,6 +50,35 @@ async function loadCriticalData({
 
 export default function Page() {
   const data = useLoaderData<typeof loader>();
+  const location = useLocation();
+
+  // Scroll to top when component mounts or route changes
+  useEffect(() => {
+    const scrollToTop = () => {
+      // Try multiple methods
+      window.scrollTo(0, 0);
+      window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Try scrolling the main element if it exists
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+
+      // Try scrolling the root element
+      const rootElement = document.querySelector('#root');
+      if (rootElement) {
+        rootElement.scrollTop = 0;
+      }
+    };
+
+    // Try immediately and after delays
+    scrollToTop();
+    setTimeout(scrollToTop, 100);
+    setTimeout(scrollToTop, 500);
+  }, [location.pathname]); // Re-run when pathname changes
 
   return (
     <div className="page">

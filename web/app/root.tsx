@@ -32,6 +32,8 @@ import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
 import {DebugProvider} from './contexts/DebugContext';
 
+import {useEffect} from 'react';
+
 import {Sanity} from 'hydrogen-sanity';
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
 
@@ -235,6 +237,12 @@ export function Layout({children}: {children?: React.ReactNode}) {
   // Get the current language for the HTML lang attribute
   const {currentLocale} = useLocale();
   const currentLanguage = currentLocale.language.toLowerCase();
+
+  useEffect(() => {
+    setTimeout(() => {
+      scrollTo(0, 0);
+    }, 200);
+  }, []);
 
   return (
     <html lang={currentLanguage}>
