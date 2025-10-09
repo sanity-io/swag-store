@@ -36,7 +36,7 @@ interface AttributionProviderProps {
 export const AttributionProvider: React.FC<AttributionProviderProps> = ({
   children,
 }) => {
-  const client = useClient();
+  const client = useClient({ apiVersion: "2025-10-09" });
   const [data, setData] = useState<AttributionData>({
     orders: [],
     campaigns: [],
