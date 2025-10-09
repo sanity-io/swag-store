@@ -10,6 +10,7 @@ import {HOME_PAGE_QUERY, NESTED_HOME_PRODUCTS_QUERY} from '~/groq/queries';
 import {SANITY_SHOPIFY_PRODUCTS} from '~/graphql/ProductQuery';
 
 import {Query} from 'hydrogen-sanity';
+import { captureLandingAttribution } from '~/lib/attribution';
 
 export const meta: MetaFunction = (data) => {
   return [
@@ -100,6 +101,14 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
 export default function Home() {
   const data = useLoaderData<typeof loader>();
   const location = useLocation();
+
+  useEffect(() => {
+    captureLandingAttribution({
+      pageId: data.sanityData._id,
+      pageSlug: "home",
+      pageTitle: "home",
+    });
+  }, [data.sanityData._id, "home", "home"]);
 
   // Scroll to top when component mounts or route changes
   useEffect(() => {

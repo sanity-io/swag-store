@@ -132,6 +132,7 @@ export const PRODUCT_AGE_ANALYSIS_QUERY = defineQuery(`
 `);
 
 export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage-> {
+    _id,
     modules[] {
       _type,
       _key,
