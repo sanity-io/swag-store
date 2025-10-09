@@ -5,6 +5,10 @@ import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
 import {defineField, defineType} from 'sanity'
 import {getPriceRange} from '../../utils/getPriceRange'
 import {GROUPS} from '../../constants'
+import {
+  ProductSalesCount,
+  ProductSalesCountInput,
+} from '../../components/attribution/ProductSalesCount'
 
 export const productType = defineType({
   name: 'product',
@@ -37,6 +41,16 @@ export const productType = defineType({
       title: 'Slug',
       type: 'proxyString',
       options: {field: 'store.slug.current'},
+    }),
+    defineField({
+      name: 'productValue',
+      title: 'Product Value',
+      type: 'number',
+      components: {
+        input: ProductSalesCountInput,
+      },
+      group: 'editorial',
+      readOnly: true,
     }),
     defineField({
       name: 'slug',
