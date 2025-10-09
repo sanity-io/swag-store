@@ -5,12 +5,12 @@ import {useClient, useFormValue} from 'sanity'
 
 export const ProductSalesCountInput = () => {
   const [data, setData] = useState<ProductSalesCountProps[]>([])
-  const x = useFormValue(['productMeta']) as {_ref: string}
+  const x = useFormValue(['productMeta']) as {_ref: string} | undefined
 
   const client = useClient({apiVersion: '2023-05-03'})
 
   useEffect(() => {
-    if (x._ref) {
+    if (x && x._ref) {
       client.fetch(`*[_id == "${x._ref}"][0]`).then((res) => {
         setData([
           {value: res.salesValueToday, mode: 'today'},
@@ -85,6 +85,7 @@ const ProductSalesCount = ({value, mode}: ProductSalesCountProps) => {
     case '7d': {
       label = 'Last 7 days'
       tone = 'primary'
+      break
     }
     case '30d': {
       label = 'Last 30 days'
