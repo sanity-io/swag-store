@@ -116,10 +116,26 @@ import {productVariantType} from './documents/productVariant'
 import {categoryType} from './documents/category'
 import {postType} from './documents/post'
 import {marketingCampaignType} from './documents/marketingCampaign'
+import {productMetaType} from './documents/productMeta'
 import {notification} from './documents/notification'
 import {customerType} from './documents/customer'
 
-const documents = [collectionType, colorThemeType, pageType, categoryType, homeType, productType, colorVariantType, productMapType, productVariantType, postType, marketingCampaignType, notification, customerType]
+const documents = [
+  collectionType,
+  colorThemeType,
+  pageType,
+  categoryType,
+  productMetaType,
+  homeType,
+  productType,
+  colorVariantType,
+  productMapType,
+  productVariantType,
+  postType,
+  marketingCampaignType,
+  notification,
+  customerType,
+]
 
 import {settingsType} from './singletons/settingsType'
 
