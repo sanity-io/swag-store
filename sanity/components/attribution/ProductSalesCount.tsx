@@ -28,7 +28,7 @@ export const ProductSalesCountInput = () => {
     <>
       <Flex gap={4}>
         {data.map((datum) => (
-          <ProductSalesCount key={datum.value} {...datum} />
+          <ProductSalesCount key={datum.mode} {...datum} />
         ))}
       </Flex>
       <div style={{marginTop: '30px'}}>
