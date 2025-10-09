@@ -1,13 +1,12 @@
-import {ListItemBuilder, StructureResolver} from 'sanity/structure'
+import {ListItemBuilder, StructureResolver} from 'sanity/structure';
 import collections from './collectionStructure'
 import colorThemes from './colorThemeStructure'
 import home from './homeStructure'
 import pages from './pageStructure'
-import posts, {marketingCampaigns} from './postStructure'
+import posts, { marketingCampaigns } from './postStructure'
 import products from './productStructure'
 import settings from './settingStructure'
 import notifications from './notificationStructure'
-import productMeta from './productMetaStructure'
 
 /**
  * Structure overrides
@@ -57,7 +56,6 @@ export const structure: StructureResolver = (S, context) =>
       posts(S, context),
       marketingCampaigns(S, context),
       S.divider(),
-      productMeta(S, context),
       collections(S, context),
       products(S, context),
       S.divider(),
