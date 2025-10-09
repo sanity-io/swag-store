@@ -1,55 +1,106 @@
 import React from "react";
-import { useAttribution } from "./AttributionProvider";
+import {useAttribution} from "./AttributionProvider";
+
+const formatCurrency = (value: number, currency: string | null) => {
+  if (!Number.isFinite(value)) {
+    return "—";
+  }
+
+  if (currency) {
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(value);
+    } catch (error) {
+      console.warn("Unable to format currency", currency, error);
+      return `${currency} ${value.toFixed(2)}`;
+    }
+  }
+
+  return value.toFixed(2);
+};
 
 export const MetricsOverview: React.FC = () => {
-  const { totalRevenue, totalOrders, campaigns, attributionReferences } =
-    useAttribution();
+  const {
+    totalValue,
+    totalEvents,
+    uniquePages,
+    pageSummaries,
+    utmSummaries,
+    primaryCurrency,
+    totalsByCurrency,
+  } = useAttribution();
 
-  const activeCampaigns = campaigns.filter(
-    (campaign) => campaign.campaignStatus === "active"
-  ).length;
-  const totalAddToCarts = attributionReferences.reduce(
-    (sum, ref) => sum + (ref.addToCartCount || 0),
-    0
-  );
-  const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+  const averageValue = totalEvents > 0 ? totalValue / totalEvents : 0;
+  const topPage = pageSummaries[0];
+  const topSource = utmSummaries[0];
+  const additionalCurrencies = totalsByCurrency.slice(1);
 
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
         gap: "1rem",
       }}
     >
       <div className="metric-card">
-        <p className="metric-value">${totalRevenue.toFixed(2)}</p>
-        <p className="metric-label">Total Revenue</p>
+        <p className="metric-value">
+          {formatCurrency(totalValue, primaryCurrency)}
+        </p>
+        <p className="metric-label">Total Attributed Value</p>
+        {additionalCurrencies.length > 0 && (
+          <p className="metric-subtext">
+            + {additionalCurrencies.length} other currency value
+            {additionalCurrencies.length > 1 ? "s" : ""}
+          </p>
+        )}
       </div>
 
       <div className="metric-card">
-        <p className="metric-value">{totalOrders}</p>
-        <p className="metric-label">Total Orders</p>
+        <p className="metric-value">{totalEvents}</p>
+        <p className="metric-label">Attributed Events</p>
       </div>
 
       <div className="metric-card">
-        <p className="metric-value">${averageOrderValue.toFixed(2)}</p>
-        <p className="metric-label">Average Order Value</p>
+        <p className="metric-value">
+          {totalEvents > 0
+            ? formatCurrency(averageValue, primaryCurrency)
+            : "—"}
+        </p>
+        <p className="metric-label">Average Event Value</p>
       </div>
 
       <div className="metric-card">
-        <p className="metric-value">{activeCampaigns}</p>
-        <p className="metric-label">Active Campaigns</p>
+        <p className="metric-value">{uniquePages}</p>
+        <p className="metric-label">Pages Driving Value</p>
       </div>
 
       <div className="metric-card">
-        <p className="metric-value">{totalAddToCarts}</p>
-        <p className="metric-label">Total Add to Carts</p>
+        <p className="metric-value">
+          {topPage
+            ? formatCurrency(
+                topPage.totalValue,
+                topPage.currencyCode ?? primaryCurrency,
+              )
+            : "—"}
+        </p>
+        <p className="metric-label">
+          Top Page{topPage ? `: ${topPage.pageTitle}` : ""}
+        </p>
       </div>
 
       <div className="metric-card">
-        <p className="metric-value">{attributionReferences.length}</p>
-        <p className="metric-label">Tracked Content Items</p>
+        <p className="metric-value">
+          {topSource
+            ? formatCurrency(topSource.totalValue, topSource.currencyCode ?? primaryCurrency)
+            : "—"}
+        </p>
+        <p className="metric-label">
+          Top UTM Source{topSource ? `: ${topSource.source}` : ""}
+        </p>
       </div>
     </div>
   );

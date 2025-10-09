@@ -4,8 +4,15 @@ import {useEffect} from 'react';
 
 import PageComponentList from '~/components/PageComponentList';
 import {PAGE_QUERY} from '~/groq/queries';
+import {captureLandingAttribution} from '~/lib/attribution';
 
 import {Query} from 'hydrogen-sanity';
+
+type PageDocument = {
+  _id?: string;
+  slug?: string;
+  title?: string;
+};
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [{title: `Sanity Market | ${data?.page.title ?? ''}`}];
@@ -51,6 +58,17 @@ async function loadCriticalData({
 export default function Page() {
   const data = useLoaderData<typeof loader>();
   const location = useLocation();
+  const page = data.page as PageDocument;
+  const pageId = page?._id;
+
+  useEffect(() => {
+    if (!pageId) return;
+    captureLandingAttribution({
+      pageId,
+      pageSlug: page?.slug,
+      pageTitle: page?.title,
+    });
+  }, [pageId, page?.slug, page?.title]);
 
   // Scroll to top when component mounts or route changes
   useEffect(() => {

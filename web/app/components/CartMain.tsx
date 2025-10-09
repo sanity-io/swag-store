@@ -2,13 +2,14 @@ import {useOptimisticCart, Money} from '@shopify/hydrogen';
 import {LocalizedLink} from './LocalizedLink';
 import {LocalizedMoney} from './LocalizedMoney';
 import {useLocation} from 'react-router';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 import {CartLineItem} from '~/components/CartLineItem';
 import clsx from 'clsx';
 import {CartForm} from '@shopify/hydrogen';
 import {useCartFetchers} from '~/hooks/useCartFetchers';
 import {useDebug} from '~/contexts/DebugContext';
+import {sendCheckoutAttributionEvent} from '~/lib/attribution';
 
 export type CartLayout = 'page' | 'aside';
 
@@ -26,6 +27,9 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
+  const handleCheckoutAttribution = useCallback(() => {
+    sendCheckoutAttributionEvent(originalCart ?? null);
+  }, [originalCart]);
   return (
     <div
       key="CART_BUTTON"
@@ -35,6 +39,8 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
       <a
         href={originalCart?.checkoutUrl}
         className="w-full 800:w-1/3 flex 800:grid 800:grid-cols-3 justify-between items-center"
+        onClick={handleCheckoutAttribution}
+        onAuxClick={handleCheckoutAttribution}
       >
         <div className="bg-black 800:col-span-2 800:w-full text-white md:group-hover:text-brand-yellow  py-2 inline-flex w-1/2 px-[20px]">
           Total ({cart?.totalQuantity ?? 0}):&nbsp;

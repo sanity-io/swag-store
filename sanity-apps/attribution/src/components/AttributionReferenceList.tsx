@@ -1,105 +1,73 @@
 import React from "react";
-import { useAttribution } from "./AttributionProvider";
+import {useAttribution} from "./AttributionProvider";
+
+const formatCurrency = (value: number, currency: string | null) => {
+  if (!Number.isFinite(value)) {
+    return "—";
+  }
+
+  if (currency) {
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(value);
+    } catch (error) {
+      console.warn("Unable to format currency", currency, error);
+      return `${currency} ${value.toFixed(2)}`;
+    }
+  }
+
+  return value.toFixed(2);
+};
 
 export const AttributionReferenceList: React.FC = () => {
-  const { attributionReferences } = useAttribution();
+  const {utmSummaries, primaryCurrency} = useAttribution();
 
-  const getContentTypeIcon = (type: string) => {
-    switch (type) {
-      case "page":
-        return "📄";
-      case "product":
-        return "🛍️";
-      case "collection":
-        return "📦";
-      default:
-        return "📄";
-    }
-  };
-
-  const getContentTypeColor = (type: string) => {
-    switch (type) {
-      case "page":
-        return "#3b82f6";
-      case "product":
-        return "#22c55e";
-      case "collection":
-        return "#f59e0b";
-      default:
-        return "#a3a3a3";
-    }
-  };
-
-  if (attributionReferences.length === 0) {
+  if (utmSummaries.length === 0) {
     return (
-      <p style={{ color: "#a3a3a3", textAlign: "center", padding: "2rem" }}>
-        No attribution references found
+      <p style={{color: "#a3a3a3", textAlign: "center", padding: "2rem"}}>
+        No UTM information captured yet
       </p>
     );
   }
 
   return (
     <ul className="attribution-reference-list">
-      {attributionReferences.slice(0, 10).map((reference) => (
-        <li key={reference._id} className="attribution-item">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              marginBottom: "0.5rem",
-            }}
-          >
-            <div>
-              <h3 className="content-title">{reference.contentTitle}</h3>
-              <p
-                className="content-type"
-                style={{
-                  color: getContentTypeColor(reference.contentType),
-                  fontWeight: "600",
-                }}
-              >
-                {getContentTypeIcon(reference.contentType)}{" "}
-                {reference.contentType.toUpperCase()}
-              </p>
-            </div>
-            <div style={{ textAlign: "right" }}>
-              <p className="sales-value">
-                ${reference.currentSalesValue?.toFixed(2) || "0.00"}
-              </p>
-              <p style={{ color: "#a3a3a3", fontSize: "0.75rem", margin: "0" }}>
-                {reference.addToCartCount || 0} add to carts
-              </p>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <span style={{ color: "#a3a3a3", fontSize: "0.75rem" }}>
-                Conversion: {((reference.conversionRate || 0) * 100).toFixed(1)}
-                %
-              </span>
-              <span style={{ color: "#a3a3a3", fontSize: "0.75rem" }}>
-                Status: {reference.isActive ? "Active" : "Inactive"}
-              </span>
-            </div>
+      {utmSummaries.slice(0, 10).map((entry) => {
+        const currency = entry.currencyCode ?? primaryCurrency;
+        return (
+          <li key={`${entry.source}-${currency ?? 'unknown'}`} className="attribution-item">
             <div
               style={{
-                width: "8px",
-                height: "8px",
-                borderRadius: "50%",
-                backgroundColor: reference.isActive ? "#22c55e" : "#6b7280",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
               }}
-            />
-          </div>
-        </li>
-      ))}
+            >
+              <div>
+                <h3 className="content-title">{entry.source}</h3>
+                <p className="content-type">{entry.key.toUpperCase()}</p>
+              </div>
+              <div style={{textAlign: "right"}}>
+                <p className="sales-value">
+                  {formatCurrency(entry.totalValue, currency)}
+                </p>
+                <p
+                  style={{
+                    color: "#a3a3a3",
+                    fontSize: "0.75rem",
+                    margin: 0,
+                  }}
+                >
+                  {entry.eventCount} event{entry.eventCount === 1 ? "" : "s"}
+                </p>
+              </div>
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 };

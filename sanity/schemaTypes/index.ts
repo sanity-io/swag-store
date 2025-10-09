@@ -1,3 +1,6 @@
+import {attributionMoneyType} from './objects/attributionMoney'
+import {attributionLineItemType} from './objects/attributionLineItem'
+import {attributionUtmParamType} from './objects/attributionUtmParam'
 import {accordionGroupType} from './objects/module/accordionGroupType'
 import {accordionType} from './objects/module/accordionType'
 import {calloutType} from './objects/module/calloutType'
@@ -53,6 +56,9 @@ import {specialGridItemType} from './objects/module/specialGridItem'
 const annotations = [linkEmailType, linkExternalType, linkInternalType, linkProductType]
 
 const objects = [
+  attributionMoneyType,
+  attributionLineItemType,
+  attributionUtmParamType,
   accordionGroupType,
   accordionType,
   calloutType,
@@ -105,6 +111,7 @@ import {portableTextSimpleType} from './portableText/portableTextSimpleType'
 
 const blocks = [portableTextType, portableTextSimpleType]
 
+import {attributionEventType} from './documents/attributionEvent'
 import {collectionType} from './documents/collection'
 import {colorThemeType} from './documents/colorTheme'
 import {pageType} from './documents/page'
@@ -121,6 +128,7 @@ import {notification} from './documents/notification'
 import {customerType} from './documents/customer'
 
 const documents = [
+  attributionEventType,
   collectionType,
   colorThemeType,
   pageType,

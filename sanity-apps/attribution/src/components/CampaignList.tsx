@@ -1,68 +1,72 @@
 import React from "react";
-import { useAttribution } from "./AttributionProvider";
+import {useAttribution} from "./AttributionProvider";
+
+const formatCurrency = (value: number, currency: string | null) => {
+  if (!Number.isFinite(value)) {
+    return "—";
+  }
+
+  if (currency) {
+    try {
+      return new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency,
+        maximumFractionDigits: 2,
+      }).format(value);
+    } catch (error) {
+      console.warn("Unable to format currency", currency, error);
+      return `${currency} ${value.toFixed(2)}`;
+    }
+  }
+
+  return value.toFixed(2);
+};
 
 export const CampaignList: React.FC = () => {
-  const { campaigns } = useAttribution();
+  const {pageSummaries, primaryCurrency} = useAttribution();
 
-  const getStatusClass = (status: string) => {
-    switch (status) {
-      case "active":
-        return "status-active";
-      case "draft":
-        return "status-draft";
-      case "paused":
-        return "status-paused";
-      case "completed":
-        return "status-completed";
-      case "cancelled":
-        return "status-cancelled";
-      default:
-        return "status-draft";
-    }
-  };
-
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "No date";
-    return new Date(dateString).toLocaleDateString();
-  };
-
-  if (campaigns.length === 0) {
+  if (pageSummaries.length === 0) {
     return (
-      <p style={{ color: "#a3a3a3", textAlign: "center", padding: "2rem" }}>
-        No campaigns found
+      <p style={{color: "#a3a3a3", textAlign: "center", padding: "2rem"}}>
+        No pages have attributed events yet
       </p>
     );
   }
 
   return (
     <ul className="campaign-list">
-      {campaigns.slice(0, 10).map((campaign) => (
-        <li key={campaign._id} className="campaign-item">
-          <div>
-            <h3 className="campaign-name">{campaign.campaignName}</h3>
-            <p
-              style={{
-                color: "#a3a3a3",
-                fontSize: "0.875rem",
-                margin: "0.25rem 0",
-              }}
-            >
-              {campaign.pageTitle}
-            </p>
-            <p style={{ color: "#a3a3a3", fontSize: "0.75rem", margin: "0" }}>
-              Revenue: $
-              {campaign.revenueMetrics?.totalRevenue?.toFixed(2) || "0.00"} •
-              Orders: {campaign.revenueMetrics?.totalOrders || 0} • Started:{" "}
-              {formatDate(campaign.startDate)}
-            </p>
-          </div>
-          <span
-            className={`campaign-status ${getStatusClass(campaign.campaignStatus)}`}
-          >
-            {campaign.campaignStatus}
-          </span>
-        </li>
-      ))}
+      {pageSummaries.slice(0, 10).map((page) => {
+        const currency = page.currencyCode ?? primaryCurrency;
+        return (
+          <li key={`${page.pageId}-${currency ?? 'unknown'}`} className="campaign-item">
+            <div>
+              <p className="campaign-name">{page.pageTitle}</p>
+              <p className="order-details">
+                {page.eventCount} event{page.eventCount === 1 ? "" : "s"} • Avg {formatCurrency(page.averageValue, currency)}
+              </p>
+              {page.pageSlug ? (
+                <p className="order-details">Slug: {page.pageSlug}</p>
+              ) : null}
+            </div>
+            <div style={{textAlign: "right"}}>
+              <p className="sales-value">
+                {formatCurrency(page.totalValue, currency)}
+              </p>
+              {page.lastEventAt ? (
+                <p
+                  style={{
+                    color: "#a3a3a3",
+                    fontSize: "0.75rem",
+                    margin: 0,
+                  }}
+                >
+                  Last event: {new Date(page.lastEventAt).toLocaleString()}
+                </p>
+              ) : null}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 };

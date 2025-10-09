@@ -156,6 +156,7 @@ export const HOME_PAGE_QUERY = defineQuery(`*[_type == "settings"][0].homePage->
 }`);
 
 export const PAGE_QUERY = defineQuery(`*[_type in ["page"] && slug.current == $handle][0] {
+  _id,
   title,
   _type,
   'slug': slug.current,

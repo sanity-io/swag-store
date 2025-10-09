@@ -72,17 +72,17 @@ export const AttributionDashboard: React.FC = () => {
         </div>
 
         <div className="dashboard-section">
-          <h2 className="section-title">Recent Orders</h2>
+          <h2 className="section-title">Recent Attribution Events</h2>
           <OrderList />
         </div>
 
         <div className="dashboard-section">
-          <h2 className="section-title">Active Campaigns</h2>
+          <h2 className="section-title">Top Pages by Value</h2>
           <CampaignList />
         </div>
 
         <div className="dashboard-section">
-          <h2 className="section-title">Top Performing Content</h2>
+          <h2 className="section-title">Top UTM Sources</h2>
           <AttributionReferenceList />
         </div>
       </div>
