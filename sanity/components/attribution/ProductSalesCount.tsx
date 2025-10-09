@@ -43,6 +43,7 @@ const ProductSalesCount = ({value, mode}: ProductSalesCountProps) => {
     case '7d': {
       label = 'Last 7 days'
       tone = 'primary'
+      break
     }
     case '30d': {
       label = 'Last 30 days'
