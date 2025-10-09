@@ -1,4 +1,5 @@
 packages:
-  - 'sanity'
-  - 'web'
-  - 'functions/*'
+  - "sanity"
+  - "sanity-apps/*"
+  - "web"
+  - "functions/*"
