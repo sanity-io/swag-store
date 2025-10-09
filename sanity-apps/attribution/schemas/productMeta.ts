@@ -12,6 +12,13 @@ export const productMeta = {
       validation: (rule: any) => rule.min(0)
     },
     {
+      title: 'product',
+      name: 'product',
+
+      type: 'reference',
+      to: [{type: 'product'}],
+    }    ,
+    {
       name: 'salesValueToday',
       title: 'Sales Value Today',
       type: 'number',
