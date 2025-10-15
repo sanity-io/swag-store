@@ -46,14 +46,28 @@ export function PageLayout({
   return (
     <Suspense
       fallback={
-        <main
-          className={clsx('w-full 800:min-h-screen bg-gray-100 relative', {
-            '800:w-full': cartPage,
-            '800:w-2/3': !cartPage,
-          })}
-        >
-          {children}
-        </main>
+        <div className="flex flex-wrap">
+          <main
+            className={clsx('w-full 800:min-h-screen bg-gray-100 relative', {
+              '800:w-full': cartPage,
+              '800:w-2/3': !cartPage,
+            })}
+          >
+            {children}
+          </main>
+
+          <div className={clsx('w-full flex flex-col sticky z-30 bottom-0')}>
+            {header && (
+              <Header
+                header={header}
+                isLoggedIn={isLoggedIn}
+                publicStoreDomain={publicStoreDomain}
+              >
+                <CartLoading />
+              </Header>
+            )}
+          </div>
+        </div>
       }
     >
       <Await resolve={cart}>
@@ -86,10 +100,7 @@ export function PageLayout({
               </main>
 
               <div
-                className={clsx('w-full flex flex-col sticky z-30 bottom-0', {
-                  // '800:w-full': !cartPage,
-                  // '800:w-2/3': cartPage,
-                })}
+                className={clsx('w-full flex flex-col sticky z-30 bottom-0')}
               >
                 {header && (
                   <Header
@@ -116,6 +127,10 @@ export function PageLayout({
       </Await>
     </Suspense>
   );
+}
+
+function CartLoading() {
+  return <CartMain cart={null} layout="aside" />;
 }
 
 function CartBlock({cart}: {cart: PageLayoutProps['cart']}) {

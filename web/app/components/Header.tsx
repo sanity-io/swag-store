@@ -5,7 +5,7 @@ import clsx from 'clsx';
 
 interface HeaderProps {
   header: HeaderQuery;
-  cart: Promise<CartApiQueryFragment | null>;
+  cart?: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
