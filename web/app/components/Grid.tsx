@@ -159,7 +159,7 @@ function GridItem({
             alt={product.store?.title || product.title}
             aspectRatio="1/1"
             src={product.store?.previewImageUrl}
-            loading={loading}
+            loading={'eager'}
             sizes="(min-width: 45em) 800px, 100vw"
           />
         )}

@@ -9,18 +9,21 @@ import {isPreviewEnabled} from 'hydrogen-sanity/preview';
 
 import {filter} from './sanity/stega';
 
-/**
- * The context implementation is separate from server.ts
- * so that type can be extracted for AppLoadContext
- * */
-export async function createAppLoadContext(
+const additionalContext = {
+  sanity: null as any, // Will be set below
+} as const;
+
+type AdditionalContextType = typeof additionalContext;
+
+declare global {
+  interface HydrogenAdditionalContext extends AdditionalContextType {}
+}
+
+export async function createHydrogenRouterContext(
   request: Request,
   env: Env,
   executionContext: ExecutionContext,
 ) {
-  /**
-   * Open a cache instance in the worker and a custom session instance.
-   */
   if (!env?.SESSION_SECRET) {
     throw new Error('SESSION_SECRET environment variable is not set');
   }
@@ -31,7 +34,6 @@ export async function createAppLoadContext(
     AppSession.init(request, [env.SESSION_SECRET]),
     PreviewSession.init(request, [env.SESSION_SECRET]),
   ]);
-
 
   const sanity = await createSanityContext({
     request,
@@ -54,17 +56,20 @@ export async function createAppLoadContext(
     } 
   });
 
-  const hydrogenContext = createHydrogenContext({
-    env,
-    request,
-    cache,
-    waitUntil,
-    session,
-    i18n: getLocaleFromRequest(request),
-    cart: {
-      queryFragment: CART_QUERY_FRAGMENT,
+  const hydrogenContext = createHydrogenContext(
+    {
+      env,
+      request,
+      cache,
+      waitUntil,
+      session,
+      i18n: getLocaleFromRequest(request),
+      cart: {
+        queryFragment: CART_QUERY_FRAGMENT,
+      },
     },
-  });
+    { ...additionalContext, sanity }
+  );
 
   // Initialize supported locales in the background
   // This will cache the locales for future requests
@@ -72,9 +77,14 @@ export async function createAppLoadContext(
     console.error('Failed to initialize supported locales:', error);
   });
 
-  return {
-    ...hydrogenContext,
-    sanity,
-    // declare additional Remix loader context
-  };
+  return hydrogenContext;
+}
+
+// Keep the old function for backward compatibility during migration
+export async function createAppLoadContext(
+  request: Request,
+  env: Env,
+  executionContext: ExecutionContext,
+) {
+  return createHydrogenRouterContext(request, env, executionContext);
 }

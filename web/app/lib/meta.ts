@@ -1,6 +1,6 @@
 // https://gist.github.com/ryanflorence/ec1849c6d690cfbffcb408ecd633e069
 
-import type {LoaderFunction, MetaFunction} from '@shopify/remix-oxygen';
+import type {LoaderFunction, MetaFunction} from 'react-router';
 export const mergeMeta = <
   Loader extends LoaderFunction | unknown = unknown,
   ParentsLoaders extends Record<string, LoaderFunction | unknown> = Record<

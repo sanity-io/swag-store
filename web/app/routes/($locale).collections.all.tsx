@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from 'react-router';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
 import {getPaginationVariables} from '@shopify/hydrogen';

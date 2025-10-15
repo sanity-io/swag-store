@@ -1,7 +1,6 @@
-import type {Config} from '@react-router/dev/config';
+import type {Config} from "@react-router/dev/config";
+import {hydrogenPreset} from "@shopify/hydrogen/react-router-preset";
 
 export default {
-  appDirectory: 'app',
-  buildDirectory: 'dist',
-  ssr: true,
+  presets: [hydrogenPreset()],
 } satisfies Config;
