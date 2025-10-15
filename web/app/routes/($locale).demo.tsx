@@ -1,4 +1,4 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import {type LoaderFunctionArgs} from 'react-router';
 import cx from 'classnames';
 import {useLoaderData, type MetaFunction} from 'react-router';
 import {useState, useEffect} from 'react';

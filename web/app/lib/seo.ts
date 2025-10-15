@@ -1,5 +1,5 @@
 import type {SeoConfig} from '@shopify/hydrogen';
-import type {MetaArgs} from '@shopify/remix-oxygen';
+import type {MetaArgs} from 'react-router';
 
 import {getSeoMeta} from '@shopify/hydrogen';
 
