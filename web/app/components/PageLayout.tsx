@@ -44,7 +44,18 @@ export function PageLayout({
   const cartPage = collectionPage || isPage;
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <main
+          className={clsx('w-full 800:min-h-screen bg-gray-100 relative', {
+            '800:w-full': cartPage,
+            '800:w-2/3': !cartPage,
+          })}
+        >
+          {children}
+        </main>
+      }
+    >
       <Await resolve={cart}>
         {(cart) => (
           <div className="font-mono">
