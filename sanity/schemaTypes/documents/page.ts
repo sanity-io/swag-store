@@ -53,6 +53,7 @@ export const pageType = defineField({
         defineArrayMember({ type: 'collaborators' }),
         defineArrayMember({ type: 'faqs' }),
         defineArrayMember({ type: 'careers' }),
+        defineArrayMember({ type: 'customTable' }),
       ],
       group: 'editorial',
     }),
