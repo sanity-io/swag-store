@@ -31,6 +31,14 @@ export default async function handleRequest(
     },
     // Allow Sanity assets loaded from the CDN to be loaded in your storefront
     defaultSrc: ['https://cdn.sanity.io'],
+    // Allow base64 images and images from various sources
+    imgSrc: [
+      'https://cdn.sanity.io',
+      'https://cdn.shopify.com',
+      'https://shopify.com',
+      'data:',
+      "'self'",
+    ],
     // Allow Studio to load your storefront in Presentation's iframe
     // Also allow self for local development
     frameAncestors: isPreviewEnabled

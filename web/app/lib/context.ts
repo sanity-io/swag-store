@@ -73,9 +73,13 @@ export async function createHydrogenRouterContext(
 
   // Initialize supported locales in the background
   // This will cache the locales for future requests
-  getSupportedLocales(hydrogenContext.storefront).catch((error) => {
-    console.error('Failed to initialize supported locales:', error);
-  });
+  if (hydrogenContext.storefront && typeof hydrogenContext.storefront.query === 'function') {
+    getSupportedLocales(hydrogenContext.storefront).catch((error) => {
+      console.error('Failed to initialize supported locales:', error);
+    });
+  } else {
+    console.warn('Storefront client not available for localization initialization');
+  }
 
   return hydrogenContext;
 }

@@ -115,6 +115,12 @@ interface ShopifyLocalizationData {
  */
 export async function fetchLocalizationData(storefront: Storefront): Promise<I18nLocale[]> {
   try {
+    // Check if storefront has query method
+    if (!storefront || typeof storefront.query !== 'function') {
+      console.warn('Storefront client does not have query method available');
+      return getFallbackLocales();
+    }
+
     const response = await storefront.query(LOCALIZATION_QUERY);
 
     const data = response as ShopifyLocalizationData;

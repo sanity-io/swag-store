@@ -18,6 +18,7 @@ if (typeof ALGOLIA_APP_ID !== 'string' || typeof ALGOLIA_WRITE_KEY !== 'string')
 
 export default defineBlueprint({
   "resources": [
+    // Not currently running but here for example/reference
     // defineDocumentFunction({
     //   name: 'algolia-sync',
     //   src: 'functions/algolia-sync',
@@ -40,6 +41,15 @@ export default defineBlueprint({
     //     projection: '{_id, store,  _type,colorVariant, productMap}',
     //   }
     // }),
+    defineDocumentFunction({
+      name: 'sanity-shopify-product-slug',
+      src: 'functions/sanity-shopify-product-slug',
+      event: {
+        on: ['create', 'update'],
+        filter: '_type == "product" && delta::changed("store.slug.current") && slug != null',
+        projection: '{_id, _type, slug, store}',
+      },
+    }),
     defineDocumentFunction({
       name: 'stale-products',
       src: 'functions/stale-products',
