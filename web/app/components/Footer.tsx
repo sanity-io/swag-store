@@ -142,10 +142,10 @@ function FooterMenu({
 }) {
   return (
     <nav
-      className="footer-menu uppercase text-black p-[20px] flex flex-col 800:flex-row pb-2 800:pb-0 justify-between"
+      className="footer-menu uppercase text-black p-[20px] flex flex-col 800:flex-row pb-2 800:pb-0  justify-between"
       role="navigation"
     >
-      <div className="flex flex-col 800:flex-row  p-10 items-center gap-0 800:gap-12">
+      <div className="flex flex-col 800:flex-row  p-10 800:px-0 items-center gap-0 800:gap-12 800:py-[24px]">
         {FALLBACK_FOOTER_MENU.items.map((item) => {
           if (!item.url) return null;
           // if the url is internal, we strip the domain
