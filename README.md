@@ -30,10 +30,11 @@ swag-store/
 
 ### Prerequisites
 
-- **Node.js** 18+ 
+- **Node.js** 18+ (required by Hydrogen)
 - **pnpm** 10.12.4+ (package manager)
-- **Shopify CLI** (for Hydrogen development)
+- **Shopify CLI** ~3.85.4 (for Hydrogen development)
 - **Sanity CLI** (for CMS management)
+- **TypeScript** 5.2.2+ (for type checking)
 
 ### Installation
 
@@ -69,8 +70,13 @@ Start all services in development mode:
 pnpm dev
 
 # Or start individual services
-pnpm dev:web      # Hydrogen storefront
+pnpm dev:web      # Hydrogen storefront (with codegen)
 pnpm dev:sanity   # Sanity Studio
+
+# Additional development commands
+pnpm typecheck    # Run TypeScript type checking
+pnpm lint         # Run ESLint
+pnpm codegen      # Generate GraphQL types and Sanity types
 ```
 
 ## 🌐 Frontend (Hydrogen Storefront)
@@ -90,25 +96,38 @@ A modern e-commerce storefront built with Shopify Hydrogen and React Router v7.
 
 ### Tech Stack
 
-- **Framework**: Shopify Hydrogen 2025.5.0
-- **Routing**: React Router 7.6.0
+- **Framework**: Shopify Hydrogen 2025.7.0
+- **Routing**: React Router 7.9.2 (file-based routing)
 - **Styling**: Tailwind CSS 4.1.6
 - **State Management**: React Context + Hooks
 - **Data Fetching**: GraphQL + GROQ queries
+- **React**: 18.3.1
+- **TypeScript**: 5.2.2
 
-### Key Routes
+### Key Routes (File-based Routing)
 
-- `/` - Homepage with featured content
-- `/products/[handle]` - Product detail pages
-- `/collections/[handle]` - Collection pages
-- `/pages/[handle]` - CMS-managed pages
-- `/search` - Search and filtering interface
+The application uses React Router v7's file-based routing system with locale support:
+
+- `($locale)._index.tsx` - Homepage with featured content
+- `($locale).products.$handle.tsx` - Product detail pages
+- `($locale).collections.$handle.tsx` - Collection pages
+- `($locale).collections._index.tsx` - Collections listing
+- `($locale).collections.all.tsx` - All products page
+- `($locale).pages.$handle.tsx` - CMS-managed pages
+- `($locale).cart.tsx` - Shopping cart
+- `($locale).cart.$lines.tsx` - Cart line items
+- `($locale).policies.$handle.tsx` - Policy pages
+- `($locale).newsletter.ts` - Newsletter subscription
+- `($locale).subscribe.tsx` - Subscription management
+- `($locale).discount.$code.tsx` - Discount code handling
+- `[robots.txt].tsx` - SEO robots file
+- `api.preview.ts` - Sanity preview API
 
 ## 📝 CMS (Sanity Studio)
 
 **Location**: `sanity/`
 
-A powerful content management system with custom schemas and workflows.
+A powerful content management system with custom schemas and workflows built with Sanity v4.10.1.
 
 ### Content Types
 
@@ -123,10 +142,13 @@ A powerful content management system with custom schemas and workflows.
 ### Custom Features
 
 - **🔄 Shopify Sync**: Automatic product synchronization
-- **📊 Analytics**: Built-in content analytics
-- **🎯 Hotspots**: Interactive image hotspots
+- **📊 Analytics**: Built-in content analytics with Sanity Assist
+- **🎯 Hotspots**: Interactive image hotspots with custom plugin
 - **📱 Preview**: Live preview of content
 - **🔧 Custom Actions**: Automated content workflows
+- **🤖 AI Assist**: Content generation and optimization
+- **📸 Media Management**: Advanced asset handling with custom plugin
+- **🔍 Search**: Built-in search and filtering
 
 ### Studio Features
 
@@ -266,6 +288,9 @@ Deploy to Shopify Oxygen:
 cd web
 pnpm build
 shopify hydrogen deploy
+
+# Or use the Hydrogen CLI directly
+npx @shopify/cli hydrogen deploy
 ```
 
 ### Sanity Studio
@@ -391,11 +416,30 @@ For issues and questions:
 2. Review existing issues
 3. Create a new issue with detailed information
 
+## 🔄 Migration Notes
+
+### React Router v7
+
+This project has been migrated from Remix to React Router v7, following the official migration guide. Key changes include:
+
+- **File-based routing**: Uses `@react-router/fs-routes` for automatic route generation
+- **Import changes**: All routing imports now use `react-router` instead of `@remix-run/react`
+- **Hydrogen integration**: Uses `@shopify/hydrogen/react-router-preset` for Hydrogen compatibility
+- **Type safety**: Full TypeScript support with generated types
+
+### Package Updates
+
+- **Hydrogen**: Updated to 2025.7.0 with latest features
+- **Sanity**: Updated to v4.10.1 with AI Assist and improved performance
+- **React Router**: Migrated to v7.9.2 with file-based routing
+- **Tailwind CSS**: Updated to v4.1.6 with improved performance
+
 ## 🔗 Related Links
 
 - [Sanity Documentation](https://www.sanity.io/docs)
 - [Shopify Hydrogen](https://hydrogen.shopify.dev)
-- [React Router](https://reactrouter.com)
+- [React Router v7](https://reactrouter.com)
+- [Remix to React Router Migration](https://reactrouter.com/upgrading/remix)
 - [Tailwind CSS](https://tailwindcss.com)
 
 ---
