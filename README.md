@@ -171,11 +171,8 @@ Serverless functions for automation and integrations.
 | `algolia-sync` | Sync products to Algolia search | Product updates |
 | `marketing-campaign-create` | Create marketing campaigns | Manual/API |
 | `marketing-campaign-send` | Send campaign emails | Scheduled |
-| `notification-webhook` | Process webhook notifications | Webhook events |
 | `product-map` | Map Shopify products to Sanity | Product sync |
-| `product-ref-map` | Create product references | Product updates |
 | `sanity-shopify-product-slug` | Generate product slugs | Product creation |
-| `shopify-image-upload` | Upload images to Shopify | Media uploads |
 | `stale-products` | Identify stale products | Scheduled |
 
 ### Function Development
@@ -214,6 +211,8 @@ pnpm dev
 ### Attribution App
 
 **Purpose**: E-commerce attribution tracking and campaign analytics
+
+This was created during a hackathon and is not a fully built/robust application.
 
 **Features**:
 - Order tracking and attribution analysis
