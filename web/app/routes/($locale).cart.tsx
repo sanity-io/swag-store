@@ -3,6 +3,7 @@ import type {CartQueryDataReturn} from '@shopify/hydrogen';
 import {CartForm} from '@shopify/hydrogen';
 import {
   data,
+  redirect,
   type LoaderFunctionArgs,
   type ActionFunctionArgs,
   type HeadersFunction,
@@ -104,56 +105,12 @@ export async function action({request, context}: ActionFunctionArgs) {
   );
 }
 
-export async function loader({request, context}: LoaderFunctionArgs) {
-  const {cart, storefront} = context;
-
-  // Get cart data with currency context using storefront client (like products do)
-  let cartData = null;
-  try {
-    const cartId = await cart.getCartId();
-    if (cartId) {
-      console.log('Fetching cart with currency context:', {
-        cartId,
-        country: storefront.i18n.country,
-        language: storefront.i18n.language,
-      });
-
-      // First, update the cart's buyer identity to match the current market
-      try {
-        await cart.updateBuyerIdentity({
-          countryCode: storefront.i18n.country,
-        });
-        console.log('Updated cart buyer identity to:', storefront.i18n.country);
-      } catch (updateError) {
-        console.log('Could not update cart buyer identity:', updateError);
-      }
-
-      const result = await storefront.query(CART_QUERY_ROUTE, {
-        variables: {
-          cartId,
-          country: storefront.i18n.country,
-          language: storefront.i18n.language,
-        },
-      });
-      cartData = result.cart;
-      console.log('Cart data fetched:', cartData?.cost?.subtotalAmount);
-    }
-  } catch (error) {
-    console.error('Error fetching cart with currency context:', error);
-    // Fallback to regular cart.get() if currency context fails
-    cartData = await cart.get();
-  }
-
-  return cartData || null;
+export async function loader({request}: LoaderFunctionArgs) {
+  // Redirect to the index page
+  return redirect('/');
 }
 
 export default function Cart() {
-  const cart = useLoaderData<typeof loader>();
-
-  return (
-    <div className="cart">
-      <h1>Cart</h1>
-      <CartMain layout="page" cart={cart} />
-    </div>
-  );
+  // This component will never render due to the redirect in the loader
+  return null;
 }

@@ -1,7 +1,7 @@
 import {type LoaderFunctionArgs} from 'react-router';
 import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
 import {useEffect} from 'react';
-import {LocalizedLink} from '~/components/LocalizedLink';
+
 import {
   getSelectedProductOptions,
   Analytics,
