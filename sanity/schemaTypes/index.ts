@@ -47,6 +47,7 @@ import {techInformationType} from './objects/module/techInformation'
 import {collaboratorsType} from './objects/module/collaborators'
 import {faqsType} from './objects/module/faqs'
 import {careersType} from './objects/module/careersType'
+import customTable from './objects/module/customTable'
 import {specialGridItemType} from './objects/module/specialGridItem'
 
 // Objects used as annotations must be imported first
@@ -71,6 +72,7 @@ const objects = [
   collaboratorsType,
   faqsType,
   careersType,
+  customTable,
   footerType,
   gridItemType,
   gridType,
