@@ -71,20 +71,37 @@ jobs:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
         working-directory: .
 
-      - name: Build Sanity Studio
-        run: pnpm run build
-        env:
-          NPM_CONFIG_USERCONFIG: ~/.npmrc
-          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-        working-directory: .
+        - name: Verify sanity directory setup
+          run: |
+            # Check that web directory has access to necessary files
+            ls -la
+            echo "--- Checking for lockfile ---"
+            ls -la pnpm-lock.yaml || echo "Lockfile not found in root"
+            echo "--- Checking sanity directory ---"
+            ls -la sanity/
+            echo "--- Checking sanity node_modules ---"
+            ls -la web/node_modules/ | head -5
+          working-directory: .
 
+      - name: Ensure lockfile in sanity directory
+        run: |
+          # Copy the lockfile to the sanity directory if it doesn't exist
+          if [ ! -f pnpm-lock.yaml ]; then
+            echo "Copying lockfile from root to sanity directory..."
+            cp ../pnpm-lock.yaml pnpm-lock.yaml
+          fi
+
+          # Verify the lockfile exists
+          ls -la pnpm-lock.yaml
+          echo "Lockfile size: $(wc -c < pnpm-lock.yaml) bytes"
+        working-directory: sanity
+    
       - name: Deploy Sanity Studio
         run: pnpm run deploy
         env:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-        working-directory: .
 
       - name: Deploy Sanity Schema
         run: pnpm run deploy-schema
@@ -92,7 +109,6 @@ jobs:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-        working-directory: .
 
       - name: Deploy Sanity GraphQL
         run: pnpm run deploy-graphql
@@ -100,4 +116,3 @@ jobs:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-        working-directory: .
