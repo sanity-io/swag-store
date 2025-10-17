@@ -32,7 +32,7 @@ import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
 import {DebugProvider} from './contexts/DebugContext';
 
-import {useEffect} from 'react';
+import {useEffect, startTransition} from 'react';
 
 import {Sanity} from 'hydrogen-sanity';
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
@@ -61,17 +61,14 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   const nextLocale = nextPath.split('/')[1];
 
   if (currentLocale !== nextLocale) {
-    console.log('Revalidating: locale change', {currentLocale, nextLocale});
     return true;
   }
 
   // Only revalidate for specific cart actions, not all form submissions
   if (formAction && formAction.includes('/cart')) {
-    console.log('Revalidating: cart action', {formAction});
     return true;
   }
 
-  console.log('Not revalidating: no conditions met');
   // Defaulting to no revalidation for root loader data to improve performance.
   // When using this feature, you risk your UI getting out of sync with your server.
   // Use with caution. If you are uncomfortable with this optimization, update the
@@ -164,18 +161,9 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const {storefront, sanity} = context;
-
-  const header = await storefront.query(HEADER_QUERY, {
-    cache: storefront.CacheLong(),
-    variables: {
-      headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-      country: storefront.i18n?.country,
-      language: storefront.i18n?.language,
-    },
-  });
-
-  return {header};
+  // Only load critical data that's absolutely necessary for initial render
+  // Header and Footer can be deferred since they're not above the fold
+  return {};
 }
 
 /**
@@ -186,19 +174,33 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
 function loadDeferredData({context}: LoaderFunctionArgs) {
   const {storefront, customerAccount, cart, sanity} = context;
 
-  // defer the footer query (below the fold)
-  const footer = storefront
-    .query(FOOTER_QUERY, {
+  // Defer header and footer queries since they're not critical for initial render
+  // Use more aggressive caching to prevent re-fetching on every route change
+  const header = storefront
+    .query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
+        headerMenuHandle: 'main-menu',
         country: storefront.i18n?.country,
         language: storefront.i18n?.language,
       },
     })
     .catch((error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
+      console.error('Header query error:', error);
+      return null;
+    });
+
+  const footer = storefront
+    .query(FOOTER_QUERY, {
+      cache: storefront.CacheLong(),
+      variables: {
+        footerMenuHandle: 'footer',
+        country: storefront.i18n?.country,
+        language: storefront.i18n?.language,
+      },
+    })
+    .catch((error) => {
+      console.error('Footer query error:', error);
       return null;
     });
 
@@ -233,7 +235,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   })();
 
   // Defer SEO query since it's not critical for initial render
-  const sanitySeo = sanity.query(SEO_QUERY).catch((error) => {
+  const sanitySeo = (sanity as any).query(SEO_QUERY).catch((error: any) => {
     console.error('SEO query error:', error);
     return null;
   });
@@ -241,6 +243,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
     cart: cartData,
+    header,
     footer,
     sanitySeo,
   };
@@ -256,7 +259,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
 
   useEffect(() => {
     setTimeout(() => {
-      scrollTo(0, 0);
+      startTransition(() => {
+        scrollTo(0, 0);
+      });
     }, 200);
   }, []);
 

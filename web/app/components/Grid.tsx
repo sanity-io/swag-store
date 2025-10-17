@@ -56,11 +56,11 @@ export function Grid({items, loading = 'lazy'}: GridProps) {
         if (item?._type === 'specialGridItem') {
           return (
             <div
+              key={item._key}
               className="w-full h-full grid-item flex items-center justify-center p-2 py-0 px-4"
               style={{backgroundColor: item.backgroundColor || 'black'}}
             >
               <button
-                key={item._key}
                 onClick={() => {
                   if (item.trigger === 'comments') {
                     toggleComments();

@@ -25,7 +25,6 @@ export function BackInStockForm({
     setAlreadySubscribed(false);
   }, [variant?.id]);
 
-  console.log('variant', variant);
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();

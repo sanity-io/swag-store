@@ -8,7 +8,7 @@ import {Newsletter} from './Newsletter';
 
 interface FooterProps {
   footer: Promise<FooterQuery | null>;
-  header: HeaderQuery;
+  header: Promise<HeaderQuery | null>;
   publicStoreDomain: string;
   currentLocale: I18nLocale;
 }
@@ -40,7 +40,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://github.com/sanity-io"
                         >
-                          <img src="/images/github.svg" />
+                          <img
+                            src="/images/github.svg"
+                            alt="Follow Sanity on GitHub"
+                          />
                         </a>
                       </li>
                       <li>
@@ -48,7 +51,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://www.youtube.com/@sanity_io"
                         >
-                          <img src="/images/youtube.svg" />
+                          <img
+                            src="/images/youtube.svg"
+                            alt="Follow Sanity on YouTube"
+                          />
                         </a>
                       </li>
                       <li>
@@ -56,7 +62,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://www.linkedin.com/company/sanity-io"
                         >
-                          <img src="/images/linkedin.svg" />
+                          <img
+                            src="/images/linkedin.svg"
+                            alt="Follow Sanity on LinkedIn"
+                          />
                         </a>
                       </li>
                       <li>
@@ -64,7 +73,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://bsky.app/profile/sanity.io"
                         >
-                          <img src="/images/bluesky.svg" />
+                          <img
+                            src="/images/bluesky.svg"
+                            alt="Follow Sanity on Bluesky"
+                          />
                         </a>
                       </li>
                       <li>
@@ -72,7 +84,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://x.com/sanity_io"
                         >
-                          <img src="/images/x.svg" />
+                          <img
+                            src="/images/x.svg"
+                            alt="Follow Sanity on X (Twitter)"
+                          />
                         </a>
                       </li>
                       <li>
@@ -80,7 +95,10 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://www.sanity.io/feed/rss"
                         >
-                          <img src="/images/rss.svg" />
+                          <img
+                            src="/images/rss.svg"
+                            alt="Subscribe to Sanity RSS feed"
+                          />
                         </a>
                       </li>
                       <li>
@@ -88,13 +106,16 @@ export function Footer({
                           className="800:hover:opacity-50 duration-300 inline-block"
                           href="https://snty.link/community"
                         >
-                          <img src="/images/discord.svg" />
+                          <img
+                            src="/images/discord.svg"
+                            alt="Join Sanity Discord community"
+                          />
                         </a>
                       </li>
                     </ul>
                   </div>
                   <div className="flex justify-center 800:my-10">
-                    <img src="/images/footer-logo.svg" />
+                    <img src="/images/footer-logo.svg" alt="Sanity logo" />
                   </div>
                   <div className="p-4">
                     <div className="flex flex-col 1400:flex-row justify-center text-center items-center gap-2 max-w-[340px] mx-auto">
@@ -114,14 +135,19 @@ export function Footer({
                 </div>
               </div>
             </div>
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-                currentLocale={currentLocale}
-              />
-            )}
+            <Await resolve={header}>
+              {(header) =>
+                footer?.menu &&
+                header?.shop?.primaryDomain?.url && (
+                  <FooterMenu
+                    menu={footer.menu}
+                    primaryDomainUrl={header.shop.primaryDomain.url}
+                    publicStoreDomain={publicStoreDomain}
+                    currentLocale={currentLocale}
+                  />
+                )
+              }
+            </Await>
           </footer>
         )}
       </Await>
@@ -136,7 +162,7 @@ function FooterMenu({
   currentLocale,
 }: {
   menu: FooterQuery['menu'];
-  primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
+  primaryDomainUrl: string;
   publicStoreDomain: string;
   currentLocale: I18nLocale;
 }) {
@@ -196,24 +222,6 @@ const FALLBACK_FOOTER_MENU = {
       url: '/policies/privacy-policy',
       items: [],
     },
-    // {
-    //   id: 'gid://shopify/MenuItem/461633093688',
-    //   resourceId: 'gid://shopify/ShopPolicy/23358013496',
-    //   tags: [],
-    //   title: 'Refund Policy',
-    //   type: 'SHOP_POLICY',
-    //   url: '/policies/refund-policy',
-    //   items: [],
-    // },
-    // {
-    //   id: 'gid://shopify/MenuItem/461633126456',
-    //   resourceId: 'gid://shopify/ShopPolicy/23358111800',
-    //   tags: [],
-    //   title: 'Shipping Policy',
-    //   type: 'SHOP_POLICY',
-    //   url: '/policies/shipping-policy',
-    //   items: [],
-    // },
     {
       id: 'gid://shopify/MenuItem/461633159224',
       resourceId: 'gid://shopify/ShopPolicy/23358079032',

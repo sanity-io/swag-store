@@ -1,4 +1,4 @@
-import {createContext, useContext, useState, ReactNode} from 'react';
+import {createContext, useContext, useState, ReactNode, useEffect} from 'react';
 
 interface DebugContextType {
   commentsEnabled: boolean;
@@ -9,9 +9,16 @@ const DebugContext = createContext<DebugContextType | undefined>(undefined);
 
 export function DebugProvider({children}: {children: ReactNode}) {
   const [commentsEnabled, setCommentsEnabled] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const toggleComments = () => {
-    setCommentsEnabled((prev) => !prev);
+    if (isHydrated) {
+      setCommentsEnabled((prev) => !prev);
+    }
   };
 
   return (

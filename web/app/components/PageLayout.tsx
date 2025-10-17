@@ -16,7 +16,7 @@ import {useDebug} from '~/contexts/DebugContext';
 interface PageLayoutProps {
   cart: CartApiQueryFragment | null;
   footer: Promise<FooterQuery | null>;
-  header: HeaderQuery;
+  header: Promise<HeaderQuery | null>;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
   children?: React.ReactNode;
@@ -57,15 +57,19 @@ export function PageLayout({
           </main>
 
           <div className={clsx('w-full flex flex-col sticky z-30 bottom-0')}>
-            {header && (
-              <Header
-                header={header}
-                isLoggedIn={isLoggedIn}
-                publicStoreDomain={publicStoreDomain}
-              >
-                <CartLoading />
-              </Header>
-            )}
+            <Await resolve={header}>
+              {(header) =>
+                header && (
+                  <Header
+                    header={header}
+                    isLoggedIn={isLoggedIn}
+                    publicStoreDomain={publicStoreDomain}
+                  >
+                    <CartLoading />
+                  </Header>
+                )
+              }
+            </Await>
           </div>
         </div>
       }
@@ -100,16 +104,19 @@ export function PageLayout({
               <div
                 className={clsx('w-full flex flex-col sticky z-30 bottom-0')}
               >
-                {header && (
-                  <Header
-                    header={header}
-                    cart={cart}
-                    isLoggedIn={isLoggedIn}
-                    publicStoreDomain={publicStoreDomain}
-                  >
-                    <CartBlock cart={cart} />
-                  </Header>
-                )}
+                <Await resolve={header}>
+                  {(header) =>
+                    header && (
+                      <Header
+                        header={header}
+                        isLoggedIn={isLoggedIn}
+                        publicStoreDomain={publicStoreDomain}
+                      >
+                        <CartBlock cart={cart} />
+                      </Header>
+                    )
+                  }
+                </Await>
               </div>
             </div>
             <div className="relative z-20">
