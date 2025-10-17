@@ -1,6 +1,6 @@
 # [Sanity Market](https://sanity.market) - E-Commerce Monorepo
 
- Built with **Sanity CMS**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
+ **Running Live in Production:** Built with **Sanity CMS**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
 
 ![Sanity Market Screenshot](website.png)
 View the live [Sanity Market](https://sanity.market)
