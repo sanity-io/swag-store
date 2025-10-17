@@ -1,5 +1,17 @@
 import { defineQuery } from 'groq';
 
+export const SEO_QUERY = defineQuery(`
+  *[_type == "settings"][0].seo {
+    title,
+    description,
+    image {
+      asset-> {
+        ...,
+      }
+    }
+  }
+`);
+
 export const NESTED_PRODUCT_QUERY = defineQuery(`
   'products': coalesce(modules[] {
     (_type == 'grid') => {

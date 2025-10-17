@@ -23,7 +23,6 @@ export default async function handleRequest(
 
   const {SanityProvider} = context.sanity;
 
-  console.log('isPreviewEnabled', isPreviewEnabled);
   const {nonce, header, NonceProvider} = createContentSecurityPolicy({
     shop: {
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,

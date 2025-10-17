@@ -36,6 +36,7 @@ import {useEffect} from 'react';
 
 import {Sanity} from 'hydrogen-sanity';
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
+import {SEO_QUERY} from '~/groq/queries';
 
 export type RootLoader = typeof loader;
 
@@ -49,7 +50,9 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   formAction,
 }) => {
   // revalidate when manually revalidating via useRevalidator
-  if (currentUrl.toString() === nextUrl.toString()) return true;
+  if (currentUrl.toString() === nextUrl.toString()) {
+    return true;
+  }
 
   // revalidate when the locale changes (different path prefix) - this is crucial for currency updates
   const currentPath = currentUrl.pathname;
@@ -58,14 +61,17 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
   const nextLocale = nextPath.split('/')[1];
 
   if (currentLocale !== nextLocale) {
+    console.log('Revalidating: locale change', {currentLocale, nextLocale});
     return true;
   }
 
   // Only revalidate for specific cart actions, not all form submissions
   if (formAction && formAction.includes('/cart')) {
+    console.log('Revalidating: cart action', {formAction});
     return true;
   }
 
+  console.log('Not revalidating: no conditions met');
   // Defaulting to no revalidation for root loader data to improve performance.
   // When using this feature, you risk your UI getting out of sync with your server.
   // Use with caution. If you are uncomfortable with this optimization, update the
@@ -99,6 +105,12 @@ export function links() {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
+  console.log('Root loader called:', {
+    url: args.request.url,
+    method: args.request.method,
+    timestamp: new Date().toISOString(),
+  });
+
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
 
@@ -152,19 +164,16 @@ export async function loader(args: LoaderFunctionArgs) {
  * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
  */
 async function loadCriticalData({context}: LoaderFunctionArgs) {
-  const {storefront} = context;
+  const {storefront, sanity} = context;
 
-  const [header] = await Promise.all([
-    storefront.query(HEADER_QUERY, {
-      cache: storefront.CacheLong(),
-      variables: {
-        headerMenuHandle: 'main-menu', // Adjust to your header menu handle
-        country: storefront.i18n?.country,
-        language: storefront.i18n?.language,
-      },
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
+  const header = await storefront.query(HEADER_QUERY, {
+    cache: storefront.CacheLong(),
+    variables: {
+      headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+      country: storefront.i18n?.country,
+      language: storefront.i18n?.language,
+    },
+  });
 
   return {header};
 }
@@ -175,7 +184,7 @@ async function loadCriticalData({context}: LoaderFunctionArgs) {
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
 function loadDeferredData({context}: LoaderFunctionArgs) {
-  const {storefront, customerAccount, cart} = context;
+  const {storefront, customerAccount, cart, sanity} = context;
 
   // defer the footer query (below the fold)
   const footer = storefront
@@ -223,10 +232,17 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
     }
   })();
 
+  // Defer SEO query since it's not critical for initial render
+  const sanitySeo = sanity.query(SEO_QUERY).catch((error) => {
+    console.error('SEO query error:', error);
+    return null;
+  });
+
   return {
     isLoggedIn: customerAccount.isLoggedIn(),
     cart: cartData,
     footer,
+    sanitySeo,
   };
 }
 
