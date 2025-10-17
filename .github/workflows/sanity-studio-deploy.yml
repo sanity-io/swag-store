@@ -71,17 +71,17 @@ jobs:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
         working-directory: .
 
-        - name: Verify sanity directory setup
-          run: |
-            # Check that web directory has access to necessary files
-            ls -la
-            echo "--- Checking for lockfile ---"
-            ls -la pnpm-lock.yaml || echo "Lockfile not found in root"
-            echo "--- Checking sanity directory ---"
-            ls -la sanity/
-            echo "--- Checking sanity node_modules ---"
-            ls -la web/node_modules/ | head -5
-          working-directory: .
+      - name: Verify Sanity directory setup
+        run: |
+          # Check that Sanity directory has access to necessary files
+          ls -la
+          echo "--- Checking for lockfile ---"
+          ls -la pnpm-lock.yaml || echo "Lockfile not found in root"
+          echo "--- Checking sanity directory ---"
+          ls -la sanity/
+          echo "--- Checking sanity node_modules ---"
+          ls -la sanity/node_modules/ | head -5
+        working-directory: .
 
       - name: Ensure lockfile in sanity directory
         run: |
@@ -95,7 +95,7 @@ jobs:
           ls -la pnpm-lock.yaml
           echo "Lockfile size: $(wc -c < pnpm-lock.yaml) bytes"
         working-directory: sanity
-    
+
       - name: Deploy Sanity Studio
         run: pnpm run deploy
         env:
