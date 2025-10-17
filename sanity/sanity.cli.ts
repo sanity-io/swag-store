@@ -15,6 +15,9 @@ export default defineCliConfig({
     projectId,
     dataset
   },
+  deployment: {
+    appId: 'm2123kpoguhqkpk659m00j7n'
+  },
   // studioHost: process.env.SANITY_STUDIO_HOST || 'localhost',
   /**
    * Enable auto-updates for studios.

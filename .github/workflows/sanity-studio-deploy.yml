@@ -1,0 +1,103 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sanity/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-studio:
+    name: Deploy Sanity Studio
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sanity
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.4
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+          check-latest: true
+          cache: "pnpm"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Setup Sanity authentication
+        run: |
+          # Create .npmrc file with proper authentication in home directory
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+
+          # Also create .npmrc in the sanity directory for pnpm
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          echo "@sanity:registry=https://registry.npmjs.org/" >> .npmrc
+          echo "always-auth=true" >> .npmrc
+        working-directory: sanity
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+        working-directory: .
+
+      - name: Build Sanity Studio
+        run: pnpm run build
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+        working-directory: .
+
+      - name: Deploy Sanity Studio
+        run: pnpm run deploy
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        working-directory: .
+
+      - name: Deploy Sanity Schema
+        run: pnpm run deploy-schema
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        working-directory: .
+
+      - name: Deploy Sanity GraphQL
+        run: pnpm run deploy-graphql
+        env:
+          NPM_CONFIG_USERCONFIG: ~/.npmrc
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        working-directory: .
