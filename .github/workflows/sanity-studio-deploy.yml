@@ -129,13 +129,3 @@ jobs:
           SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
           SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
         working-directory: sanity
-
-      - name: Deploy Sanity GraphQL
-        run: pnpm run deploy-graphql
-        env:
-          NPM_CONFIG_USERCONFIG: ~/.npmrc
-          NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
-          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
-          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
-        working-directory: sanity
