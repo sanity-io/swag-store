@@ -178,7 +178,7 @@ export default function Product() {
       />
       <button
         onClick={() => window.history.back()}
-        className="fixed top-4 w-[80px] h-[80px] z-20 left-4"
+        className="fixed cursor-pointer 800:hover:text-brand-yellow top-4 w-[80px] h-[80px] z-20 left-4"
       >
         <Arrow />
       </button>

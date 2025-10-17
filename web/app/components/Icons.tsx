@@ -1,6 +1,6 @@
 export const Arrow = () => (
   <svg
-    className="w-full h-full"
+    className="w-full h-full duration-300 transition-colors"
     width="50"
     height="50"
     viewBox="0 0 50 50"
