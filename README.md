@@ -152,6 +152,7 @@ A powerful content management system with custom schemas and workflows built wit
 - **🔧 Custom Actions**: Automated content workflows
 - **🤖 AI Assist**: Content generation and optimization
 - **📸 Media Management**: Advanced asset handling with custom plugin
+- **🛍️ Back in Stock Management**: Custom Back in Stock syncing + Customer management
 
 ### Studio Features
 
