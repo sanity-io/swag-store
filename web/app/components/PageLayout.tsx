@@ -6,10 +6,10 @@ import type {
   HeaderQuery,
 } from 'storefrontapi.generated';
 import {Footer} from '~/components/Footer';
-import {Header, HeaderMenu} from '~/components/Header';
+import {Header} from '~/components/Header';
 import {CartMain, CartCheckout} from '~/components/CartMain';
 import {useLocale} from '~/hooks/useLocale';
-import {useOptimisticCart} from '@shopify/hydrogen';
+
 import {Suspense} from 'react';
 import {useDebug} from '~/contexts/DebugContext';
 
@@ -73,8 +73,6 @@ export function PageLayout({
       <Await resolve={cart}>
         {(cart) => (
           <div className="font-mono">
-            {/* <MobileMenuAside header={header} publicStoreDomain={publicStoreDomain} /> */}
-
             {/* Debug Toggle Button - Only shows when comments are enabled */}
             {commentsEnabled && (
               <button
