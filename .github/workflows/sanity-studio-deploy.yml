@@ -96,12 +96,29 @@ jobs:
           echo "Lockfile size: $(wc -c < pnpm-lock.yaml) bytes"
         working-directory: sanity
 
+      - name: Verify Sanity configuration
+        run: |
+          echo "Project ID: $SANITY_STUDIO_PROJECT_ID"
+          echo "Dataset: $SANITY_STUDIO_DATASET"
+          echo "Auth token present: $([ -n "$SANITY_AUTH_TOKEN" ] && echo "Yes" || echo "No")"
+
+          # Test Sanity CLI connection
+          pnpm exec sanity debug --secrets
+        env:
+          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        working-directory: sanity
+
       - name: Deploy Sanity Studio
         run: pnpm run deploy
         env:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
+        working-directory: sanity
 
       - name: Deploy Sanity Schema
         run: pnpm run deploy-schema
@@ -109,6 +126,9 @@ jobs:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
+        working-directory: sanity
 
       - name: Deploy Sanity GraphQL
         run: pnpm run deploy-graphql
@@ -116,3 +136,6 @@ jobs:
           NPM_CONFIG_USERCONFIG: ~/.npmrc
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+          SANITY_STUDIO_PROJECT_ID: ${{ secrets.SANITY_STUDIO_PROJECT_ID }}
+          SANITY_STUDIO_DATASET: ${{ secrets.SANITY_STUDIO_DATASET || 'production' }}
+        working-directory: sanity

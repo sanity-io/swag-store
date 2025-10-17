@@ -24,6 +24,19 @@ The following secrets must be configured in your GitHub repository settings:
   4. Run: `sanity debug --secrets` to get your auth token
   5. Copy the token value
 
+### 3. SANITY_STUDIO_PROJECT_ID
+- **Purpose**: Identifies your Sanity project for deployment
+- **How to get**:
+  1. Go to [sanity.io/manage](https://sanity.io/manage)
+  2. Select your project
+  3. Copy the Project ID from the project settings
+  4. Or run: `sanity debug --secrets` to see your project ID
+
+### 4. SANITY_STUDIO_DATASET (Optional)
+- **Purpose**: Specifies which dataset to deploy to (defaults to 'production')
+- **Default**: `production`
+- **How to get**: Check your `sanity.cli.ts` file or Sanity project settings
+
 ## Setting up GitHub Secrets
 
 1. Go to your GitHub repository
