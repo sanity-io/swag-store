@@ -61,9 +61,17 @@ export const notification = defineType({
     }),
     defineField({
       name: 'isRead',
-      title: 'Is Read',
-      type: 'boolean',
-      initialValue: false,
+      title: 'Read Status',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Unread', value: 'unread'},
+          {title: 'Read', value: 'read'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'unread',
+      description: 'Whether the notification has been read',
     }),
     defineField({
       name: 'expiresAt',

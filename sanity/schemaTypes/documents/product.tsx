@@ -2,7 +2,7 @@ import {TagIcon} from '@sanity/icons'
 import pluralize from 'pluralize-esm'
 import ProductHiddenInput from '../../components/inputs/ProductHidden'
 import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
-import {defineField, defineType} from 'sanity'
+import {defineField, defineType, defineArrayMember} from 'sanity'
 import {getPriceRange} from '../../utils/getPriceRange'
 import {GROUPS} from '../../constants'
 
@@ -46,36 +46,69 @@ export const productType = defineType({
     }),
     defineField({
       name: 'backInStock',
-      title: 'Back in Stock (enables the back in stock form)',
-      description: 'If enabled, the back in stock form will be displayed on the product page',
-      type: 'boolean',
+      title: 'Back in Stock Form',
+      description: 'Enable the back in stock form on the product page',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Enabled', value: 'enabled'},
+          {title: 'Disabled', value: 'disabled'},
+        ],
+        layout: 'radio',
+      },
       group: 'editorial',
-      initialValue: false,
+      initialValue: 'disabled',
     }),
     defineField({
       name: 'colorTheme',
-      type: 'reference',
-      to: [{type: 'colorTheme'}],
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'colorTheme'}})],
+      description: 'Color theme for this product',
       group: 'testing',
+      validation: (Rule) => Rule.max(1).warning('Only one color theme can be selected'),
     }),
     defineField({
       name: 'colorVariant',
-      type: 'reference',
-      to: [{type: 'colorVariant'}],
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'colorVariant'}})],
+      description: 'Color variant for this product',
       group: 'testing',
+      validation: (Rule) => Rule.max(1).warning('Only one color variant can be selected'),
     }),
     defineField({
       name: 'productMap',
       title: 'Product Map',
-      type: 'reference',
-      to: [{type: 'productMap'}],
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'productMap'}})],
+      description: 'Product mapping configuration',
       group: 'testing',
+      validation: (Rule) => Rule.max(1).warning('Only one product map can be selected'),
     }),
     defineField({
       name: 'images',
       title: 'Images',
       type: 'array',
-      of: [{type: 'image', fields: [{name: 'alt', type: 'string', title: 'Alt text'}]}],
+      of: [
+        {
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+          fields: [
+            {
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+              description: 'Alternative text for screen readers',
+              validation: (Rule) => [
+                Rule.required().error('Alt text is required for accessibility'),
+                Rule.max(125).warning('Keep alt text under 125 characters'),
+              ],
+            },
+          ],
+        },
+      ],
+      description: 'Product images with hotspot support',
       group: 'editorial',
     }),
     defineField({
@@ -97,9 +130,18 @@ export const productType = defineType({
     }),
     defineField({
       name: 'hideFromSearch',
-      title: 'Hide from Search',
-      type: 'boolean',
+      title: 'Search Visibility',
+      description: 'Control whether this product appears in search results',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Visible in Search', value: 'visible'},
+          {title: 'Hidden from Search', value: 'hidden'},
+        ],
+        layout: 'radio',
+      },
       group: 'editorial',
+      initialValue: 'visible',
     }),
     defineField({
       name: 'seo',

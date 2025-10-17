@@ -1,27 +1,33 @@
-import {defineField} from 'sanity'
+import {defineField, defineType} from 'sanity'
+import {ImageIcon} from '@sanity/icons'
 
 import blocksToText from '../../../utils/blocksToText'
 
-export const gridItemType = defineField({
+export const gridItemType = defineType({
   name: 'gridItem',
   title: 'Grid Item',
   type: 'object',
+  icon: ImageIcon,
   fields: [
     defineField({
       name: 'image',
       type: 'image',
       options: {hotspot: true},
-      // validation: (Rule) => Rule.required(),
+      description: 'Image for this grid item with hotspot support',
+      validation: (Rule) => Rule.required().error('Image is required for grid items'),
     }),
     defineField({
       name: 'body',
       type: 'portableTextSimple',
-      validation: (Rule) => Rule.required(),
+      description: 'Text content for this grid item',
+      validation: (Rule) => Rule.required().error('Content is required for grid items'),
     }),
     defineField({
       name: 'colorTheme',
-      type: 'reference',
-      to: [{type: 'colorTheme'}],
+      type: 'array',
+      of: [{type: 'reference', to: {type: 'colorTheme'}}],
+      description: 'Color theme for this grid item',
+      validation: (Rule) => Rule.max(1).warning('Only one color theme can be selected'),
     }),
     defineField({
       name: 'cta',
@@ -30,19 +36,26 @@ export const gridItemType = defineField({
       fields: [
         defineField({
           name: 'showCta',
-          title: 'Show CTA',
-          type: 'boolean',
-          initialValue: false,
+          title: 'CTA Status',
+          type: 'string',
+          options: {
+            list: [
+              {title: 'Show CTA', value: 'show'},
+              {title: 'Hide CTA', value: 'hide'},
+            ],
+            layout: 'radio',
+          },
+          initialValue: 'hide',
           description: 'Enable to show a call-to-action button',
         }),
         defineField({
           name: 'text',
           title: 'Text',
           type: 'string',
-          hidden: ({parent}) => !parent?.showCta,
+          hidden: ({parent}) => parent?.showCta !== 'show',
           validation: (Rule) => Rule.custom((value, context) => {
             const {parent} = context as any;
-            if (parent?.showCta && !value) {
+            if (parent?.showCta === 'show' && !value) {
               return 'CTA text is required when CTA is enabled';
             }
             return true;
@@ -52,10 +65,10 @@ export const gridItemType = defineField({
           name: 'url',
           title: 'URL',
           type: 'url',
-          hidden: ({parent}) => !parent?.showCta,
+          hidden: ({parent}) => parent?.showCta !== 'show',
           validation: (Rule) => Rule.custom((value, context) => {
             const {parent} = context as any;
-            if (parent?.showCta && !value) {
+            if (parent?.showCta === 'show' && !value) {
               return 'CTA URL is required when CTA is enabled';
             }
             return true;
@@ -65,7 +78,7 @@ export const gridItemType = defineField({
           name: 'color',
           title: 'Color',
           type: 'string',
-          hidden: ({parent}) => !parent?.showCta,
+          hidden: ({parent}) => parent?.showCta !== 'show',
           options: {
             list: [
               {title: 'Orange', value: 'orange'},

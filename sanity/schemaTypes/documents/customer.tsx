@@ -14,9 +14,16 @@ export const customerType = defineType({
     }),
     defineField({
       name: 'acceptsMarketing',
-      title: 'Accepts Marketing',
-      type: 'boolean',
-      initialValue: false,
+      title: 'Marketing Preference',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Accepts Marketing', value: 'accepted'},
+          {title: 'No Marketing', value: 'declined'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'declined',
       description: 'Whether the customer has opted in to receive marketing emails',
     }),
     defineField({
@@ -35,9 +42,12 @@ export const customerType = defineType({
             {
               name: 'productVariant',
               title: 'Product Variant',
-              type: 'reference',
-              to: [{type: 'productVariant'}],
-              validation: (Rule) => Rule.required(),
+              type: 'array',
+              of: [{type: 'reference', to: {type: 'productVariant'}}],
+              validation: (Rule) => [
+                Rule.required().error('Product variant is required'),
+                Rule.max(1).warning('Only one product variant can be selected'),
+              ],
             },
             {
               name: 'dateAdded',

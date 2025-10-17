@@ -1,11 +1,10 @@
-
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {PackageIcon} from '@sanity/icons'
 import {getExtension} from '@sanity/asset-utils'
 import pluralize from 'pluralize-esm'
 import CollectionHiddenInput from '../../components/inputs/CollectionHidden'
 import ShopifyDocumentStatus from '../../components/media/ShopifyDocumentStatus'
-import { GROUPS } from '../../constants'
+import {GROUPS} from '../../constants'
 
 export const collectionType = defineType({
   name: 'collection',
@@ -68,14 +67,22 @@ export const collectionType = defineType({
     }),
     defineField({
       name: 'showHero',
-      type: 'boolean',
-      description: 'If disabled, page title will be displayed instead',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Show Hero', value: 'show'},
+          {title: 'Show Page Title', value: 'hide'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'show',
+      description: 'Display hero section or page title',
       group: 'editorial',
     }),
     defineField({
       name: 'hero',
       type: 'hero',
-      hidden: ({document}) => !document?.showHero,
+      hidden: ({document}) => document?.showHero !== 'show',
       group: 'editorial',
     }),
     defineField({

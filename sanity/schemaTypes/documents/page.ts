@@ -1,10 +1,10 @@
 import {DocumentIcon} from '@sanity/icons'
-import {defineField, defineArrayMember} from 'sanity'
+import {defineField, defineArrayMember, defineType} from 'sanity'
 
 import {validateSlug} from '../../utils/validateSlug'
 import { GROUPS } from '../../constants'
 
-export const pageType = defineField({
+export const pageType = defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
@@ -15,13 +15,18 @@ export const pageType = defineField({
       name: 'title',
       group: 'editorial',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      description: 'Page title that appears in the browser tab and search results',
+      validation: (Rule) => [
+        Rule.required().error('Page title is required'),
+        Rule.max(60).warning('Consider keeping titles under 60 characters for SEO'),
+      ],
     }),
     defineField({
       name: 'slug',
       group: 'editorial',
       type: 'slug',
       options: {source: 'title'},
+      description: 'URL-friendly version of the title (auto-generated from title)',
       validation: validateSlug,
     }),
     defineField({
@@ -32,9 +37,11 @@ export const pageType = defineField({
     }),
     defineField({
       name: 'colorTheme',
-      type: 'reference',
-      to: [{type: 'colorTheme'}],
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: {type: 'colorTheme'}})],
+      description: 'Color theme for this page',
       group: 'theme',
+      validation: (Rule) => Rule.max(1).warning('Only one color theme can be selected'),
     }),
     defineField({
       name: 'hero',

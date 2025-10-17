@@ -1,6 +1,9 @@
-# Swag Store - E-commerce Platform
+# [Sanity Market](https://sanity.market) - E-Commerce Monorepo
 
-A comprehensive e-commerce platform built with **Sanity CMS**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
+ Built with **Sanity CMS**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
+
+![Sanity Market Screenshot](website.png)
+View the live [Sanity Market](https://sanity.market)
 
 ## 🏗️ Architecture Overview
 
@@ -10,7 +13,7 @@ This repository contains multiple interconnected systems:
 - **📝 CMS**: Sanity Studio for content management
 - **⚡ Functions**: Serverless functions for automation
 - **📱 Apps**: Custom Sanity SDK applications
-- **🔄 Integrations**: Shopify, Algolia, and webhook systems
+- **🔄 Integrations**: Shopify, Algolia, and Klaviyo
 
 ## 📁 Repository Structure
 
@@ -88,7 +91,6 @@ A modern e-commerce storefront built with Shopify Hydrogen and React Router v7.
 ### Features
 
 - **🛍️ Product Catalog**: Dynamic product listings and collections
-- **🔍 Search & Filtering**: Advanced search with Algolia integration
 - **🌍 Internationalization**: Multi-language and multi-currency support
 - **📱 Responsive Design**: Mobile-first responsive layout
 - **⚡ Performance**: Optimized for Core Web Vitals
@@ -125,6 +127,8 @@ The application uses React Router v7's file-based routing system with locale sup
 
 ## 📝 CMS (Sanity Studio)
 
+![Sanity Market Screenshot](studio.png)
+
 **Location**: `sanity/`
 
 A powerful content management system with custom schemas and workflows built with Sanity v4.10.1.
@@ -134,7 +138,7 @@ A powerful content management system with custom schemas and workflows built wit
 - **Products**: Shopify-synced product data
 - **Collections**: Product groupings and categories
 - **Pages**: Custom CMS pages and content
-- **Posts**: Blog posts and articles
+- **Emails**: Craft marketing campaigns for Klaviyo
 - **Marketing Campaigns**: Campaign management
 - **Notifications**: System notifications
 - **Settings**: Site-wide configuration
@@ -148,7 +152,6 @@ A powerful content management system with custom schemas and workflows built wit
 - **🔧 Custom Actions**: Automated content workflows
 - **🤖 AI Assist**: Content generation and optimization
 - **📸 Media Management**: Advanced asset handling with custom plugin
-- **🔍 Search**: Built-in search and filtering
 
 ### Studio Features
 
@@ -322,14 +325,6 @@ sanity deploy
 
 ## 📚 Documentation
 
-### Guides
-
-- [Sanity Development Setup](SANITY_DEV_SETUP.md)
-- [Dataset Management](SANITY_DATASET_MANAGEMENT.md)
-- [Marketing Campaign Functions](MARKETING_CAMPAIGN_FUNCTIONS_GUIDE.md)
-- [Notification System](NOTIFICATION_SYSTEM.md)
-- [Product Tag Processing](PRODUCT_TAG_PROCESSING.md)
-
 ### API Documentation
 
 - **Sanity API**: [docs.sanity.io](https://docs.sanity.io)
@@ -371,8 +366,9 @@ pnpm test
 
 ### Shopify
 
+We use the [Sanity Connect for Shopify](https://www.sanity.io/docs/apis-and-sdks/sanity-connect-for-shopify) app
+
 - **Product Sync**: Automatic product synchronization
-- **Order Processing**: Order webhook handling
 - **Image Management**: Asset upload and optimization
 - **Inventory**: Real-time inventory updates
 
@@ -382,11 +378,6 @@ pnpm test
 - **Filtering**: Dynamic filtering capabilities
 - **Analytics**: Search analytics and insights
 
-### Webhooks
-
-- **Order Events**: Real-time order processing
-- **Product Updates**: Automatic content updates
-- **Notification System**: External system integration
 
 ## 🤝 Contributing
 
@@ -409,11 +400,7 @@ This project is licensed under the UNLICENSED license.
 
 ## 🆘 Support
 
-For issues and questions:
-
-1. Check the documentation in the `docs/` folder
-2. Review existing issues
-3. Create a new issue with detailed information
+This repo is meant to be an educational reference, this is not meant to be a goto market starter repo for building out custom commerce experiences. If you have questions about implementation strategy feel free to raise questions in our [Discord](https://snty.link/community) to start a conversation.
 
 ## 🔄 Migration Notes
 

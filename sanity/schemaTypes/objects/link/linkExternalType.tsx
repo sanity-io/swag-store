@@ -1,7 +1,7 @@
 import {EarthGlobeIcon} from '@sanity/icons'
-import {defineField} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
-export const linkExternalType = defineField({
+export const linkExternalType = defineType({
   title: 'External Link',
   name: 'linkExternal',
   type: 'object',
@@ -25,13 +25,25 @@ export const linkExternalType = defineField({
       name: 'url',
       title: 'URL',
       type: 'url',
-      validation: (Rule) => Rule.required().uri({scheme: ['http', 'https']}),
+      description: 'External URL to link to',
+      validation: (Rule) => [
+        Rule.required().error('URL is required for external links'),
+        Rule.uri({scheme: ['http', 'https']}).error('URL must start with http:// or https://'),
+      ],
     }),
     defineField({
-      title: 'Open in a new window?',
+      title: 'Open Behavior',
       name: 'newWindow',
-      type: 'boolean',
-      initialValue: true,
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Open in new window', value: 'new'},
+          {title: 'Open in same window', value: 'same'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'new',
+      description: 'How the link should open when clicked',
     }),
   ],
 })
