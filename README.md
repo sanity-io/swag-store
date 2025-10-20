@@ -1,6 +1,6 @@
 # [Sanity Market](https://sanity.market) - E-Commerce Monorepo
 
- **Running Live in Production:** Built with **Sanity CMS**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
+ **This is Running Live in Production:** Built with **Sanity**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
 
 ![Sanity Market Screenshot](website.png)
 View the live [Sanity Market](https://sanity.market)
@@ -10,7 +10,7 @@ View the live [Sanity Market](https://sanity.market)
 This repository contains multiple interconnected systems:
 
 - **🌐 Frontend**: React Router-based Hydrogen storefront
-- **📝 CMS**: Sanity Studio for content management
+- **📝 Studio/CMS**: Sanity Studio for content management
 - **⚡ Functions**: Serverless functions for automation
 - **📱 Apps**: Custom Sanity SDK applications
 - **🔄 Integrations**: Shopify, Algolia, and Klaviyo
@@ -397,7 +397,7 @@ We use the [Sanity Connect for Shopify](https://www.sanity.io/docs/apis-and-sdks
 
 ## 📄 License
 
-This project is licensed under the UNLICENSED license.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 

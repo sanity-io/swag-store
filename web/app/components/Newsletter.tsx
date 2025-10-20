@@ -24,7 +24,9 @@ export function Newsletter({
   title = 'Join our newsletter',
 }: NewsletterProps) {
   const [email, setEmail] = useState('');
-  const [acceptsMarketing, setAcceptsMarketing] = useState(showMarketingOptIn);
+  const [acceptsMarketing, setAcceptsMarketing] = useState(
+    showMarketingOptIn ? 'accepted' : 'declined',
+  );
   const [pending, setPending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
@@ -42,7 +44,7 @@ export function Newsletter({
       try {
         const formData = new FormData();
         formData.append('email', email);
-        formData.append('acceptsMarketing', 'true');
+        formData.append('acceptsMarketing', acceptsMarketing);
         if (productId) {
           formData.append('productId', productId);
         }
@@ -57,7 +59,7 @@ export function Newsletter({
         if (data.success) {
           setSuccess(true);
           setEmail('');
-          setAcceptsMarketing(showMarketingOptIn);
+          setAcceptsMarketing(showMarketingOptIn ? 'accepted' : 'declined');
           setAlreadySubscribed(false);
         } else if (data.alreadySubscribed) {
           setAlreadySubscribed(true);
@@ -127,8 +129,10 @@ export function Newsletter({
               id="acceptsMarketing"
               name="acceptsMarketing"
               type="checkbox"
-              checked={acceptsMarketing}
-              onChange={(e) => setAcceptsMarketing(e.target.checked)}
+              checked={acceptsMarketing === 'accepted'}
+              onChange={(e) =>
+                setAcceptsMarketing(e.target.checked ? 'accepted' : 'declined')
+              }
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               disabled={isSubmitting}
             />

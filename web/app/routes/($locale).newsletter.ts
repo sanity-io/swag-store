@@ -13,7 +13,7 @@ export type NewsletterActionState = {
 export async function action({request, context}: ActionFunctionArgs) {
   const formData = await request.formData();
   const email = formData.get('email')?.toString();
-  const acceptsMarketing = formData.get('acceptsMarketing') === 'true';
+  const acceptsMarketing = formData.get('acceptsMarketing')?.toString() || 'declined';
   const productId = formData.get('productId')?.toString();
 
   let message: string | undefined;
@@ -53,7 +53,7 @@ export async function action({request, context}: ActionFunctionArgs) {
       // Check if this is a general newsletter signup (no productId)
       if (!productId) {
         // For general newsletter, check if they already accept marketing
-        if (existingCustomer.acceptsMarketing) {
+        if (existingCustomer.acceptsMarketing === 'accepted') {
           return {
             id: Date.now(),
             payload: {email},
