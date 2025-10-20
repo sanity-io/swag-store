@@ -1,13 +1,16 @@
 import {redirect, type LoaderFunctionArgs} from 'react-router';
-import {useLoaderData, type MetaFunction} from 'react-router';
-import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
-import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
-import {ProductItem} from '~/components/ProductItem';
+import {LocalizedLink} from '~/components/LocalizedLink';
+import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
+import {getPaginationVariables} from '@shopify/hydrogen';
 import {useEffect} from 'react';
 
+import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+
+import {GridProductItem, ProductItem} from '~/components/ProductItem';
+import clsx from 'clsx';
+
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  return [{title: `Sanity Market | ${data?.collection.title ?? ''} Products`}];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -17,7 +20,33 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const searchParams = new URLSearchParams(args.request.url.split('?')[1]);
+  const grid = searchParams.get('grid');
+  const category = searchParams.get('category');
+
+  // Filter products by category if specified
+  let filteredProducts = criticalData.collection.products;
+  if (category && criticalData.collection.products?.nodes) {
+    const filtered = criticalData.collection.products.nodes.filter(
+      (product: any) => {
+        return product.tags
+          .map((tag: string) => tag.toUpperCase())
+          .includes(category.toUpperCase());
+      },
+    );
+    filteredProducts = {
+      ...criticalData.collection.products,
+      nodes: filtered,
+    };
+  }
+
+  return {
+    ...deferredData,
+    ...criticalData,
+    grid,
+    category,
+    filteredProducts,
+  };
 }
 
 /**
@@ -32,11 +61,11 @@ async function loadCriticalData({
   const {handle} = params;
   const {storefront} = context;
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 8,
+    pageBy: 60, // Increased to match collections.all
   });
 
   if (!handle) {
-    throw redirect('/collections');
+    throw redirect('/collections/all');
   }
 
   const [{collection}] = await Promise.all([
@@ -47,7 +76,6 @@ async function loadCriticalData({
         country: storefront.i18n?.country,
         language: storefront.i18n?.language,
       },
-      // Add other queries here, so that they are loaded in parallel
     }),
   ]);
 
@@ -75,51 +103,195 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
+  const {collection, filteredProducts, grid, category} =
+    useLoaderData<typeof loader>();
+  const location = useLocation();
 
+  // Scroll to top when component mounts or route changes
   useEffect(() => {
-    setTimeout(() => {
+    const scrollToTop = () => {
+      // Try multiple methods
       window.scrollTo(0, 0);
-    }, 200);
-  }, []);
+      window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Try scrolling the main element if it exists
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+
+      // Try scrolling the root element
+      const rootElement = document.querySelector('#root');
+      if (rootElement) {
+        rootElement.scrollTop = 0;
+      }
+    };
+
+    // Try immediately and after delays
+    scrollToTop();
+    setTimeout(scrollToTop, 100);
+  }, [location.pathname]);
+
+  const allProducts = collection.products?.nodes || [];
 
   return (
-    <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
-      <PaginatedResourceSection
-        connection={collection.products}
-        resourcesClassName="products-grid"
-      >
-        {({node: product, index}) => (
-          <ProductItem
-            key={product.id}
-            product={product}
-            loading={index < 8 ? 'eager' : undefined}
-          />
+    <div className="collection bg-gray-100">
+      {/* Filter navigation - only show if not in grid mode */}
+      {!grid && (
+        <div className="fixed top-0 left-0 w-full p-4 z-10 800:max-w-[80%]">
+          <div className="flex items-start leading-none flex-wrap gap-2">
+            <span className="text-sm relative top-2 inline-block mr-8">
+              FILTER
+            </span>
+            <LocalizedLink
+              to={`/collections/${collection.handle}`}
+              className={clsx(
+                'text-24 800:text-56 mr-6 font-sans',
+                category === null && 'italic',
+              )}
+            >
+              All {collection.title} ({allProducts?.length ?? 0})
+            </LocalizedLink>
+            <LocalizedLink
+              to={`/collections/${collection.handle}?category=hats`}
+              className={clsx(
+                'text-24 800:text-56 mr-6 font-sans',
+                category === 'hats' && 'italic',
+              )}
+            >
+              Hats (
+              {allProducts?.filter((product: any) =>
+                product.tags.includes('Hats'),
+              ).length ?? 0}
+              )
+            </LocalizedLink>
+            <LocalizedLink
+              to={`/collections/${collection.handle}?category=clothing`}
+              className={clsx(
+                'text-24 800:text-56 mr-6 font-sans',
+                category === 'clothing' && 'italic',
+              )}
+            >
+              Clothing (
+              {allProducts?.filter((product: any) =>
+                product.tags.includes('Clothing'),
+              ).length ?? 0}
+              )
+            </LocalizedLink>
+            <LocalizedLink
+              to={`/collections/${collection.handle}?category=accessories`}
+              className={clsx(
+                'text-24 800:text-56 mr-6 font-sans',
+                category === 'accessories' && 'italic',
+              )}
+            >
+              Accessories (
+              {allProducts?.filter((product: any) =>
+                product.tags.includes('Accessories'),
+              ).length ?? 0}
+              )
+            </LocalizedLink>
+            <LocalizedLink
+              to={`/collections/${collection.handle}?category=goods`}
+              className={clsx(
+                'text-24 800:text-56 mr-6 font-sans',
+                category === 'goods' && 'italic',
+              )}
+            >
+              Goods (
+              {allProducts?.filter((product: any) =>
+                product.tags.includes('Goods'),
+              ).length ?? 0}
+              )
+            </LocalizedLink>
+          </div>
+        </div>
+      )}
+
+      {/* Grid view header */}
+      {grid && (
+        <div className="hidden 800:grid grid-cols-10 text-white gap-0 bg-black">
+          <div className="col-span-2 p-1.5 hidden 800:block">SKU</div>
+          <div className="col-span-1 p-1.5">Thumbnail</div>
+          <div className="col-span-6 800:col-span-3 p-1.5">Product</div>
+          <div className="col-span-2 p-1.5">Price</div>
+          <div className="col-span-1 p-1.5"></div>
+        </div>
+      )}
+
+      {/* Products grid */}
+      <div
+        className={clsx(
+          'grid gap-0',
+          grid ? 'grid-cols-1' : 'grid-cols-2 800:grid-cols-4 gap-0',
         )}
-      </PaginatedResourceSection>
-      <Analytics.CollectionView
-        data={{
-          collection: {
-            id: collection.id,
-            handle: collection.handle,
-          },
-        }}
-      />
+      >
+        {filteredProducts?.nodes?.map((product: any, index: number) => {
+          return grid ? (
+            <GridProductItem
+              key={product.id}
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          ) : (
+            <ProductItem
+              key={product.id}
+              product={product}
+              loading={index < 8 ? 'eager' : undefined}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-const PRODUCT_ITEM_FRAGMENT = `#graphql
-  fragment MoneyProductItem on MoneyV2 {
+const COLLECTION_ITEM_FRAGMENT = `#graphql
+  fragment ProductVariantFields on ProductVariant {
+    availableForSale
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    id
+    image {
+      __typename
+      id
+      url
+      altText
+      width
+      height
+    }
+    price {
+      amount
+      currencyCode
+    }
+    product {
+      title
+      handle
+    }
+    selectedOptions {
+      name
+      value
+    }
+    sku
+    title
+    unitPrice {
+      amount
+      currencyCode
+    }
+  }
+  fragment MoneyCollectionItem on MoneyV2 {
     amount
     currencyCode
   }
-  fragment ProductItem on Product {
+  fragment CollectionItem on Product {
     id
     handle
     title
+    tags
     featuredImage {
       id
       altText
@@ -127,20 +299,44 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
       width
       height
     }
+    selectedOrFirstAvailableVariant(ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      ...ProductVariantFields
+    }
+    options {
+      name
+      optionValues {
+        name
+        firstSelectableVariant {
+          ...ProductVariantFields
+        }
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    variants(first: 250) {
+      nodes {
+        ...ProductVariantFields
+      }
+    }
     priceRange {
       minVariantPrice {
-        ...MoneyProductItem
+        ...MoneyCollectionItem
       }
       maxVariantPrice {
-        ...MoneyProductItem
+        ...MoneyCollectionItem
       }
     }
   }
 ` as const;
 
-// NOTE: https://shopify.dev/docs/api/storefront/2022-04/objects/collection
+// NOTE: https://shopify.dev/docs/api/storefront/latest/objects/collection
 const COLLECTION_QUERY = `#graphql
-  ${PRODUCT_ITEM_FRAGMENT}
   query Collection(
     $handle: String!
     $country: CountryCode
@@ -162,7 +358,7 @@ const COLLECTION_QUERY = `#graphql
         after: $endCursor
       ) {
         nodes {
-          ...ProductItem
+          ...CollectionItem
         }
         pageInfo {
           hasPreviousPage
@@ -173,4 +369,5 @@ const COLLECTION_QUERY = `#graphql
       }
     }
   }
+  ${COLLECTION_ITEM_FRAGMENT}
 ` as const;
