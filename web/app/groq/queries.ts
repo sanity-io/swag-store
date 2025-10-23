@@ -199,7 +199,7 @@ export const PAGE_QUERY = defineQuery(`*[_type in ["page"] && slug.current == $h
   }
 }`);
 
-export const SANITY_PRODUCT_QUERY = defineQuery(`*[_type == "product" && slug == $handle][0] {
+export const SANITY_PRODUCT_QUERY = defineQuery(`*[_type == "product" && store.slug.current == $handle][0] {
   ...,
   images[] {
     ...,
