@@ -403,9 +403,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This repo is meant to be an educational reference, this is not meant to be a goto market starter repo for building out custom commerce experiences. If you have questions about implementation strategy feel free to raise questions in our [Discord](https://snty.link/community) to start a conversation.
 
-> **Note:** The `@sanity/frontend-analytics` package referenced by this project is **private** and is not publicly available. If you require access, please contact the Sanity team or your project administrator for details on usage and availability.
-
-
 ## 🔄 Migration Notes
 
 ### React Router v7
