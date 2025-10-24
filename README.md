@@ -1,6 +1,6 @@
 # [Sanity Market](https://sanity.market) - E-Commerce Monorepo
 
- > **This is Running Live in Production:** Built with **Sanity**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, attribution tracking, and automated marketing campaigns.
+ > **This is Running Live in Production:** Built with **Sanity**, **Shopify Hydrogen**, **Sanity Functions**, and **Sanity SDK Apps**. This monorepo provides a complete headless commerce solution with advanced content management, real-time notifications, and automated marketing campaigns.
 
 ![Sanity Market Screenshot](website.png)
 View the live [Sanity Market](https://sanity.market)
@@ -24,7 +24,6 @@ swag-store/
 ├── functions/                    # Sanity Functions (serverless)
 ├── sanity-apps/                  # Custom Sanity SDK Apps
 │   ├── notifications/            # Notification management app
-│   └── attribution/              # Attribution tracking app
 ├── data/                         # Sample data and fixtures
 └── docs/                         # Documentation and guides
 ```
@@ -209,25 +208,6 @@ Custom applications built with the Sanity SDK for specialized workflows.
 **Usage**:
 ```bash
 cd sanity-apps/notifications
-pnpm dev
-```
-
-### Attribution App
-
-**Purpose**: E-commerce attribution tracking and campaign analytics
-
-This was created during a hackathon and is not a fully built/robust application.
-
-**Features**:
-- Order tracking and attribution analysis
-- Campaign performance monitoring
-- Revenue analytics and reporting
-- UTM parameter management
-- Product performance insights
-
-**Usage**:
-```bash
-cd sanity-apps/attribution
 pnpm dev
 ```
 
