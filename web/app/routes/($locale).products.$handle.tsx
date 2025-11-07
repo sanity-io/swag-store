@@ -22,6 +22,12 @@ import {portableRichText} from '~/serializers/richText';
 import {Query} from 'hydrogen-sanity';
 import {SANITY_PRODUCT_QUERY} from '~/groq/queries';
 import {useDebug} from '~/contexts/DebugContext';
+import {
+  generateOpenAIProductFeedData,
+  generateOpenAIProductFeedJSONLD,
+  type ProductData,
+  type MerchantSettings,
+} from '~/lib/openaiProductFeed';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -83,9 +89,98 @@ async function loadCriticalData({
   // The API handle might be localized, so redirect to the localized handle
   redirectIfHandleIsLocalized(request, {handle, data: product});
 
+  // Generate OpenAI Product Feed data (optional - don't fail page if this errors)
+  let openAIJSONLD: object | null = null;
+  try {
+    const url = new URL(request.url);
+    const baseUrl = `${url.protocol}//${url.host}`;
+    
+    // Default merchant settings - these should ideally come from Sanity settings
+    const merchantSettings: MerchantSettings = {
+      sellerName: 'Sanity Market',
+      sellerUrl: baseUrl,
+      sellerPrivacyPolicy: `${baseUrl}/policies/privacy-policy`,
+      sellerTermsOfService: `${baseUrl}/policies/terms-of-service`,
+      returnPolicyUrl: `${baseUrl}/policies/refund-policy`,
+      returnWindowDays: 30,
+    };
+
+    const productData: ProductData = {
+      id: product.id,
+      handle: product.handle,
+      title: product.title,
+      description: product.description,
+      vendor: product.vendor,
+      productType: product.productType,
+      tags: product.tags,
+      featuredImage: product.featuredImage
+        ? {
+            url: product.featuredImage.url,
+            altText: product.featuredImage.altText || undefined,
+          }
+        : undefined,
+      images: product.images?.nodes?.map((img: any) => ({
+        url: img.url,
+        altText: img.altText || undefined,
+      })),
+      selectedOrFirstAvailableVariant: product.selectedOrFirstAvailableVariant
+        ? {
+            id: product.selectedOrFirstAvailableVariant.id,
+            sku: product.selectedOrFirstAvailableVariant.sku || undefined,
+            availableForSale:
+              product.selectedOrFirstAvailableVariant.availableForSale,
+            price: product.selectedOrFirstAvailableVariant.price
+              ? {
+                  amount: product.selectedOrFirstAvailableVariant.price.amount,
+                  currencyCode:
+                    product.selectedOrFirstAvailableVariant.price.currencyCode,
+                }
+              : undefined,
+            image: product.selectedOrFirstAvailableVariant.image
+              ? {
+                  url: product.selectedOrFirstAvailableVariant.image.url,
+                  altText:
+                    product.selectedOrFirstAvailableVariant.image.altText ||
+                    undefined,
+                }
+              : undefined,
+          }
+        : undefined,
+      variants: product.variants?.nodes?.map((v: any) => ({
+        id: v.id,
+        sku: v.sku || undefined,
+        availableForSale: v.availableForSale,
+        price: v.price
+          ? {
+              amount: v.price.amount,
+              currencyCode: v.price.currencyCode,
+            }
+          : undefined,
+      })),
+      // Metafields are optional - can be added later if needed
+      metafields: undefined,
+    };
+
+    const openAIFeedData = generateOpenAIProductFeedData(
+      productData,
+      baseUrl,
+      merchantSettings,
+      {
+        enableSearch: sanityProduct?.hideFromSearch !== 'hidden',
+        enableCheckout: true,
+      },
+    );
+
+    openAIJSONLD = generateOpenAIProductFeedJSONLD(openAIFeedData);
+  } catch (error) {
+    // Log error but don't fail the page
+    console.error('Error generating OpenAI Product Feed data:', error);
+  }
+
   return {
     product,
     sanityProduct,
+    openAIJSONLD,
   };
 }
 
@@ -104,7 +199,7 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 export default function Product() {
   const data = useLoaderData<typeof loader>();
   const {commentsEnabled} = useDebug();
-  const {product, sanityProduct} = data;
+  const {product, sanityProduct, openAIJSONLD} = data;
   const location = useLocation();
 
   // Scroll to top when component mounts or route changes
@@ -155,6 +250,16 @@ export default function Product() {
 
   return (
     <div className="bg-gray grid grid-cols-2 gap-0">
+      {/* OpenAI Product Feed JSON-LD */}
+      {openAIJSONLD && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(openAIJSONLD),
+          }}
+        />
+      )}
+      {/* Standard Schema.org Product JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -391,8 +496,24 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    productType
+    tags
     encodedVariantExistence
     encodedVariantAvailability
+    featuredImage {
+      url
+      altText
+      width
+      height
+    }
+    images(first: 10) {
+      nodes {
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       optionValues {
@@ -416,6 +537,27 @@ const PRODUCT_FRAGMENT = `#graphql
     adjacentVariants (selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
+    variants(first: 250) {
+      nodes {
+        id
+        sku
+        availableForSale
+        price {
+          amount
+          currencyCode
+        }
+      }
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+      maxVariantPrice {
+        amount
+        currencyCode
+      }
+    }
     seo {
       description
       title
@@ -437,3 +579,4 @@ const PRODUCT_QUERY = `#graphql
   }
   ${PRODUCT_FRAGMENT}
 ` as const;
+

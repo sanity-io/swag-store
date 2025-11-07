@@ -102,11 +102,6 @@ export function links() {
 }
 
 export async function loader(args: LoaderFunctionArgs) {
-  console.log('Root loader called:', {
-    url: args.request.url,
-    method: args.request.method,
-    timestamp: new Date().toISOString(),
-  });
 
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);

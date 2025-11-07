@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from 'react-router';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
+import {useEffect} from 'react';
 import {LocalizedLink} from '~/components/LocalizedLink';
 import {type Shop} from '@shopify/hydrogen/storefront-api-types';
 
@@ -47,6 +48,34 @@ export async function loader({params, context}: LoaderFunctionArgs) {
 
 export default function Policy() {
   const {policy} = useLoaderData<typeof loader>();
+  const location = useLocation();
+
+  // Scroll to top when component mounts or route changes
+  useEffect(() => {
+    const scrollToTop = () => {
+      // Try multiple methods
+      window.scrollTo(0, 0);
+      window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+
+      // Try scrolling the main element if it exists
+      const mainElement = document.querySelector('main');
+      if (mainElement) {
+        mainElement.scrollTop = 0;
+      }
+
+      // Try scrolling the root element
+      const rootElement = document.querySelector('#root');
+      if (rootElement) {
+        rootElement.scrollTop = 0;
+      }
+    };
+
+    // Try immediately and after delays
+    scrollToTop();
+    setTimeout(scrollToTop, 100);
+  }, [location.pathname]); // Re-run when pathname changes
 
   return (
     <div className="bg-black text-white">

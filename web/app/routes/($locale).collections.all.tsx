@@ -259,6 +259,9 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    description
+    vendor
+    productType
     tags
     featuredImage {
       id
@@ -266,6 +269,14 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       url
       width
       height
+    }
+    images(first: 10) {
+      nodes {
+        url
+        altText
+        width
+        height
+      }
     }
     selectedOrFirstAvailableVariant(ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
       ...ProductVariantFields
@@ -298,6 +309,21 @@ const COLLECTION_ITEM_FRAGMENT = `#graphql
       }
       maxVariantPrice {
         ...MoneyCollectionItem
+      }
+    }
+    metafields(identifiers: [
+      {namespace: "custom", key: "gtin"},
+      {namespace: "custom", key: "mpn"},
+      {namespace: "custom", key: "brand"},
+      {namespace: "custom", key: "material"},
+      {namespace: "custom", key: "condition"}
+    ]) {
+      edges {
+        node {
+          namespace
+          key
+          value
+        }
       }
     }
   }
