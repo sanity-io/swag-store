@@ -120,6 +120,7 @@ export const productType = defineType({
       name: 'category',
       type: 'reference',
       to: [{type: 'category'}],
+      validation: (Rule) => Rule.required().error('Category is required'),
       group: 'editorial',
     }),
     defineField({
