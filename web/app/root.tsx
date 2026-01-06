@@ -15,24 +15,21 @@ import {
   Scripts,
   ScrollRestoration,
   useRouteLoaderData,
-  useLocation,
 } from 'react-router';
 
 import {
   FOOTER_QUERY,
   HEADER_QUERY,
-  CART_QUERY_FRAGMENT,
-  CART_QUERY_ROOT,
+  CART_QUERY_FRAGMENT
 } from '~/lib/fragments';
 import {getLocaleFromRequest} from '~/lib/i18n';
-import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import {useLocale} from './hooks/useLocale';
 import {DebugProvider} from './contexts/DebugContext';
 
-import {useEffect, startTransition} from 'react';
+import {useEffect, useState, startTransition, Suspense, Component, ErrorInfo, ReactNode} from 'react';
 
 import {Sanity} from 'hydrogen-sanity';
 import {VisualEditing} from 'hydrogen-sanity/visual-editing';
@@ -109,13 +106,13 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  const {storefront, env, sanity, cache, waitUntil, session} = args.context;
+  const {storefront, env, cache, waitUntil, session} = args.context;
 
   // Get the current locale from the request URL
   const currentLocale = getLocaleFromRequest(args.request);
 
   // Create a new hydrogen context with the current locale
-  const hydrogenContext = createHydrogenContext({
+  createHydrogenContext({
     env,
     request: args.request,
     cache: cache as Cache,
@@ -265,7 +262,6 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {/* <link rel="stylesheet" href={resetStyles} /> */}
         <link rel="stylesheet" href={tailwindCss} />
         <link rel="stylesheet" href={appStyles} />
         <Meta />
@@ -287,11 +283,57 @@ export function Layout({children}: {children?: React.ReactNode}) {
         </DebugProvider>
 
         <Sanity nonce={nonce} />
-        {/* <VisualEditing action="/api/preview" /> */}
+        <VisualEditingWrapper />
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
     </html>
+  );
+}
+
+class VisualEditingErrorBoundary extends Component<
+  {children: ReactNode},
+  {hasError: boolean}
+> {
+  constructor(props: {children: ReactNode}) {
+    super(props);
+    this.state = {hasError: false};
+  }
+
+  static getDerivedStateFromError() {
+    return {hasError: true};
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Silently handle VisualEditing connection errors
+    // These are expected when preview mode is not active
+    if (error.message?.includes('visual editing') || 
+        error.message?.includes('Unable to connect')) {
+      console.debug('VisualEditing connection error (expected when preview is inactive):', error.message);
+      return;
+    }
+    console.error('VisualEditing error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+
+    return this.props.children;
+  }
+}
+
+function VisualEditingWrapper() {
+  // VisualEditing component will handle connection internally
+  // It will only activate when preview mode is properly enabled via the preview route
+  // Wrap in error boundary to gracefully handle connection failures
+  return (
+    <VisualEditingErrorBoundary>
+      <Suspense fallback={null}>
+        <VisualEditing action="/api/preview" />
+      </Suspense>
+    </VisualEditingErrorBoundary>
   );
 }
 

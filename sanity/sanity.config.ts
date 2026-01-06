@@ -53,8 +53,8 @@ export default defineConfig({
       previewUrl: {
         initial: 'http://localhost:3000',
         previewMode: {
-          enable: 'api/preview',
-          disable: 'api/preview',
+          enable: '/api/preview',
+          disable: '/api/preview',
         },
       },
       allowOrigins: ['http://localhost:3000'],
