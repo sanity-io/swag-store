@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from 'react-router';
-import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation, useParams} from 'react-router';
 import {useEffect} from 'react';
 
 import PageComponentList from '~/components/PageComponentList';
@@ -51,6 +51,8 @@ async function loadCriticalData({
 export default function Page() {
   const data = useLoaderData<typeof loader>();
   const location = useLocation();
+  const params = useParams();
+  const handle = params.handle;
 
   // Scroll to top when component mounts or route changes
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function Page() {
 
   return (
     <div className="page">
-      <Query query={PAGE_QUERY} options={{initial: data.page}}>
+      <Query query={PAGE_QUERY} params={{handle}} options={{initial: data.page}}>
         {(data) => <PageComponentList components={data?.modules} />}
       </Query>
     </div>

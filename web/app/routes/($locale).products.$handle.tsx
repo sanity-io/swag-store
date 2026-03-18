@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from 'react-router';
-import {useLoaderData, type MetaFunction, useLocation} from 'react-router';
+import {useLoaderData, type MetaFunction, useLocation, useParams} from 'react-router';
 import {useEffect} from 'react';
 
 import {
@@ -201,6 +201,8 @@ export default function Product() {
   const {commentsEnabled} = useDebug();
   const {product, sanityProduct, openAIJSONLD} = data;
   const location = useLocation();
+  const params = useParams();
+  const handle = params.handle;
 
   // Scroll to top when component mounts or route changes
   useEffect(() => {
@@ -336,7 +338,12 @@ export default function Product() {
           <div className="pb-[60px]">
             <Query
               query={SANITY_PRODUCT_QUERY}
-              options={{initial: {data: sanityProduct}}}
+              params={{handle}}
+              options={{
+                // Always provide initial data for SSR compatibility
+                // The Query component will automatically refetch with stega encoding when preview mode is enabled
+                initial: {data: sanityProduct}
+              }}
             >
               {({data}) => {
                 return (
@@ -415,7 +422,12 @@ export default function Product() {
       <div className="sticky w-full bottom-[40px] col-span-2 -mt-[40px] z-30">
         <Query
           query={SANITY_PRODUCT_QUERY}
-          options={{initial: {data: sanityProduct}}}
+          params={{handle}}
+          options={{
+            // Always provide initial data for SSR compatibility
+            // The Query component will automatically refetch with stega encoding when preview mode is enabled
+            initial: {data: sanityProduct}
+          }}
         >
           {({data}) => (
             <AddToCartButton
