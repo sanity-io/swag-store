@@ -26,12 +26,24 @@ export function CartCheckout({cart: originalCart}: CartMainProps) {
   // The useOptimisticCart hook applies pending actions to the cart
   // so the user immediately sees feedback when they modify the cart.
   const cart = useOptimisticCart(originalCart);
+  const hasItems = (cart?.totalQuantity ?? 0) > 0;
   return (
     <div
       key="CART_BUTTON"
       aria-labelledby="cart-summary"
-      className="w-full h-[40px] group order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end"
+      className="w-full h-[40px] group order-0 800:absolute bottom-0 z-20 bg-black flex justify-between items-center 800:justify-end relative"
     >
+      {hasItems && (
+        <div className="absolute bottom-[40px] bg-black w-full 800:w-1/3  right-0 px-[20px] pt-2 pb-1 text-[11px] text-white z-20">
+          by checking out you agree to our{' '}
+          <LocalizedLink
+            to="/policies/terms-of-service"
+            className="underline hover:text-brand-yellow"
+          >
+            terms and service
+          </LocalizedLink>
+        </div>
+      )}
       <a
         href={originalCart?.checkoutUrl}
         className="w-full 800:w-1/3 flex 800:grid 800:grid-cols-3 justify-between items-center"
@@ -90,6 +102,7 @@ export function CartMain({
     cart &&
     Boolean(cart?.discountCodes?.filter((code) => code.applicable)?.length);
   const className = `cart-main min-h-[40px] relative flex duration-300 transition-all ease-in-out flex-col justify-between ${withDiscount ? 'with-discount' : ''}`;
+  const hasItems = (cart?.totalQuantity ?? 0) > 0;
 
   useEffect(() => {
     if (location.pathname.includes('/collections/') || isPage) {
@@ -135,7 +148,7 @@ export function CartMain({
         <div
           className={clsx('cart-details')}
           style={{
-            height: `calc(100% - 40px)`,
+            height: !hasItems ? `calc(100% - 40px)` : `calc(100% - 70px)`,
           }}
           aria-labelledby="cart-lines"
         >
