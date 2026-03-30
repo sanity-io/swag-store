@@ -25,6 +25,8 @@ declare global {
     SANITY_API_VERSION: string;
     SANITY_API_TOKEN: string;
     SANITY_STUDIO_HOST: string;
+    /** Origin used for Presentation iframe CSP when preview is enabled */
+    SANITY_STUDIO_STOREFRONT_ORIGIN?: string;
     MARKETO_CLIENT_ID: string;
     MARKETO_CLIENT_SECRET: string;
     MARKETO_ENDPOINT: string;

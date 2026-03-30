@@ -1,18 +1,18 @@
 import {ServerRouter} from 'react-router';
 import {isbot} from 'isbot';
 import {renderToReadableStream} from 'react-dom/server';
-import {
-  createContentSecurityPolicy,
-  type HydrogenRouterContextProvider,
-} from '@shopify/hydrogen';
+import {createContentSecurityPolicy} from '@shopify/hydrogen';
 import type {EntryContext} from 'react-router';
+import type {createHydrogenRouterContext} from '~/lib/context';
+
+type HydrogenAppContext = Awaited<ReturnType<typeof createHydrogenRouterContext>>;
 
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
-  context: HydrogenRouterContextProvider,
+  context: HydrogenAppContext,
 ) {
   const projectId = context.env.SANITY_PROJECT_ID;
   const studioHostName =
