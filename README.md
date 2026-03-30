@@ -97,8 +97,8 @@ A modern e-commerce storefront built with Shopify Hydrogen and React Router v7.
 
 ### Tech Stack
 
-- **Framework**: Shopify Hydrogen 2025.7.0
-- **Routing**: React Router 7.9.2 (file-based routing)
+- **Framework**: Shopify Hydrogen 2025.7.1
+- **Routing**: React Router 7.12.0 (file-based routing)
 - **Styling**: Tailwind CSS 4.1.6
 - **State Management**: React Context + Hooks
 - **Data Fetching**: GraphQL + GROQ queries
@@ -396,9 +396,9 @@ This project has been migrated from Remix to React Router v7, following the offi
 
 ### Package Updates
 
-- **Hydrogen**: Updated to 2025.7.0 with latest features
+- **Hydrogen**: Updated to 2025.7.1 with latest features
 - **Sanity**: Updated to v4.10.1 with AI Assist and improved performance
-- **React Router**: Migrated to v7.9.2 with file-based routing
+- **React Router**: Migrated to v7.12.0 with file-based routing
 - **Tailwind CSS**: Updated to v4.1.6 with improved performance
 
 ## 🔗 Related Links

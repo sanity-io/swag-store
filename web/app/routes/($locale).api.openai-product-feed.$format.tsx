@@ -91,13 +91,9 @@ const PRODUCTS_QUERY = `#graphql
           {namespace: "custom", key: "material"},
           {namespace: "custom", key: "condition"}
         ]) {
-          edges {
-            node {
-              namespace
-              key
-              value
-            }
-          }
+          namespace
+          key
+          value
         }
       }
       pageInfo {
@@ -209,11 +205,13 @@ export async function loader({
               }
             : undefined,
         })),
-        metafields: product.metafields?.edges?.map((edge: any) => ({
-          namespace: edge.node.namespace,
-          key: edge.node.key,
-          value: edge.node.value,
-        })),
+        metafields: product.metafields
+          ?.filter(Boolean)
+          .map((mf: {namespace: string; key: string; value: string}) => ({
+            namespace: mf.namespace,
+            key: mf.key,
+            value: mf.value,
+          })),
       }));
 
       allProducts.push(...products);
